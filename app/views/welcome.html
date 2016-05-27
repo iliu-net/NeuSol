@@ -60,14 +60,6 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
 <?php } ?>
 <!-- <pre><?php print_r($data); ?></pre> -->
 
-<pre>
-<?php
-print_r($accounts);
-/*  $f3 = Sc::f3();
-  if ($f3->get('test_string') != $test_string) echo '<h3>get an vars are indeed different!</h3>';
- print_r($f3->get('report'));*/
-?>
-</pre>
 </div>
 <?= View::instance()->render('footer.html') ?>
 <script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>

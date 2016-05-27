@@ -13,6 +13,4 @@ $f3=require('lib/f3/base.php');
 $f3->config('config/config.ini');
 $f3->config($routes);
 
-
-
 $f3->run();
