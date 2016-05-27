@@ -1,0 +1,8 @@
+<?= View::instance()->render('header.html') ?>
+<h3>Upload File</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+
+<?= Sc::uploadForm(['action'=>Sc::url('/import')]) ?>
+
+<?= View::instance()->render('footer.html') ?>
+

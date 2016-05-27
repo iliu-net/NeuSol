@@ -1,0 +1,37 @@
+<?php
+  Sc::ui_script('/app/views/acct_detail.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/acct','Listing') ?>
+</div>
+<div id="bottom">
+<h3><?=$page_head?> </h3>
+<?= isset($msg) ? '<div id="showmsg">'.$msg.'</div>' : '' ?>
+
+
+<form action="<?= $form_action ?>" method="POST">
+ <?php if (isset($POST['acctId'])) { ?>
+ <p><?= Fm::text('acctId',['label'=>'Id: ','readonly']) ?></p>
+ <?php } ?>
+ <p><?= Fm::text('description',['label'=>'Description: ',maxlength=>40,'required']) ?> </p>
+ <p><?= Fm::text('acctNo',['label'=>'Account Number: ',maxlength=>32]) ?> </p>
+ <p><?= Fm::text('symbol',['label'=>'Institution: ',maxlength=>32]) ?> </p>
+ <p><?= Fm::text('sname',['label'=>'SNAME: ','maxlength'=>16,'required','pattern'=>'[_A-Z0-9]+']);?> </p>
+ <p><?= Fm::txtarea('remarks',['label'=>'Remarks: ','rows'=>4,'cols'=>50]) ?></p>
+ <p>
+  <?= Fm::text('hint',['label'=>'Password hint: ','maxlength'=>32,'type'=>'password']) ?> 
+  <input type="button" onclick="showHide()" id="show_button" value="Show"/>
+</p>
+ 
+ <div class="control-group">
+   <input type="hidden" name="<?= $form_command ?>" value="<?= $form_command ?>"/>
+   <input type="submit" name="submit" value="<?= $form_label ?>"/>
+ </div>
+</form>
+
+</script>
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+

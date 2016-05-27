@@ -1,0 +1,37 @@
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/acct/create','Add New') ?>
+</div>
+<div id="bottom">
+<h3>Accounts</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<table>
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Number</th>
+    <th>Institution</th>
+    <th>SName</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($accounts as $act) { ?>
+    <tr>
+      <td><span title="<?= $act['remarks'] ?>"><?= $act['description'] ?> </span></td>
+      <td><span title="<?= $act['remarks'] ?>"><?= $act['acctNo'] ?> </span></td>
+      <td><span title="<?= $act['remarks'] ?>"><?= $act['symbol'] ?> </span></td>
+      <td><span title="<?= $act['hint'] ?>"><?= $act['sname'] ?> </span></td>
+      <td>
+	<span title="<?= $act['remarks'] ?>">
+          <?= Sc::go('/acct/update/'.$act['acctId'],'Edit') ?>
+          <?= Sc::go('/acct/delete/'.$act['acctId'],'Delete',['confirm'=>'Are you sure?']) ?>
+	</span>
+      </td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</div>
+<?= View::instance()->render('footer.html') ?>
+

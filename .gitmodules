@@ -1,0 +1,18 @@
+[submodule "submodules/sorttable"]
+	path = submodules/sorttable
+	url = https://github.com/stuartlangridge/sorttable
+[submodule "submodules/Pikaday"]
+	path = submodules/Pikaday
+	url = https://github.com/dbushell/Pikaday.git
+[submodule "submodules/moment"]
+	path = submodules/moment
+	url = https://github.com/moment/moment.git
+[submodule "submodules/phpGraph"]
+	path = submodules/phpGraph
+	url = https://github.com/jerrywham/phpGraph.git
+[submodule "submodules/fatfree"]
+	path = submodules/fatfree
+	url = https://github.com/bcosca/fatfree.git
+[submodule "submodules/parsecsv-for-php"]
+	path = submodules/parsecsv-for-php
+	url = https://github.com/parsecsv/parsecsv-for-php.git

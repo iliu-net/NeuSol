@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title><?= $site ?></title>
+  <!-- Include headers -->
+  <style type="text/css">
+  <?php 
+    $sidebar_width = isset($sidebar_width) ? $sidebar_width : '150px';
+    $topbar_height = isset($topbar_height) ? $topbar_height : '30px';
+  ?>
+/* Used for the FrameSet replacements */
+#container {
+    border: 1px solid black;
+    height: 300px;
+}
+
+#left {
+    /* border: 1px solid black; */
+    float: left;
+    width: <?=$sidebar_width?>;
+    height: 100%;
+    background-color: #f8f8f8;
+    font-family: arial, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 4px;
+    border: 1px solid #d0d0d0;
+    /* border-top: none; */
+    /* overflow-y: scroll; */
+}
+
+#right {
+    /* border: 1px solid grey; */
+    margin-left: <?=$sidebar_width?>;
+    height: 100%;
+}
+
+/* CSS for frameset like functionality */
+#topdiv {
+    background-color: #c0e0f0;
+    height: <?=$topbar_height?>
+    font-family: arial, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 4px;
+    border: 1px solid #d0d0d0;
+}
+#bottom {
+    height: 500px;
+    overflow-y: scroll;
+}
+
+  /* Show alternating colors on tables... */
+tr:nth-child(even) {
+    background-color: #D3D6FF;
+}
+tr:nth-child(odd) {
+    background-color: #D0F0F0;
+}
+th {
+    background-color: #F0F0F0;
+}
+
+/* Make sure that forms are aligned */
+  
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; }
+
+
+/* Additional styles for Sorttable */
+table.sortable thead {
+    background-color:#eee;
+    color:#666666;
+    font-weight: bold;
+    cursor: default;
+}
+
+div {
+    font-family: arial, sans-serif;
+    font-size: 10pt;
+}
+
+  /* Additional CSS rules from the current view... */
+  <?= isset($x_css_inline) ? $x_css_inline : "" ?>
+  </style>
+  <?php
+    if (isset($x_css_inc)) {
+      foreach ($x_css_inc as $inc) {
+        echo '<link rel="stylesheet" href="'.$inc.'">';
+      }
+    }
+    if ($ui_scripts) {
+      foreach ($ui_scripts as $inc) {
+        echo '<script src="'.$inc.'"></script>';
+      }
+    }
+  ?>
+ </head>
+ <body>
+ <div id="frameset">
+  <div id="left">
+     <h3><?= Sc::go('/','Home') ?></h3>
+     <h3>Data Entry</h3>
+     <ul>
+      <li><?= Sc::go('/postings','Postings') ?></li>
+      <li><?= Sc::go('/import','Bulk Import') ?></li>
+     </ul>
+<!---
+     <h3>Reports</h3>
+     <ul>
+      <li>????</li>
+     </ul>
+-->
+     <h3>Setup</h3>
+     <ul>
+      <li><?= Sc::go('/category','Categories') ?></li>
+      <li><?= Sc::go('/acct','Accounts') ?></li>
+     </ul>
+<!--
+     <hr/>
+     <ul>
+       <li><?= Sc::go('/rules','Rules Editor',['target'=>'_blank']) ?></li>
+     </ul>
+-->
+  </div>
+  <div id="right">
+   <div class="container">

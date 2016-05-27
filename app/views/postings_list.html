@@ -1,0 +1,81 @@
+<?php
+  Sc::ui_script('/ui/scripts/sorttable.js');
+  Sc::ui_script('/app/views/postings_list.js');
+  //Sc::ui_script('/app/views/postings_form.js');
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/postings/index') ?>"/>
+  <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changePage();']) ?>
+  <?= Sc::select($month,[
+	1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',
+	7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
+	],'month',['onchange'=>'changePage();']) ?>
+  <input type="text" id="form_year" name="year" maxlength=4 size=4 pattern="[0-9]" value="<?=$year?>" onchange="changePage()" required/>
+  <?= View::instance()->render('postings_form.html') ?>
+</div>
+<div id="bottom">
+<h3>Postings</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<table class="sortable">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Amount</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+   <?php 
+     $code = '';
+      foreach ($postings as $row) {
+        $code .= 'function edit_post_'.$row->postingId.'() {'.PHP_EOL;
+   	$code .= '  edit_post('.$row->postingId.',"'.$row->postingDate.'","'.$row->description.'",'.$row->categoryId.','.$row->catgroup.','.$row->amount.');';
+	$code .= '}'.PHP_EOL;
+   ?>
+     <tr>
+       <td><span title="<?=$row->text?>"><?=$row->postingDate?></span></td>
+       <td><span title="<?=$row->text?>"><?=$row->description?></span></td>
+       <td><span title="<?=$row->text?>">
+	  <?=$categories_long[$row->categoryId]?>
+	  <?= $row->catgroup != 0 ? $row->catgroup : '' ?>
+       </span></td>
+       <td <?= $row->amount < 0 ? ' style="color:red"' : ''?> align="right">
+	 <span title="<?=$row->detail.PHP_EOL.'XID: '.$row->xid ?>">
+	   <?= number_format($row->amount,2) ?>
+	 </span>
+       </td>
+       <td>
+	 <?= Sc::jslnk('edit_post_'.$row->postingId.'()',"Edit") ?>
+	 <?= Sc::go('/postings/delete/'.$row->postingId,'Delete',['confirm'=>'Are you sure?']) ?>
+       </td>
+     </tr>
+   <?php } ?>
+  </tbody>
+</table>
+
+
+<pre>
+<?php //print_r([$accounts,$account_id,$month,$year,$postings,$postingtypes,$categories_short,$categories_long]); ?>
+<?php print_r($dbobject); ?>
+ACCOUNT: (<?= $account_id ?>)
+MONTH: (<?= $month ?>)
+YEAR: (<?= $year ?>)
+
+<?= $debug_msg ?>
+</pre>
+
+</div>
+<script type="text/javascript">
+<?= $code ?>
+</script>
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
+
+

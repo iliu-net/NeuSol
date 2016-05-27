@@ -1,0 +1,74 @@
+<?php
+  Sc::ui_script('/ui/scripts/sorttable.js');
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::ui_script('/app/views/welcome.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  $graph = new phpGraph();
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/postings/index') ?>"/>
+  <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changeAcct();']) ?>
+  <?= View::instance()->render('postings_form.html') ?>
+</div>
+<div id="bottom">
+<h3>Year-to-date Summary</h3>
+
+<!--
+<h4>Income</h4>
+$graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
+-->
+
+<table>
+<thead>
+ <tr>
+  <th>Category</th>
+  <th>Expenses</th>
+  <th>Income</th>
+  <th>Total</th>
+ </tr>
+</thead>
+<tbody>
+ <?php $in = $out = 0.0; ?>
+ <?php $data = []; ?>
+ <?php foreach ($table as $sname=>$row) { ?>
+  <?php $tot = $row['income']-$row['expenses'];?>
+  <?php if ($tot < 0) $data[$sname] = -$tot; ?>
+  <tr>
+   <td><?=$row['name']?></td>
+   <td align="right"><?= number_format($row['expenses'],2) ?></td>
+   <td align="right"><?= number_format($row['income'],2) ?></td>
+   <td align="right"<?= $tot < 0 ? ' style="color:red"' : ''?>><?= number_format($tot,2) ?></td>
+   <?php $in += $row['income']; $out += $row['expenses']; ?>
+  </tr>
+ <?php } ?>
+</tbody>
+<?php $tot = $in - $out; ?>
+<tfooter>
+ <tr>
+  <td>Totals</td>
+   <td align="right"><?= number_format($out,2) ?></td>
+   <td align="right"><?= number_format($in,2) ?></td>
+   <td align="right"<?= $tot < 0 ? ' style="color:red"' : ''?>><?= number_format($tot,2) ?></td>
+ </tr>
+</tfooter>
+</table>
+<?php if (count($data)) { ?>
+<strong>Adjusted Expenses</strong>
+<?= $graph->draw($data,['type'=>'pie','diskLegends'=>true]) ?>
+<?php } ?>
+<!-- <pre><?php print_r($data); ?></pre> -->
+
+<pre>
+<?php
+print_r($accounts);
+/*  $f3 = Sc::f3();
+  if ($f3->get('test_string') != $test_string) echo '<h3>get an vars are indeed different!</h3>';
+ print_r($f3->get('report'));*/
+?>
+</pre>
+</div>
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
+

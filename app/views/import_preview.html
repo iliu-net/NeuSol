@@ -1,0 +1,73 @@
+<?php
+  Sc::ui_script('/ui/scripts/sorttable.js');
+  Sc::ui_script('/app/views/import_preview.js');
+  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+   <?= Sc::jslnk("do_submit('post');","Import") ?> :
+   <?= Sc::jslnk("do_submit('preview');","Re-Apply Rules") ?> :
+</div>
+<div id="bottom">
+<h3>Import Rows</h3>
+<div id="main_top_area"/>
+
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+
+</div>
+<div id="preview_rows">
+  <table class="sortable">
+<!-- <table id="main_table"> -->
+  <thead>
+  <tr>
+    <th>Acct</th>
+    <th>Date</db>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Amount</th>
+    <th>xid</th>
+  </tr>
+  </thead>
+  <tbody>
+<?php
+//$catopts = $categories_long;
+//$catopts[''] = '';
+//$catopts['S'] = 'SKIP';
+//$catopts['D'] = 'DUPLICATE';
+
+$i = 0;
+foreach ($rows as $row) {
+?>
+  <tr>
+    <?= ImportController::td($row,$accounts_long[$row[CN_ACCOUNT]]) ?>
+    <?= ImportController::td($row,$row[CN_DATE]) ?>
+    <?= ImportController::td($row,$row[CN_DESCRIPTION]) ?>
+    <?= ImportController::category($f3,$row,$i++,$rr_map,$categories_long) ?>
+    <?= ImportController::amount($row) ?>
+    <?= ImportController::td($row,$row[CN_XID]) ?>
+  </tr>
+<?php } ?>
+  </tbody>
+</table>
+<input type="hidden" id="rowcount" name="rowcount" value="<?=$i?>"/>
+</div>
+</div>
+
+<div id="IPC stuff" style="display: none">
+ <form id="dlg" method="post" action="<?=Sc::url('/import/next')?>">
+  <input type="hidden" name="importer" value="<?= $POST['importer'] ?>"/>
+  <input type="hidden" name="filename" value="<?= $POST['filename'] ?>"/>
+  <input type="hidden" id="command_msg" name="command" value=""/>
+  <textarea name="rowdata" wrap="hard"><?=$rowdata?></textarea>
+  <textarea name="override" id="override"></textarea>
+ </form>
+</div>
+
+<!---  
+<script type="text/javascript">
+//window.onload = function() {
+//  UltimateScrollingTable("main_table",0,0,1);
+//}
+</script>
+-->
+<?= View::instance()->render('footer.html') ?>

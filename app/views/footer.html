@@ -1,0 +1,17 @@
+   </div>
+  </div>
+
+ <!-- post scripts -->
+ </body>
+ <script type="text/javascript">
+ function fit_bottom() {
+   top_div = document.getElementById("topdiv");
+   bottom_div = document.getElementById("bottom");
+   bottom_div.style.height = (window.innerHeight - top_div.clientHeight - 5) + "px";
+      
+ }
+ window.onresize = fit_bottom;
+ fit_bottom();
+ </script>
+
+</html>
