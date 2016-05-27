@@ -1,2 +1,2 @@
-data/*.php
+data/*.*
 data/Importers/*.php

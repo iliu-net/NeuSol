@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Apply some SELINUX and UNIX permissions
+#
+basedir=$(cd $(dirname $0) && cd .. && pwd)
+[ -z "$basedir" ] && exit 1
+
+
+restorecon -R $basedir
+chmod 777 $basedir/data $basedir/data/Importers
+chcon -R -t httpd_sys_rw_content_t $basedir/data
+

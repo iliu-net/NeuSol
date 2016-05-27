@@ -1,2 +1,5 @@
 # NeuSol
-expense tracking software
+
+Basic expense tracking software.
+
+
