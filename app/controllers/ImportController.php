@@ -110,7 +110,7 @@ class ImportController extends Controller {
     list ($status,$msg) = $this->applyRules($f3,$rows,$rr_map);
     if ($status) $f3->set('PARAMS.msg','<pre>'.$msg.'</pre>');
 
-    $this->tagDuplicates($f3,$rows);
+    $this->tagDuplicates($f3,$rows,$rr_map);
 
     $f3->set('rows',$rows);
     $f3->set('rowdata',self::encode($rows));
@@ -125,7 +125,7 @@ class ImportController extends Controller {
     foreach ($rr_map as $uid => $cmds) {
       list($rownum,$cmd,$grp) = $cmds;
       if (BaseImport::row_uuid($rows[$rownum]) != $uid) continue;
-      if ($cmd != '=' && $cmd != 'S' )
+      if ($cmd != '=' && $cmd != 'S' && $cmd != 'D')
         $rows[$rownum][CN_CATEGORY] = $cmd == '~' ? '' : $cmd;
 
       if ($grp != '') $rows[$rownum][CN_CATGRP] = $grp;
@@ -145,8 +145,36 @@ class ImportController extends Controller {
     }
     return [0,''];
   }
-  public function tagDuplicates($f3,&$rows) {
-    // TODO!
+  public function tagDuplicates($f3,&$rows,&$rrmap) {
+    $accts = [];
+    foreach ($rows as $row) {
+      if (!isset($begin)) {
+        $begin = $row[CN_DATE];
+      } else {
+        if ($row[CN_DATE] < $begin) $begin = $row[CN_DATE];
+      }
+      if (!isset($end)) {
+        $end = $row[CN_DATE];
+      } else {
+        if ($row[CN_DATE] > $end) $end = $row[CN_DATE];
+      }
+      if ($row[CN_ACCOUNT] != '') $accts[$row[CN_ACCOUNT]] = $row[CN_ACCOUNT];
+    }
+    if (!(isset($begin) && isset($end))) return;
+
+    $postingDAO = new Posting($this->db);
+    $duptab = [];//DEBUG
+    $ruid = $postingDAO->get_uids($begin,$end,$accts);
+    $duptab[] = $ruid;//DEBUG
+    $i = 0;
+    foreach ($rows as $row) {
+      $uid = BaseImport::row_uuid($row);
+      $rnum = $i++;
+      if (!isset($ruid[$uid])) continue;
+      $rrmap[$uid] = [$rnum,'D',''];
+    }
+    $duptab[] = $rrmap;//DEBUG
+    $f3->set('duptab',$duptab);//DEBUG
   }
   public function insertRows($f3,$rows,$rr_map) {
     $k = 0;
@@ -158,7 +186,7 @@ class ImportController extends Controller {
     foreach ($rows as &$row) {
       $uid = BaseImport::row_uuid($row);
       if (isset($rr_map[$uid])) {
-        if ($rr_map[$uid][1] == 'S') continue; // SKIP row!
+        if ($rr_map[$uid][1] == 'S' || $rr_map[$uid][1] == 'D') continue; // SKIP row!
       }
       // Insert row...
       //$posting->importRow($row);
@@ -236,8 +264,11 @@ class ImportController extends Controller {
       $html .= '</option>';
     }
     $html .= '<option value="S"'.($selcat == 'S' ? 'selected' : '').'>** skip **</option>';
+    if ($selcat == 'D') {
+      $html .= '<option value="D" selected>** DUPLICATE ROW **</option>';
+    }
     $html .= '</select>';
-    $html .= '<input type="text" size=1 placeholder="'.$row[CN_CATGRP].'" value="'.(isset($rr_map[$uid]) ? $rr_map[$uid][1] : '').'" id="cgn'.$i.'" pattern="[0-9]"/>';
+    $html .= '<input type="text" size=1 placeholder="'.$row[CN_CATGRP].'" value="'.(isset($rr_map[$uid]) ? $rr_map[$uid][2] : '').'" id="cgn'.$i.'" pattern="[0-9]"/>';
 
     $html .= '</td>';
     return $html;
@@ -298,8 +329,7 @@ class ImportController extends Controller {
     return $enc;
   } 
   static public function decode($txt) {
-    file_put_contents('data/log.txt',$txt);
-
+    //file_put_contents('data/log.txt',$txt);
     //$txt = pack('H*',$txt);
     $txt = base64_decode($txt);
     if ($txt === FALSE) return [NULL,'baset4 error'];

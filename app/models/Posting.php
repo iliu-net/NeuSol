@@ -5,12 +5,17 @@ class Posting extends BaseModel {
     public function id_column() { return 'postingId'; }
 
     public function get_uids($from,$to,$accts=[]) {
-      $sql = 'SELECT postingDate,amount,xid FROM nsPostings WHERE ? <= postingDate AND postingDate <= ?';
+      $sql = 'SELECT postingDate,amount,xid FROM nsPosting WHERE ? <= postingDate AND postingDate <= ?';
       if (count($accts)) {
         $sql .= ' AND acctId IN ('.implode(',',$accts).')';
       }
-      
-      
+      $rows = $this->db->exec($sql,[$from,$to]);
+      $res = [];
+      foreach ($rows as $row) {
+        $uid = implode(':',[$row['postingDate'],(float)$row['amount'],$row['xid']]);
+	$res[$uid] = $uid;
+      }
+      return $res;
     }
 
 
@@ -31,6 +36,11 @@ class Posting extends BaseModel {
       */
       $this->db->exec('INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
 		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
+
+      //DEBUG
+      file_put_contents('data/log.txt',print_r(['INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
+		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]],true),FILE_APPEND);
+      //DEBUG
     }
 
     public function listPostings($acct,$month,$year) {
