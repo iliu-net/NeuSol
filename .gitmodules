@@ -9,7 +9,7 @@
 	url = https://github.com/moment/moment.git
 [submodule "submodules/phpGraph"]
 	path = submodules/phpGraph
-	url = https://github.com/jerrywham/phpGraph.git
+	url = https://github.com/iliu-net/phpGraph.git
 [submodule "submodules/fatfree"]
 	path = submodules/fatfree
 	url = https://github.com/bcosca/fatfree.git
