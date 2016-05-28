@@ -17,11 +17,13 @@ The web server must have mod_rewrite enable and allow .htaccess overrides.
    The name `NeuDev` is special for a test instance.  In that case the
    `nonprod-config.ini` is also read and needs to be configured.
 2. git clone --recursive https://github.com/iliu-net/NeuSol.git NeuSol
-3. Create a database and a database user
+3. If on a SELINUX system you may need to run:
+   - scripts/secfg
+4. Create a database and a database user
    - create database pfm;
    - GRANT ALL PRIVILEGES ON pfm.* TO 'pfm'@'localhost' IDENTIFIED BY 'mypass';
-4. Configure this in config/config.ini
-5. Initialize the database schema:
+5. Configure this in config/config.ini
+6. Initialize the database schema:
    - php index.php /restore scripts/init.sql
-6. Point your web-browser to your app directory.
+7. Point your web-browser to your app directory.
 

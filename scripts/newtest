@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Use to initialize a test environement
+#
+if [ $# -ne 2 ] ; then
+  echo "Usage: $0 <prod-pase-dir> <test-base-dir>" 1>&2
+  exit 1
+fi
+
+src="$(realpath -e $1)" ; [ -z "$src" ] &&  exit 2
+dst="$(realpath -e $2)" ; [ -z "$dst" ] &&  exit 3
+tmp=$(mktemp)
+trap "rm -f $tmp" EXIT;
+
+echo "Are you SURE you want to wipe out your database and re-initialize it?"
+echo "All data related to this application will be LOST!!!"
+echo "Enter yes if you really want to do this."
+read a
+if [ "$a" != "yes" ]; then
+	exit 1
+fi
+
+php $src/index.php /backup $tmp
+php $dst/index.php /restore $tmp
+rm -f $dst/data/*.php $dst/data/Importers/*.php
+cp $src/data/*.php $dst/data
+cp $src/data/Importers/*.php $dst/data/Importers
