@@ -4,14 +4,25 @@
   <thead>
   <tr>
     <th>Date</th>
-    <?php if ($account_id == 0) { ?><th>Account</ht><?php } ?>
+    <?php if ($account_id == 0) { ?><th>Account</th><?php } ?>
     <th>Description</th>
     <th>Category</th>
     <th>Amount</th>
+    <?php if (isset($balance)) { ?><th>Balance</th><?php } ?>
     <th>Action</th>
   </tr>
+   <?php if (isset($balance)) { ?>
+     <tr>
+      <td></td><td>Starting balance</td><td></td><td></td>
+      <td <?= $balance < 0 ? ' style="color:red"' : ''?> align="right">
+	   <?= number_format($balance,2) ?>
+      </td>
+      <td></td>
+     </tr>
+   <?php } ?>
   </thead>
   <tbody>
+
    <?php 
      $code = '';
       foreach ($postings as $row) {
@@ -36,6 +47,11 @@
 	   <?= number_format($row->amount,2) ?>
 	 </span>
        </td>
+       <?php if (isset($balance)) { $balance += $row->amount ; ?>
+	<td <?= $balance < 0 ? ' style="color:red"' : ''?> align="right">
+	   <?= number_format($balance,2) ?>
+	</td>
+       <?php } ?>
        <td>
 	 <?= Sc::jslnk('edit_post_'.$row->postingId.'()',"Edit") ?>
 	 <?= Sc::go('/postings/delete/'.$row->postingId,'Delete',['confirm'=>'Are you sure?']) ?>

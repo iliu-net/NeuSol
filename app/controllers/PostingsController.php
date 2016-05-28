@@ -3,9 +3,16 @@
 class PostingsController extends Controller {
   static function default_page($f3) {
     $acctId = '';
-    foreach ($f3->get('accounts_long') as $a=>$b) {
-      $acctId = $a;
-      break;
+    if ($f3->exists('accounts_long')) {
+      foreach ($f3->get('accounts_long') as $a=>$b) {
+	$acctId = $a;
+	break;
+      }
+    } else {
+      foreach ($f3->get('accounts') as $a=>$b) {
+	$acctId = $a;
+	break;
+      }
     }
     $month = date('n');
     $year = date('Y');
@@ -104,5 +111,44 @@ class PostingsController extends Controller {
     } else {
       $f3->reroute('/postings');
     }
+  }
+
+  public function balance($f3,$params) {
+    $acct = new Acct($this->db);
+    $actlst = $acct->listDesc();
+    if (count($actlst) == 0) {
+      $f3->reroute('/acct/msg/No accounts found, please create one!');
+      return '';
+    }
+    $f3->set('accounts',$actlst);
+
+    $page = self::default_page($f3);
+    if (isset($params['acct']) && isset($actlst[$params['acct']])) {
+      list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);	
+      $page = implode(',',[$params['acct'],$month,$year,$selcat]);
+      $f3->set('JAR.expire',time()+86400*60);
+      $f3->set('COOKIE.page',$page);
+    } elseif ($f3->exists('COOKIE.page') && self::valid_page($f3,$f3->get('COOKIE.page'))) {
+       $page = $f3->get('COOKIE.page');
+    }
+    list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
+
+    $f3->set('account_id',$acctId);
+
+    $categories = new Category($this->db);
+    $f3->set('categories_short',$categories->listSname());
+    $cc = $categories->listDesc();
+    $f3->set('categories_long',$cc);
+
+    $posting = new Posting($this->db);
+    list($amount,$start) = $posting->getBalance($acctId);
+    $f3->set('postings',$posting->listPostings2($acctId,$start));
+    $f3->set('balance',$amount);
+
+    $f3->set('POST.acctId',$acctId);
+    $f3->set('POST.postingDate',date('Y').'-'.date('m').'-'.date('d'));
+    echo View::instance()->render('postings_balance.html');
+
+
   }
 }

@@ -4,6 +4,17 @@ class Posting extends BaseModel {
     public function table_name() { return 'nsPosting'; }
     public function id_column() { return 'postingId'; }
 
+    public function getBalance($acct) {
+      $date = '1970-01-01';
+      $amount = 0.0;
+      $rows = $this->db->exec('SELECT dateBalance,amount FROM nsBalance WHERE acctId = ?',$acct);
+      foreach ($rows as $row) {
+        $date = $row['dateBalance'];
+	$amount = $row['amount'];
+      }
+      return [$amount,$date];
+    }
+
     public function get_uids($from,$to,$accts=[]) {
       $sql = 'SELECT postingDate,amount,xid FROM nsPosting WHERE ? <= postingDate AND postingDate <= ?';
       if (count($accts)) {
@@ -62,4 +73,9 @@ class Posting extends BaseModel {
 
       return $this->query;
     }
+    public function listPostings2($acct,$start) {
+      $this->load(['acctId=? AND postingDate > ?',$acct,$start],['order'=>'postingDate ASC']);
+      return $this->query;
+    }
+
 }

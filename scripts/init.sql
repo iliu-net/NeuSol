@@ -75,3 +75,10 @@ CREATE TABLE IF NOT EXISTS nsPosting (
   KEY (acctId,postingDate,xid,amount)
 ) DEFAULT CHARSET='utf8'  COLLATE='utf8_general_ci'  AUTO_INCREMENT=1;
 
+DROP TABLE IF EXISTS nsBalance;
+CREATE TABLE IF NOT EXISTS nsBalance (
+  acctId INT NOT NULL DEFAULT 0,
+  dateBalance DATE NOT NULL DEFAULT "1970-01-01",
+  amount DECIMAL (20,2) NOT NULL DEFAULT 0.0,
+  PRIMARY KEY (acctId)
+) DEFAULT CHARSET='utf8'  COLLATE='utf8_general_ci';
