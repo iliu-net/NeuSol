@@ -17,27 +17,36 @@ Category | group
 -->
 <hr/>
 <form action="<?= Sc::url('/postings/crud') ?>" method="POST"<?= isset($form_id) ? ' id="'.$form_id.'"' : ''?>>
- <input type="hidden" name="acctId" id="form_acctId" value="<?= $POST['acctId'] ?>" />
+ <?php
+  if (isset($accounts_long)) {
+    echo 'Account: ';
+    echo Fm::select('acctId',$accounts_long);
+    echo '<br/>';
+  } else {
+    echo '<input type="hidden" name="acctId" id="form_acctId" value="'.$POST['acctId'].'" />';
+  }
+ ?>
  Id: <?= Fm::text('postingId',['readonly','placeholder'=>'New',size=>5]) ?>
  <span style="float: right">
   Date:
    <?= Fm::text('postingDate',['size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
-   <!-- input type="text" size=8 maxlength=10 name="postingDate" value="<?= $POST['postingDate'] ?>" required placeholder="yyyy/mm/dd"/ -->
  </span>
  <br/>
   Desc:
   <span style="float:right">
     Amount:
     <?= Fm::text('amount',['size'=>7,'maxlength'=>20,'required']) ?>
-    <!-- input type="text" name="amount" id="form_amount" value="<?= $POST['ammount'] ?>" size=7 maxlength=20 required pattern="[-.0-9]" -->
   </span>
   <br/>
   <?= Fm::text('description',['maxlength'=>20,'required']) ?>
-  <!-- input type="text" name="description" id="form_description" value="<?= $POST['description'] ?>" maxlength=20 required/ -->
   <br/>
-  Category: <br/>
-  <?= Fm::select('categoryId',$categories_long) ?>
-  <!-- Sc::select($POST['categoryId'],$categories_long,'categoryId') -->
+  <?php 
+    if (isset($categories_long)) {
+     ?>  Category: <br/>
+     <?= Fm::select('categoryId',$categories_long) ?>
+   <?php } else { ?>
+     <input type="hidden" name="categoryId" id="form_categoryId" value="<?=$POST['categoryId']?>" />
+   <?php } ?>
   &nbsp;&nbsp;
     <?= Fm::text('catgroup',['size'=>4,'maxlength'=>8,'placeholder'=>'group']) ?>
     <!-- input type="text" size=11 maxlength=11 name="xid" value="<?= $POST['xid'] ?>" placeholder="group"/ -->

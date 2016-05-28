@@ -3,70 +3,68 @@
 class PostingsController extends Controller {
   static function default_page($f3) {
     $acctId = '';
-    foreach ($f3->get('accounts') as $a=>$b) {
+    foreach ($f3->get('accounts_long') as $a=>$b) {
       $acctId = $a;
       break;
     }
     $month = date('n');
     $year = date('Y');
-    return implode(',',[$acctId,$month,$year]);
+    return implode(',',[$acctId,$month,$year,'a']);
   }
   static function valid_page($f3,$page) {
-    if (!preg_match('/^(\d+),(\d+),(\d\d\d\d)$/',$page,$mv)) return false;
-    if (!$f3->exists('accounts.'.$mv[1])) return false;
+    if (!preg_match('/^(\d+),(\d+),(\d\d\d\d),([a0-9]\d*)$/',$page,$mv)) return false;
+    if ((int)$mv != 0 && !$f3->exists('accounts.'.$mv[1])) return false;
     $month = (int)$mv[2];
     if ($month < 1 or $month > 12) return false;
-    return [(int)$mv[1],$month,(int)$mv[3]];
+    return [(int)$mv[1],$month,(int)$mv[3],$mv[4]];
   }
       
 
   public function index($f3,$params) {
-    $debug = 'DEBUG'.PHP_EOL;
     $acct = new Acct($this->db);
     $actlst = $acct->listDesc();
     if (count($actlst) == 0) {
       $f3->reroute('/acct/msg/No accounts found, please create one!');
       return '';
     }
-    $f3->set('accounts',$actlst);
+    $f3->set('accounts_long',$actlst);
+    $actsel = [ 0 => "** All Accounts **" ];
+    foreach ($actlst as $i=>$j) {
+      $actsel[$i] = $j;
+    }
+    $f3->set('accounts',$actsel);
 
     $page = self::default_page($f3);
-    $debug .= "SET PAGE to default ($page)\n";
-    if ($f3->exists('COOKIE.page')) {
-       $debug .= "COOKIE EXISTS\n";
-       $debug .= 'COOKIE: '.$f3->get('COOKIE.page').PHP_EOL;
-    }
     if (isset($params['page']) && self::valid_page($f3,$params['page'])) {
       $page = $params['page'];
-      $debug .= "HAS PARAMS SO CHANGE TO $page AND SET COOKIE\n";
       $f3->set('JAR.expire',time()+86400*60);
       $f3->set('COOKIE.page',$page);
     } elseif ($f3->exists('COOKIE.page') && self::valid_page($f3,$f3->get('COOKIE.page'))) {
        $page = $f3->get('COOKIE.page');
-       $debug .= "SAW COOKIE, NOW PAGE is $page\n";
     }
-    $debug .= "PAGE: $page\n";
-    list($acctId,$month,$year) = self::valid_page($f3,$page);
-    $debug .= "acctId=$acctId, month=$month, year=$year\n";
+    list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
 
     $f3->set('account_id',$acctId);
     $f3->set('month',$month);
     $f3->set('year',$year);
+    $f3->set('category_page',$selcat);
 
     $categories = new Category($this->db);
     $f3->set('categories_short',$categories->listSname());
-    $f3->set('categories_long',$categories->listDesc());
+    $cc = $categories->listDesc();
+    $f3->set('categories_long',$cc);
+    $catopts = [ 'a' => "** All Categories **", '0' => 'No category' ];
+    foreach ($cc as $i=>$j) {
+      $catopts[$i] = $j;
+    }
+    $f3->set('categories_opt',$catopts);
 
     $posting = new Posting($this->db);
 
-    $f3->set('postings',$posting->listPostings($acctId,$month,$year));
+    $f3->set('postings',$posting->listPostings($acctId,$month,$year,$selcat));
     $f3->set('POST.acctId',$acctId);
     $day = date('d'); if ($day > '28') $day = '28';
     $f3->set('POST.postingDate',$year.'-'.$month.'-'.$day);
-    $f3->set('debug_msg',$debug);
-    /*$x= View::instance()->render('postings_list.html');
-    file_put_contents('data/log.txt',$x);
-    echo $x;*/
     echo View::instance()->render('postings_list.html');
   }
   public function crud($f3) {

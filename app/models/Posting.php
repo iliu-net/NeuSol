@@ -43,13 +43,23 @@ class Posting extends BaseModel {
       //DEBUG
     }
 
-    public function listPostings($acct,$month,$year) {
-        $this->load(['acctId=? AND ? <= postingDate AND postingDate <= ?',
-			$acct, sprintf("%04d-%02d-01",$year,$month),
-			sprintf("%04d-%02d-%02d",$year,$month,date('t',mktime(0,0,0,$month,1,$year)))],
-		    ['order'=>'postingDate ASC']);
-	//$this->load(['acctId=?',$acct]);
-	//$this->load();
-        return $this->query;
+    public function listPostings($acct,$month,$year,$cat) {
+      $query = '? <= postingDate AND postingDate <= ?';
+      $params = [ '', sprintf("%04d-%02d-01",$year,$month),
+		  sprintf("%04d-%02d-%02d",$year,$month,date('t',mktime(0,0,0,$month,1,$year))) ];
+      if ($acct) {
+        $query .= ' AND acctId=?';
+	$params[] = $acct;
+
+      }
+      if ($cat != 'a') {
+	$query .= ' AND categoryId = ?';
+	$params[] = $cat;
+      }
+      $params[0] = $query;
+
+      $this->load($params,['order'=>'postingDate ASC']);
+
+      return $this->query;
     }
 }

@@ -7,7 +7,7 @@ class AppMain extends Controller{
       $f3->reroute('/acct/msg/No accounts found, please create one!');
       return '';
     }
-    $f3->set('accounts',$actlst);
+    $f3->set('accounts_long',$actlst);
 
     if ($f3->exists('COOKIE.page') && PostingsController::valid_page($f3,$f3->get('COOKIE.page'))) {
       $page = $f3->get('COOKIE.page');

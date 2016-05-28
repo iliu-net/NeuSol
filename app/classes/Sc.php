@@ -150,7 +150,7 @@ abstract class Sc {
     $tag .= '>';
     foreach ($txts as $k=>$v) {
       $tag .= '<option value="'.$k.'"';
-      if ($k == $val) $tag.= ' selected';
+      if ($k.'' == $val.'') $tag.= ' selected'; // Force string comparisons...
       $tag .= '>'.$v.'</option>';
     }
     $tag .= '</select>';

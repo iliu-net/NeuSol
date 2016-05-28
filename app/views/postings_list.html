@@ -16,55 +16,15 @@
 	7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
 	],'month',['onchange'=>'changePage();']) ?>
   <input type="text" id="form_year" name="year" maxlength=4 size=4 pattern="[0-9]" value="<?=$year?>" onchange="changePage()" required/>
+  <?= Sc::select($category_page,$categories_opt,'category',['onchange'=>'changePage();']) ?>
+
   <?= View::instance()->render('postings_form.html') ?>
 </div>
 <div id="bottom">
-<h3>Postings</h3>
-<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
-<table class="sortable">
-  <thead>
-  <tr>
-    <th>Date</th>
-    <th>Description</th>
-    <th>Category</th>
-    <th>Amount</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-  <tbody>
-   <?php 
-     $code = '';
-      foreach ($postings as $row) {
-        $code .= 'function edit_post_'.$row->postingId.'() {'.PHP_EOL;
-   	$code .= '  edit_post('.$row->postingId.',"'.$row->postingDate.'","'.$row->description.'",'.$row->categoryId.','.$row->catgroup.','.$row->amount.');';
-	$code .= '}'.PHP_EOL;
-   ?>
-     <tr>
-       <td><span title="<?=$row->text?>"><?=$row->postingDate?></span></td>
-       <td><span title="<?=$row->text?>"><?=$row->description?></span></td>
-       <td><span title="<?=$row->text?>">
-	  <?=$categories_long[$row->categoryId]?>
-	  <?= $row->catgroup != 0 ? $row->catgroup : '' ?>
-       </span></td>
-       <td <?= $row->amount < 0 ? ' style="color:red"' : ''?> align="right">
-	 <span title="<?=$row->detail.PHP_EOL.'XID: '.$row->xid ?>">
-	   <?= number_format($row->amount,2) ?>
-	 </span>
-       </td>
-       <td>
-	 <?= Sc::jslnk('edit_post_'.$row->postingId.'()',"Edit") ?>
-	 <?= Sc::go('/postings/delete/'.$row->postingId,'Delete',['confirm'=>'Are you sure?']) ?>
-       </td>
-     </tr>
-   <?php } ?>
-  </tbody>
-</table>
-
+<?= View::instance()->render('postings_table.html') ?>
 </div>
-<script type="text/javascript">
-<?= $code ?>
-</script>
+<pre><?php print_r([$category_page,$categories_opt]); ?></pre>
+
+
 <?= View::instance()->render('footer.html') ?>
 <script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
-
-

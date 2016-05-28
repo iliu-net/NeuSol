@@ -1,0 +1,50 @@
+<h3>Postings</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<table class="sortable">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <?php if ($account_id == 0) { ?><th>Account</ht><?php } ?>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Amount</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+   <?php 
+     $code = '';
+      foreach ($postings as $row) {
+        $code .= 'function edit_post_'.$row->postingId.'() {'.PHP_EOL;
+   	$code .= '  edit_post('.$row->postingId.',"'.$row->postingDate.'","'.$row->description.'",'.$row->categoryId.','.$row->catgroup.','.$row->amount.','.$row->acctId.');';
+	$code .= '}'.PHP_EOL;
+   ?>
+     <tr>
+       <td><span title="<?=$row->text?>"><?=$row->postingDate?></span></td>
+       <?php if ($account_id == 0) { ?>
+	<td>
+          <span title="<?=$row->text?>"><?=$accounts_long[$row->acctId]?></span>
+	</hd>
+      <?php } ?>
+       <td><span title="<?=$row->text?>"><?=$row->description?></span></td>
+       <td><span title="<?=$row->text?>">
+	  <?=$categories_long[$row->categoryId]?>
+	  <?= $row->catgroup != 0 ? $row->catgroup : '' ?>
+       </span></td>
+       <td <?= $row->amount < 0 ? ' style="color:red"' : ''?> align="right">
+	 <span title="<?=$row->detail.PHP_EOL.'XID: '.$row->xid ?>">
+	   <?= number_format($row->amount,2) ?>
+	 </span>
+       </td>
+       <td>
+	 <?= Sc::jslnk('edit_post_'.$row->postingId.'()',"Edit") ?>
+	 <?= Sc::go('/postings/delete/'.$row->postingId,'Delete',['confirm'=>'Are you sure?']) ?>
+       </td>
+     </tr>
+   <?php } ?>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+<?= $code ?>
+</script>

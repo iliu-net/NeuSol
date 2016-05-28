@@ -9,7 +9,6 @@
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/postings/index') ?>"/>
-  <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changeAcct();']) ?>
   <?= View::instance()->render('postings_form.html') ?>
 </div>
 <div id="bottom">
