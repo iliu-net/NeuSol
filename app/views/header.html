@@ -101,6 +101,9 @@ div {
  <body>
  <div id="frameset">
   <div id="left">
+     <?php if (defined('NONPROD')) { ?>
+       <h2 style="color:red">NONPROD!</h2>
+     <?php } ?>
      <h3><?= Sc::go('/','Home') ?></h3>
      <h3>Data Entry</h3>
      <ul>
