@@ -16,7 +16,10 @@ Category | group
   amount DECIMAL (20,2) NOT NULL DEFAULT 0.0,
 -->
 <hr/>
-<form action="<?= Sc::url('/postings/crud') ?>" method="POST"<?= isset($form_id) ? ' id="'.$form_id.'"' : ''?>>
+
+<form action="<?=
+ isset($form_action_url) ? Sc::url($form_action_url) : Sc::url('/postings/crud')
+ ?>" method="POST"<?= isset($form_id) ? ' id="'.$form_id.'"' : ''?>>
  <?php
   if (isset($accounts_long)) {
     echo 'Account: ';

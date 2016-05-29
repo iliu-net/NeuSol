@@ -6,6 +6,9 @@
   Sc::ui_script('/ui/scripts/pikaday.js');
   Sc::x_css_inc('/ui/css/pikaday.css');
   //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+
+  Sc::f3()->set('form_action_url','/postings/crud/balance');
+
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
@@ -14,10 +17,23 @@
   <?= View::instance()->render('postings_form.html') ?>
 </div>
 <div id="bottom">
-<?= View::instance()->render('postings_table.html') ?>
-</div>
-<pre><?php print_r([$category_page,$categories_opt]); ?></pre>
+<h3>Balance Account</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
 
+<?= View::instance()->render('postings_table.html') ?>
+
+<h4>New Balance</h4>
+<form action="<?= Sc::url('/balance/new')?>" method="post" id="form_new_balance_form">
+<input type="hidden" name="acctId" id="form_acctId" value="<?=$POST['acctId']?>" />
+Date: <?=Fm::text('dateBalance',['default'=>date('Y-m-d'),'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+Amount: <?= Fm::text('amount',['size'=>7,'maxlength'=>20,'required']) ?>
+<input type="submit" name="submit" value="Update" id="form_new_balance_submit"/>
+</form
+
+</div>
+
+<!--- <pre><?php print_r([$category_page,$categories_opt]); ?></pre> -->
+<!-- <pre>COOKIES<br/><?php print_r(Sc::f3()->get('COOKIES')); ?></pre> -->
 
 <?= View::instance()->render('footer.html') ?>
 <script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>

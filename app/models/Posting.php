@@ -14,6 +14,16 @@ class Posting extends BaseModel {
       }
       return [$amount,$date];
     }
+    public function setBalance($acct,$date,$amount) {
+      $rows = $this->db->exec('SELECT * FROM nsBalance WHERE acctId = ?',$acct);
+      if (count($rows)) {
+        $this->db->exec('UPDATE nsBalance SET dateBalance=?,amount=? WHERE acctId = ?',
+			[$date,$amount,$acct]);
+      } else {
+	$this->db->exec('INSERT INTO nsBalance(dateBalance,amount,acctId) VALUES (?,?,?)',
+			[$date,$amount,$acct]);
+      }
+    }
 
     public function get_uids($from,$to,$accts=[]) {
       $sql = 'SELECT postingDate,amount,xid FROM nsPosting WHERE ? <= postingDate AND postingDate <= ?';

@@ -55,6 +55,13 @@ class PostingsController extends Controller {
     $f3->set('month',$month);
     $f3->set('year',$year);
     $f3->set('category_page',$selcat);
+    if ($selcat.'' != '0' && $selcat.'' != 'a' && !$f3->exists('POST.categoryId')) {
+      $f3->set('POST.categoryId',$selcat);
+    } else {
+      if ($f3->exists('COOKIE.lastCategory')) {
+        $f3->set('POST.categoryId',$f3->get('COOKIE.lastCategory'));
+      }
+    }
 
     $categories = new Category($this->db);
     $f3->set('categories_short',$categories->listSname());
@@ -74,13 +81,21 @@ class PostingsController extends Controller {
     $f3->set('POST.postingDate',$year.'-'.$month.'-'.$day);
     echo View::instance()->render('postings_list.html');
   }
-  public function crud($f3) {
+  public function crud($f3,$params) {
+  /*
     echo '<pre>';
-    print_r($f3->get('POST'));
+    print_r([$f3->get('POST'),$params]);
     echo '</pre>';
     return;
+    */
+    if ($f3->exists('POST.categoryId')) {
+      $f3->set('JAR.expire',time()+86400*60);
+      $f3->set('COOKIE.lastCategory',$f3->get('POST.categoryId'));
+    }
+
+    $next = isset($params['next']) ? '/'.$params['next'].'/' : '/postings/';
     if (!$f3->exists('POST.postingId')) {
-      $f3->reroute('/postings/msg/Invalid CRUD operation');
+      $f3->reroute($next.'msg/Invalid CRUD operation');
       return;
     }
     $posting = new Posting($this->db);
@@ -97,9 +112,9 @@ class PostingsController extends Controller {
     $acct = $f3->get('POST.acctId');
     $date = $f3->get('POST.postingDate');
     if (preg_match('/^(\d\d\d\d)-(\d\d)-\d\d$/',$date,$mv)) {
-      $f3->reroute('/postings/index/'.$acct.','.$mv[2].','.$mv[1].'/msg/'.$msg);
+      $f3->reroute($next.'index/'.$acct.','.$mv[2].','.$mv[1].'/msg/'.$msg);
     } else {
-      $f3->reroute('/postings/msg/'.$msg);
+      $f3->reroute($next.'msg/'.$msg);
     }
   }
   public function delete($f3,$params) {
@@ -132,6 +147,13 @@ class PostingsController extends Controller {
        $page = $f3->get('COOKIE.page');
     }
     list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
+    if ($selcat.'' != '0' && $selcat.'' != 'a' && !$f3->exists('POST.categoryId')) {
+      $f3->set('POST.categoryId',$selcat);
+    } else {
+      if ($f3->exists('COOKIE.lastCategory')) {
+        $f3->set('POST.categoryId',$f3->get('COOKIE.lastCategory'));
+      }
+    }
 
     $f3->set('account_id',$acctId);
 
@@ -151,4 +173,18 @@ class PostingsController extends Controller {
 
 
   }
+  public function newbalance($f3,$params) {
+    /*echo '<pre>';
+    print_r([$f3->get('POST'),$params]);
+    echo '</pre>';*/
+    $acctId = $f3->get('POST.acctId');
+    $dateBalance = $f3->get('POST.dateBalance');
+    $amount = $f3->get('POST.amount');
+
+    $posting = new Posting($this->db);
+    $posting->setBalance($acctId,$dateBalance,$amount);
+    $f3->reroute($next.'msg/Balanced Account '.$acctId);
+    return;
+  }
+
 }

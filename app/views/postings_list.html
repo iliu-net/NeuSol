@@ -21,10 +21,13 @@
   <?= View::instance()->render('postings_form.html') ?>
 </div>
 <div id="bottom">
+<h3>Postings</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+
 <?= View::instance()->render('postings_table.html') ?>
 </div>
-<pre><?php print_r([$category_page,$categories_opt]); ?></pre>
-
+<!---<pre><?php print_r([$category_page,$categories_opt]); ?></pre> -->
+<!--- <pre>COOKIES<br/><?php print_r($_COOKIE); ?></pre> -->
 
 <?= View::instance()->render('footer.html') ?>
 <script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
