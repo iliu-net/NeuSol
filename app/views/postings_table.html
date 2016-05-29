@@ -25,7 +25,9 @@
      $code = '';
       foreach ($postings as $row) {
         $code .= 'function edit_post_'.$row->postingId.'() {'.PHP_EOL;
-   	$code .= '  edit_post('.$row->postingId.',"'.$row->postingDate.'","'.$row->description.'",'.$row->categoryId.','.$row->catgroup.','.$row->amount.','.$row->acctId.');';
+   	$code .= '  edit_post('.$row->postingId.',"'.$row->postingDate.'","';
+	$code .= addslashes(html_entity_decode($row->description));
+	$code .= '",'.$row->categoryId.','.$row->catgroup.','.$row->amount.','.$row->acctId.');';
 	$code .= '}'.PHP_EOL;
    ?>
      <tr>
