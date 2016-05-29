@@ -156,10 +156,7 @@ abstract class Fm {
       } elseif (isset($opts['default'])) {
         $value = $opts['default'];
       } else {
-        foreach ($choices as $k=>$v) {
-	  $value = $k;
-	  break;
-	}
+        $value = "";
       }
     }
     if (isset($opts['default'])) unset($opts['default']);
