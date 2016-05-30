@@ -8,57 +8,44 @@ class RptSummary extends Controller{
     $f3->set('categories_short',$categories->listSname());
     $f3->set('categories_long',$categories->listDesc());
 
-    $table[0] = [  'expenses' => [],'income' => [], 'adj'=>[] ];
-    for ($mn = 1; $mn < 13; ++$mn) {
-      $table[$mn] = [ 'expenses' => [],'income' => [],'adj' => [] ];
+    $ctypes = new CategoryType($this->db);
+    $ctlst = $ctypes->listDesc();
+    $f3->set('category_types',$ctlst);
 
+    $table = [ 0 => [] ];
+
+
+    for ($mn = 1; $mn < 13; ++$mn) {
       $start = sprintf('%04d-%02d-%02d', $year,$mn,1);
       $end = sprintf('%04d-%02d-%02d', $year + ($mn == 12 ? 1 : 0), $mn == 12 ? 1 : $mn+1, 1);
-      
-      foreach (['expenses'=>'<','income'=>'>'] as $i=>$j) {
-        $rows = $this->db->exec('SELECT categoryId,catgroup,sum(amount) as totals
-		FROM nsPosting
-		WHERE ? <= postingDate AND postingDate < ? AND amount '.$j.' 0
-		GROUP by categoryId,catgroup',[$start,$end]);
 
+      $table[$mn] = [];
+      foreach (array_keys($ctlst) as $ct) {
+        $table[$mn][$ct] = [];
+        $rows = $this->db->exec('SELECT nsPosting.categoryId as catId,catgroup,sum(amount) as totals
+		FROM nsPosting,nsCategory
+		WHERE ? <= postingDate AND postingDate < ? AND nsCategory.categoryId = nsPosting.categoryId AND nsCategory.categoryTypeId = ?
+		GROUP by nsPosting.categoryId,catgroup',[$start,$end,$ct]);
+	 //echo "<pre>ct = $ct, rows=".count($rows)."</pre>";
 	 foreach ($rows as $row) {
-	   if (!isset($table[$mn][$i][$row['categoryId']])) $table[$mn][$i][$row['categoryId']] = [];
-	   $table[$mn][$i][$row['categoryId']][$row['catgroup']] = $row['totals'];
+	   if (!isset($table[$mn][$ct][$row['catId']])) $table[$mn][$ct][$row['categoryId']] = [];
+	   $table[$mn][$ct][$row['catId']][$row['catgroup']] = $row['totals'];
 
-	   if (!isset($table[0][$i][$row['categoryId']])) $table[0][$i][$row['categoryId']] = [];
-	   if (!isset($table[0][$i][$row['categoryId']][$row['catgroup']])) $table[0][$i][$row['categoryId']][$row['catgroup']] = 0;
-	   $table[0][$i][$row['categoryId']][$row['catgroup']] += $row['totals'];
+	   if (!isset($table[0][$ct][$row['catId']])) $table[0][$ct][$row['catId']] = [];
+	   if (!isset($table[0][$ct][$row['catId']][$row['catgroup']])) $table[0][$ct][$row['catId']][$row['catgroup']] = 0;
+	   $table[0][$ct][$row['catId']][$row['catgroup']] += $row['totals'];
 	 }
-      }
-    }
 
-    // Isolate adjustments...
-    $adj = [];
-    foreach (array_keys($table[0]['income']) as $cat) {
-      if(!isset($table[0]['expenses'][$cat])) continue;
-      $adj[$cat] = $cat;
-    }
-    for ($mn = 0;$mn < 13;++$mn) {
-      foreach ($adj as $cat) {
-        foreach (['expenses','income'] as $tt) {
-	  if (isset($table[$mn][$tt][$cat])) {
-	    if (!isset($table[$mn]['adj'])) $table[$mn]['adj'] = [];
-	    if (!isset($table[$mn]['adj'][$cat])) $table[$mn]['adj'][$cat] = [];
-	    foreach ($table[$mn][$tt][$cat] as $cg => $money) {
-	      if (!isset($table[$mn]['adj'][$cat][$cg])) $table[$mn]['adj'][$cat][$cg] = 0;
-	      $table[$mn]['adj'][$cat][$cg] += $money;
-	    }
-	    unset($table[$mn][$tt][$cat]);
-	  }
-	}
       }
     }
+    //echo '<pre>';print_r($table);echo '</pre>';
+    
 
     // Collate in tabular format...
     $dat = [];
     for ($mn = 0; $mn < 13; ++$mn) {
       $dat[$mn] = [];
-      foreach (['expenses','income','adj'] as $tt) {
+      foreach (array_keys($ctlst) as $tt) {
 	$dat[$mn][$tt] = [];
 	foreach (array_keys($table[0][$tt]) as $cat) {
 	  if (isset($table[$mn][$tt][$cat])) {
@@ -74,7 +61,7 @@ class RptSummary extends Controller{
     $totals = [];
     for ($mn = 0;$mn < 13 ; ++$mn) {
       $totals[$mn] = [];
-      foreach (['expenses','income','adj'] as $tt) {
+      foreach (array_keys($ctlst) as $tt) {
 	$totals[$mn][$tt] = 0;
 	foreach ($table[$mn][$tt] as $cdat) {
 	  foreach ($cdat as $money) {

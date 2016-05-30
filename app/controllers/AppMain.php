@@ -8,6 +8,9 @@ class AppMain extends Controller{
       return '';
     }
     $f3->set('accounts_long',$actlst);
+    $ctypes = new CategoryType($this->db);
+    $ctlst = $ctypes->listDesc();
+    $f3->set('category_types',$ctlst);
 
     if ($f3->exists('COOKIE.page') && PostingsController::valid_page($f3,$f3->get('COOKIE.page'))) {
       $page = $f3->get('COOKIE.page');
@@ -28,18 +31,25 @@ class AppMain extends Controller{
     $reports = [];
     $table = [];
     foreach (['expenses'=>'<','income'=>'>'] as $i=>$j) {
-      $reports[$i] = [];
       $rows = $this->db->exec('SELECT sname,sum(amount) as totals,nsCategory.description as category
 		FROM nsPosting,nsCategory
 		WHERE nsCategory.categoryId = nsPosting.categoryId AND postingDate > ? AND amount '.$j.' 0 AND acctId in ('.$accounts.')
 		GROUP BY nsPosting.categoryId',$start);
       foreach ($rows as $row) {
-        $reports[$i][$row['sname']] = abs($row['totals']);
 	if (!isset($table[$row['sname']])) $table[$row['sname']] = [];
 	$table[$row['sname']][$i] = abs($row['totals']);
 	$table[$row['sname']]['name'] = $row['category'];
       }
     }
+    $rows = $this->db->exec('SELECT sname,sum(amount) as totals
+		FROM nsPosting,nsCategory
+		WHERE nsCategory.categoryId = nsPosting.categoryId AND postingDate > ? AND nsCategory.categoryTypeId = ? AND acctId in ('.$accounts.')
+		GROUP BY nsPosting.categoryId',[$start,1]);
+    foreach ($rows as $row) {
+       if ($row['totals'] > 0) cotninue;
+       $reports[$row['sname']] = -$row['totals'];
+    }
+
     $f3->set('reports',$reports);		
     $f3->set('table',$table);
     echo View::instance()->render('welcome.html');

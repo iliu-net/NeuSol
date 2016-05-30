@@ -2,8 +2,11 @@
 
 class CategoryController extends Controller {
   public function index($f3,$params) {
-    $types = new Category($this->db);
-    $f3->set('categories',$types->all());
+    $types = new CategoryType($this->db);
+    $f3->set('category_types', $types->listDesc());
+
+    $cats = new Category($this->db);
+    $f3->set('categories',$cats->all());
     echo View::instance()->render('category_list.html');	
   }
   function validateForm($f3,$type,$id=null) {
@@ -20,6 +23,9 @@ class CategoryController extends Controller {
   }
 
   public function create($f3,$params) {
+    $types = new CategoryType($this->db);
+    $f3->set('category_types', $types->listDesc());
+
     if ($f3->exists('POST.create')) {
       $type = new Category($this->db);
       if (($msg = $this->validateForm($f3,$type)) == '') {
@@ -38,6 +44,9 @@ class CategoryController extends Controller {
     echo View::instance()->render('category_detail.html');
   }
   public function update($f3,$params) {
+    $types = new CategoryType($this->db);
+    $f3->set('category_types', $types->listDesc());
+
     $type = new Category($this->db);
     if ($f3->exists('POST.update')) {
       if (($msg = $this->validateForm($f3,$type,$f3->get('POST.categoryId'))) == '') {

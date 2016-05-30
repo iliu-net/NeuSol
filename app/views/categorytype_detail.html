@@ -1,0 +1,25 @@
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/categorytype','Listing') ?>
+</div>
+<div id="bottom">
+<h3><?=$page_head?> </h3>
+<?= isset($msg) ? '<div id="showmsg">'.$msg.'</div>' : '' ?>
+
+
+<form action="<?= $form_action ?>" method="POST">
+ <?php if (isset($POST['categoryTypeId'])) { ?>
+ <p><?= Fm::text('categoryTypeId',['label'=>'Id: ','readonly']); ?></p>
+ <?php } ?>
+ <p><?= Fm::text('description',['label'=>'Description: ','maxlength'=>32,'required'])?> </p>
+ 
+ <div class="control-group">
+   <input type="hidden" name="<?= $form_command ?>" value="<?= $form_command ?>"/>
+   <input type="submit" name="submit" value="<?= $form_label ?>"/>
+ </div>
+</form>
+
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+

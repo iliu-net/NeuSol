@@ -10,6 +10,7 @@
   <tr>
     <th>Description</th>
     <th>SNAME</th>
+    <th>Type</th>
     <th>Action</th>
   </tr>
   </thead>
@@ -18,6 +19,7 @@
     <tr>
       <td><span title="<?= $cat['remarks'] ?>"><?= $cat['description'] ?></span> </td>
       <td><span title="<?= $cat['remarks'] ?>"><?= $cat['sname'] ?></span> </td>
+      <td><span title="<?= $cat['remarks'] ?>"><?= $category_types[$cat['categoryTypeId']] ?></span> </td>
       <td>
           <span title="<?= $cat['remarks'] ?>">
 	    <?= Sc::go('/category/update/'.$cat['categoryId'],'Edit') ?>

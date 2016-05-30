@@ -23,8 +23,8 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
 <thead>
  <tr>
   <th>Category</th>
-  <th>Expenses</th>
-  <th>Income</th>
+  <th>Credits</th>
+  <th>Debits</th>
   <th>Total</th>
  </tr>
 </thead>
@@ -36,8 +36,8 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
   <?php if ($tot < 0) $data[$sname] = -$tot; ?>
   <tr>
    <td><?=$row['name']?></td>
-   <td align="right"><?= number_format($row['expenses'],2) ?></td>
    <td align="right"><?= number_format($row['income'],2) ?></td>
+   <td align="right"><?= number_format($row['expenses'],2) ?></td>
    <td align="right"<?= $tot < 0 ? ' style="color:red"' : ''?>><?= number_format($tot,2) ?></td>
    <?php $in += $row['income']; $out += $row['expenses']; ?>
   </tr>
@@ -54,7 +54,7 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
 </tfooter>
 </table>
 <?php if (count($data)) { ?>
-<strong>Adjusted Expenses</strong>
+<strong>Expenses</strong>
 <?= $graph->draw($data,['type'=>'pie','diskLegends'=>true]) ?>
 <?php } ?>
 

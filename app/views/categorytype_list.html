@@ -1,0 +1,29 @@
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/categorytype/create','Add New') ?>
+</div>
+<div id="bottom">
+<h3>Category Types</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<table>
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($categorytypes as $ct) { ?>
+    <tr>
+      <td><?= $ct['description'] ?></td>
+      <td>
+	  <?= Sc::go('/categorytype/update/'.$ct['categoryTypeId'],'Edit') ?>
+	  <?= Sc::go('/categorytype/delete/'.$ct['categoryTypeId'],'Delete',['confirm'=>'Are you sure?']) ?>
+      </td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</div>
+<?= View::instance()->render('footer.html') ?>
+

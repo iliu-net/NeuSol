@@ -25,5 +25,5 @@ php $dst/index.php /restore $tmp
 rm -f $dst/data/*.php $dst/data/Importers/*.php
 cp $src/data/*.php $dst/data
 cp $src/data/Importers/*.php $dst/data/Importers
-chcon -R -t httpd_sys_rw_content_t $dat/data
+chcon -R -t httpd_sys_rw_content_t $dst/data
 find $dst/data -type f -name '*.php' -print0 | xargs -0 chmod a+w

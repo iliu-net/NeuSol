@@ -20,8 +20,8 @@
   </tr>
  </thead>
  <tbody>
-  <?php foreach (['expenses','income','adj']as $tt) { ?>
-   <tr><th colspan="15"><?= $tt ?></th></tr>
+  <?php foreach (array_keys($category_types) as $tt) { ?>
+   <tr><th colspan="15"><?= $category_types[$tt] ?></th></tr>
    <?php foreach (array_keys($table[0][$tt]) as $cat) { ?>
     <tr>
      <td style="color:darkgreen"><?=$categories_long[$cat]?></td>
@@ -80,7 +80,7 @@
     </tr>
    <?php } ?>
    <tr>
-    <th>Total <?= $tt ?></th>
+    <th>Total <?=  $category_types[$tt] ?></th>
      <?php for ($i=1;$i<=13;$i++) { $mn = $i == 13 ? 0 : $i; ?>
       <?php if ($totals[$mn][$tt] < 0) { ?>
       <th align="right" style="color:red"><?= number_format($totals[$mn][$tt],2) ?></th>
@@ -91,7 +91,7 @@
      <td>&nbsp;</td>
    </tr>
    <tr>
-    <th>Cumulative <?= $tt ?></th>
+    <th>Cumulative <?=  $category_types[$tt] ?></th>
      <?php $j = 0.0; for ($i=1;$i<=12;$i++) { $j += $totals[$i][$tt];?>
       <?php if ($j < 0) { ?>
       <th align="right" style="color:red"><?= number_format($j,2) ?></th>
@@ -107,7 +107,14 @@
    <tr><th colspan="15"><hr/></th></tr>
    <tr>
     <th>Balance</th>
-    <?php for ($i=1;$i<=13;$i++) { $mn = $i == 13 ? 0 : $i; $total = $totals[$mn]['adj']+$totals[$mn]['expenses']+$totals[$mn]['income'];?>
+    <?php for ($i=1;$i<=13;$i++) { ?>
+      <?php
+	$mn = $i == 13 ? 0 : $i;
+	$total = 0;
+	foreach (array_keys($category_types) as $tt) {
+	  $total += $totals[$mn][$tt];
+	}
+      ?>
       <?php if ($total < 0) { ?>
       <th align="right" style="color:red"><?=number_format($total)?></th>
       <?php } else { ?>
@@ -118,7 +125,12 @@
    </tr>
    <tr>
     <th>Cumulative Balance</th>
-    <?php $j = 0.0; for ($i=1;$i<=12;$i++) { $j += $totals[$i]['adj']+$totals[$i]['expenses']+$totals[$i]['income'];?>
+    <?php $j = 0.0; for ($i=1;$i<=12;$i++) { ?>
+      <?php
+	foreach (array_keys($category_types) as $tt) {
+	  $j += $totals[$i][$tt];
+	}
+      ?>
       <?php if ($j < 0) { ?>
       <th align="right" style="color:red"><?=number_format($j)?></th>
       <?php } else { ?>

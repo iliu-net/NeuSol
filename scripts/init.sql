@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS nsPostingType;
-DROP TABLE IF EXISTS nsAcctTypePostingType;
-DROP TABLE IF EXISTS nsAcctType;
-
 
 DROP TABLE IF EXISTS nsAcct;
 CREATE TABLE IF NOT EXISTS nsAcct (
@@ -21,42 +17,57 @@ INSERT INTO nsAcct (acctId,description,acctNo,symbol,sname)
 INSERT INTO nsAcct (acctId,description,acctNo,symbol,sname)
 	VALUES (3,"Savings Acct","99.94.83.003","HSBC","SAVINGS");
 
+DROP TABLE IF EXISTS nsCategoryType;
+CREATE TABLE IF NOT EXISTS nsCategoryType (
+  categoryTypeId INT NOT NULL AUTO_INCREMENT,
+  description VARCHAR(32) NOT NULL DEFAULT "",
+  PRIMARY KEY (categoryTypeId)
+) DEFAULT CHARSET='utf8'  COLLATE='utf8_general_ci'  AUTO_INCREMENT=1;
+INSERT INTO nsCategoryType (categoryTypeId,description)
+  VALUES (1,"expenses");
+INSERT INTO nsCategoryType (categoryTypeId,description)
+  VALUES (2,"income");
+INSERT INTO nsCategoryType (categoryTypeId,description)
+  VALUES (3,"adj");
+
+
 DROP TABLE IF EXISTS nsCategory;
 CREATE TABLE IF NOT EXISTS nsCategory (
   categoryId  INT  NOT NULL  AUTO_INCREMENT ,
   description  VARCHAR  (40) NOT NULL DEFAULT "",
   sname CHAR(16) NOT NULL DEFAULT "",
   remarks VARCHAR(255) NOT NULL DEFAULT "",
+  categoryTypeId INT NOT NULL DEFAULT 0,
   PRIMARY KEY (categoryId)
 ) DEFAULT CHARSET='utf8'  COLLATE='utf8_general_ci'  AUTO_INCREMENT=1;
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (1,"House Mortgage","MORTGAGE");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (2,"Insurance/Finance Fee","INSURANCE");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (3,"Daycare","DAYCARE");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (4,"Education","EDUCATION");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (5,"Groceries/Toiletries","GROCERIES");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (6,"Dining","DINING");
-INSERT INTO nsCategory (categoryId, description, sname,remarks)
-  VALUES (7,"Utilities","UTILS","Electricity, Water, Etc...");
-INSERT INTO nsCategory (categoryId, description, sname,remarks)
-  VALUES (8,"Telecoms","TELCOS",  "Phone, Internet, Etc...");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (9,"Transportation","TRANSPORT");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (10,"Services","SERVICES");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (11,"Entertainment","ENTERTAIN");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (12,"Holidays","HOLIDAYS");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (13,"Personal Care","PERSONAL");
-INSERT INTO nsCategory (categoryId, description, sname)
-  VALUES (14,"Clothes","CLOTHES");
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (1,"House Mortgage","MORTGAGE",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (2,"Insurance/Finance Fee","INSURANCE",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (3,"Daycare","DAYCARE",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (4,"Education","EDUCATION",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (5,"Groceries/Toiletries","GROCERIES",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (6,"Dining","DINING",1);
+INSERT INTO nsCategory (categoryId, description, sname,remarks,categoryTypeId)
+  VALUES (7,"Utilities","UTILS","Electricity, Water, Etc...",1);
+INSERT INTO nsCategory (categoryId, description, sname,remarks,categoryTypeId)
+  VALUES (8,"Telecoms","TELCOS",  "Phone, Internet, Etc...",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (9,"Transportation","TRANSPORT",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (10,"Services","SERVICES",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (11,"Entertainment","ENTERTAIN",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (12,"Holidays","HOLIDAYS",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (13,"Personal Care","PERSONAL",1);
+INSERT INTO nsCategory (categoryId, description, sname,categoryTypeId)
+  VALUES (14,"Clothes","CLOTHES",1);
 
 DROP TABLE IF EXISTS nsPosting;
 CREATE TABLE IF NOT EXISTS nsPosting (
