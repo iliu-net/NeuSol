@@ -9,4 +9,5 @@ basedir=$(cd $(dirname $0) && cd .. && pwd)
 restorecon -R $basedir
 chmod 777 $basedir/data $basedir/data/Importers
 chcon -R -t httpd_sys_rw_content_t $basedir/data
+find $basedir/data -type f -name '*.php' -print0 | xargs -0 chmod a+w
 
