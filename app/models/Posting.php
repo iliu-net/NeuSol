@@ -59,8 +59,8 @@ class Posting extends BaseModel {
 		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
 
       //DEBUG
-      file_put_contents('data/log.txt',print_r(['INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
-		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]],true),FILE_APPEND);
+      /*file_put_contents('data/log.txt',print_r(['INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
+		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]],true),FILE_APPEND);*/
       //DEBUG
     }
 
