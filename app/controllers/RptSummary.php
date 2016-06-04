@@ -47,6 +47,7 @@ class RptSummary extends Controller{
       $dat[$mn] = [];
       foreach (array_keys($ctlst) as $tt) {
 	$dat[$mn][$tt] = [];
+	if (!isset($table[0][$tt])) continue;
 	foreach (array_keys($table[0][$tt]) as $cat) {
 	  if (isset($table[$mn][$tt][$cat])) {
 	    $dat[$mn][$tt][$cat] = $table[$mn][$tt][$cat];
@@ -63,6 +64,7 @@ class RptSummary extends Controller{
       $totals[$mn] = [];
       foreach (array_keys($ctlst) as $tt) {
 	$totals[$mn][$tt] = 0;
+	if (!isset($table[$mn][$tt])) continue;
 	foreach ($table[$mn][$tt] as $cdat) {
 	  foreach ($cdat as $money) {
 	    $totals[$mn][$tt] += $money;
