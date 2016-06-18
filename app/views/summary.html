@@ -31,7 +31,7 @@
 	 if (count($table[$mn][$tt][$cat]) == 0) {
 	   echo '&nbsp;';
 	   $total = '';
-	 } elseif (count($table[$mn][$tt][$cat]) == 1) {
+	 } elseif (count($table[$mn][$tt][$cat]) == 1 && isset($table[$mn][$tt][$cat][0])) {
 	   list($total) = $table[$mn][$tt][$cat];
 	   if ($total < 0) {
 	     echo '<span style="color:red">'.number_format($total,2).'</span>';

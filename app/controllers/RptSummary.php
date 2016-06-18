@@ -26,16 +26,16 @@ class RptSummary extends Controller{
 		FROM nsPosting,nsCategory
 		WHERE ? <= postingDate AND postingDate < ? AND nsCategory.categoryId = nsPosting.categoryId AND nsCategory.categoryTypeId = ?
 		GROUP by nsPosting.categoryId,catgroup',[$start,$end,$ct]);
-	 //echo "<pre>ct = $ct, rows=".count($rows)."</pre>";
-	 foreach ($rows as $row) {
+	//if ($ct == 2) echo "<pre>ct = $ct start=$start end=$end, rows=".count($rows)."</pre>";
+	//if ($ct == 2) echo "<pre>".print_r($rows,true)."</pre>";
+	foreach ($rows as $row) {
 	   if (!isset($table[$mn][$ct][$row['catId']])) $table[$mn][$ct][$row['categoryId']] = [];
 	   $table[$mn][$ct][$row['catId']][$row['catgroup']] = $row['totals'];
 
 	   if (!isset($table[0][$ct][$row['catId']])) $table[0][$ct][$row['catId']] = [];
 	   if (!isset($table[0][$ct][$row['catId']][$row['catgroup']])) $table[0][$ct][$row['catId']][$row['catgroup']] = 0;
 	   $table[0][$ct][$row['catId']][$row['catgroup']] += $row['totals'];
-	 }
-
+	}
       }
     }
     //echo '<pre>';print_r($table);echo '</pre>';
@@ -73,8 +73,11 @@ class RptSummary extends Controller{
       }
     }
 
+    //echo '<pre>TABLE DAT'.PHP_EOL;print_r($dat);echo '</pre>';
+
     $f3->set('table',$dat);
     $f3->set('totals',$totals);
     echo View::instance()->render('summary.html');
+    //echo '<pre>TABLE DAT'.PHP_EOL;print_r($dat);echo '</pre>';
   }
 }
