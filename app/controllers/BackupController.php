@@ -226,6 +226,12 @@ class BackupController extends Controller{
       $f3->error(404);
       return;
     }
+    if ($versions < 0) {
+      $txt = TRUE;
+      $versions = -$versions;
+    } else {
+      $txt = FALSE;
+    }
 
     $bd = $f3->get('backup_dir');
     $items = glob($bd.'/bak*.zip');
@@ -234,26 +240,32 @@ class BackupController extends Controller{
     for ($i = 0 ; $i < $versions && count($items) > 0 ; $i++) {
       array_shift($items);
     }
-    if (count($items) == 0) {
-      $f3->set('msg','No valid backups found');
-      $this->view($f3,[]);
-      return;
-    }
 
     $msg = '';
     $rem = 0;
 
-    foreach ($items as $f) {
-      if (!is_file($f)) continue;
-      if (unlink($f)) {
-	$rem++;
-	$msg .= 'Removed '.$f.PHP_EOL;
-      } else {
-	$msg .= 'Error removing '.$f.PHP_EOL;
+    if (count($items) == 0) {
+      $msg = 'No valid backups found';
+    } else {
+      foreach ($items as $f) {
+	if (!is_file($f)) continue;
+	if (unlink($f)) {
+	  $rem++;
+	  $msg .= 'Removed '.$f.PHP_EOL;
+	} else {
+	  $msg .= 'Error removing '.$f.PHP_EOL;
+	}
       }
     }
-    if ($msg != '')
-      $f3->set('msg','<pre>Removed '.$rem.($rem == 1 ? ' file' : ' files').PHP_EOL.$msg.PHP_EOL.'</pre>');
-    $this->view($f3,[]);
+
+    if ($txt) {
+      header('Content-Type: text/plain');
+      echo 'Removed '.$rem.($rem == 1 ? ' file' : ' files').PHP_EOL;
+      echo $msg.PHP_EOL;
+    } else {
+      if ($msg != '')
+	$f3->set('msg','<pre>Removed '.$rem.($rem == 1 ? ' file' : ' files').PHP_EOL.$msg.PHP_EOL.'</pre>');
+      $this->view($f3,[]);
+    }
   }
 }
