@@ -27,3 +27,11 @@ The web server must have mod_rewrite enable and allow .htaccess overrides.
    - php index.php /restore scripts/init.sql
 7. Point your web-browser to your app directory.
 
+## ChangeLog
+
+- 1.1.0
+  - Added CategoryTypes
+  - Updated FatFreeFramework
+  - Summary Reporting
+  - This version was working quite well for a few months
+- 1.0.0 : First public release
