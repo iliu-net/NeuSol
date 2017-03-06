@@ -20,8 +20,8 @@ if [ "$a" != "yes" ]; then
 	exit 1
 fi
 
-php $src/index.php /backup $tmp
-php $dst/index.php /restore $tmp
+php $src/index.php /obackup $tmp
+php $dst/index.php /orestore $tmp
 rm -f $dst/data/*.php $dst/data/Importers/*.php
 cp $src/data/*.php $dst/data
 cp $src/data/Importers/*.php $dst/data/Importers

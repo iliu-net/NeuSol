@@ -1,0 +1,29 @@
+<?php
+  Sc::ui_script('/app/views/backup.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <?= Sc::go('/backup/run','Backup') ?>
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/backup/purge/') ?>"/>
+  | Keep Backups: <input type="text" id="form_keep" name="keep" maxlength=2 size=2 pattern="[0-9]" value="30" onchange="purge()"/><?= Sc::jslnk('purge()','Purge') ?>
+
+</div>
+<div id="bottom">
+ <?= isset($msg) ? '<p>'.Sc::f3()->get('msg').'</p>' : '' ?>
+ <table>
+  <tr><th>Backup</th><th>Size</th><th>Options</th></tr>
+  <?php foreach ($backups as $i => $j) { ?>
+    <tr>
+      <td><?= $i ?></td>
+      <td><?= number_format($j['size']) ?></td>
+      <td>
+	<?= Sc::go('/backup/fetch/'.$i,'Download') ?>
+	<?= Sc::go('/backup/restore/'.$i,'Restore',['confirm'=>"Are you sure you want to restore from $i?"]) ?>
+	<?= Sc::go('/backup/del/'.$i,'Delete',['confirm'=>"Are you sure you want to delete backup file $i?"]) ?>
+    </tr>
+  <?php } ?>
+ </table>
+</div>
+<?= View::instance()->render('footer.html') ?>
+
+

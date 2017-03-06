@@ -29,7 +29,9 @@ The web server must have mod_rewrite enable and allow .htaccess overrides.
 
 ## ChangeLog
 
-- 1.1.0
+- 1.2.0: WIP
+  - Backup improvements
+- 1.1.0: First full production version
   - Added CategoryTypes
   - Updated FatFreeFramework
   - Summary Reporting
