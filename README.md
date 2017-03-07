@@ -27,11 +27,17 @@ The web server must have mod_rewrite enable and allow .htaccess overrides.
    - php index.php /restore scripts/init.sql
 7. Point your web-browser to your app directory.
 
+## TODO
+
+- Pending
+  - Authentication
+- Next
+  - Equity Positions
+
 ## ChangeLog
 
-- 1.2.0: WIP
+- 1.2.0: Backups
   - Backup improvements
-  - TODO: Equity positions
 - 1.1.0: First full production version
   - Added CategoryTypes
   - Updated FatFreeFramework
