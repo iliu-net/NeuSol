@@ -31,6 +31,7 @@ The web server must have mod_rewrite enable and allow .htaccess overrides.
 
 - 1.2.0: WIP
   - Backup improvements
+  - TODO: Equity positions
 - 1.1.0: First full production version
   - Added CategoryTypes
   - Updated FatFreeFramework

@@ -131,6 +131,12 @@ div {
        <li><?= Sc::go('/rules','Rules Editor',['target'=>'_blank']) ?></li>
      </ul>
 -->
+    <hr/>
+    <p>
+      DB_Schema <?=file_get_contents('schema.version')?> 
+      <img src="<?=Sc::url('/ui/Fat-Free_Framework_logo.png')?>" style="width: 120px; height: 45px" />
+      <?= $VERSION ?>
+    </p>
   </div>
   <div id="right">
    <div class="container">
