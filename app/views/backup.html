@@ -4,12 +4,12 @@
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <?= Sc::go('/backup/run','Backup') ?>
-  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/backup/purge/') ?>"/>
-  | Keep Backups: <input type="text" id="form_keep" name="keep" maxlength=2 size=2 pattern="[0-9]" value="30" onchange="purge()"/><?= Sc::jslnk('purge()','Purge') ?>
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/backup/purge/') ?>"/> :
+  Keep Backups: <input type="text" id="form_keep" name="keep" maxlength=2 size=2 pattern="[0-9]" value="30" onchange="purge()"/> <?= Sc::jslnk('purge()','Purge') ?>
 
 </div>
 <div id="bottom">
- <?= isset($msg) ? '<p>'.Sc::f3()->get('msg').'</p>' : '' ?>
+ <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
  <table>
   <tr><th>Backup</th><th>Size</th><th>Options</th></tr>
   <?php foreach ($backups as $i => $j) { ?>

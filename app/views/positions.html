@@ -1,0 +1,60 @@
+<?php
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  Sc::ui_script('/app/views/positions.js');
+  Sc::ui_script('/app/views/yrnav.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/') ?>"/>  
+  <?php if (count($positions)) { ?>
+  <?= Sc::jslnk("do_submit();","Save") ?> :
+  <?php } ?>
+  <?= Sc::yrnav('/positions/year/', $year) ?> :
+  <span id="add_column_menu"><?= Sc::jslnk("addcol();","Add Column") ?></span>
+  <span id="add_date" style="display: none">
+   <?= Fm::text('posDate',['value'=>$year.date('-m-d'),'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','onchange'=>'go_add_col()']) ?>
+  </span>
+
+</div>
+<div id="bottom">
+ <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
+<h3><?=$year?> Equity Positions</h3>
+
+<form id="dlg" method="post" action="<?=Sc::url('/positions/save')?>">
+<input type="hidden" id="cols" name="cols" value="<?=implode(',',array_keys($positions))?>"/>
+<table>
+  <thead>
+  <tr>
+    <th>Account</th>
+    <?php foreach (array_keys($positions) as $n) { ?>
+      <th><?= $n ?></th>
+    <?php } ?>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach ($accounts as $acct=>$acct_desc) { ?>
+    <tr>
+     <td><?= $acct_desc ?></td>
+     <?php foreach ($positions as $n=>$pos) { ?>
+       <td>
+	 <?= Fm::text('i'.$acct.'x'.str_replace('-','_',$n),['value'=>sprintf("%.2f",$pos[$acct]),'size'=>6,'maxlenght'=>12,'style'=>'text-align:right;']) ?>
+       </td>
+     <?php } ?>
+    </tr>
+  <?php } ?>
+  <tr>
+    <td>&nbsp;</td>
+    <?php foreach (array_keys($positions) as $n) { ?>
+      <th><?= Sc::go('/positions/dropcol/'.$n,'Del',['confirm'=>"Delete Column $n?"]) ?></th>
+    <?php } ?>
+  </tr>
+  </tbody>
+</table>
+</form>
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
+

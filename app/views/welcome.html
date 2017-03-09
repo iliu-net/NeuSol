@@ -36,9 +36,9 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
   <?php if ($tot < 0) $data[$sname] = -$tot; ?>
   <tr>
    <td><?=$row['name']?></td>
-   <td align="right"><?= number_format($row['income'],2) ?></td>
-   <td align="right"><?= number_format($row['expenses'],2) ?></td>
-   <td align="right"<?= $tot < 0 ? ' style="color:red"' : ''?>><?= number_format($tot,2) ?></td>
+   <td align="right"><?= Sc::cnumfmt($row['income']) ?></td>
+   <td align="right"><?= Sc::cnumfmt($row['expenses']) ?></td>
+   <td align="right"><?= Sc::cnumfmt($tot) ?></td>
    <?php $in += $row['income']; $out += $row['expenses']; ?>
   </tr>
  <?php } ?>
@@ -47,9 +47,9 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
 <tfooter>
  <tr>
   <td>Totals</td>
-   <td align="right"><?= number_format($out,2) ?></td>
-   <td align="right"><?= number_format($in,2) ?></td>
-   <td align="right"<?= $tot < 0 ? ' style="color:red"' : ''?>><?= number_format($tot,2) ?></td>
+   <td align="right"><?= Sc::cnumfmt($out) ?></td>
+   <td align="right"><?= Sc::cnumfmt($in) ?></td>
+   <td align="right"><?= Sc::cnumfmt($tot) ?></td>
  </tr>
 </tfooter>
 </table>

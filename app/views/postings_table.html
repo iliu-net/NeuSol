@@ -6,14 +6,15 @@
     <th>Description</th>
     <th>Category</th>
     <th>Amount</th>
-    <?php if (isset($balance)) { ?><th>Balance</th><?php } ?>
+    <?php if (isset($balance)) { ?><th><?= $bal_header ?></th><?php } ?>
     <th>Action</th>
   </tr>
    <?php if (isset($balance)) { ?>
      <tr>
-      <td></td><td>Starting balance</td><td></td><td></td>
-      <td <?= $balance < 0 ? ' style="color:red"' : ''?> align="right">
-	   <?= number_format($balance,2) ?>
+      <?php if ($account_id == 0) { ?><td></td><?php } ?>
+      <td></td><td><?= $bal_title ? $bal_title : '&nbsp;' ?></td><td></td><td></td>
+      <td align="right">
+	   <?= Sc::cnumfmt($balance) ?>
       </td>
       <td></td>
      </tr>
@@ -48,8 +49,8 @@
 	 </span>
        </td>
        <?php if (isset($balance)) { $balance += $row->amount ; ?>
-	<td <?= $balance < 0 ? ' style="color:red"' : ''?> align="right">
-	   <?= number_format($balance,2) ?>
+	<td align="right">
+	   <?= Sc::cnumfmt($balance) ?>
 	</td>
        <?php } ?>
        <td>

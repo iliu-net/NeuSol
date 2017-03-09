@@ -156,7 +156,22 @@ abstract class Sc {
     $tag .= '</select>';
     return $tag;
   }
-
+  static public function cnumfmt($num,$style=NULL) {
+    if ($num < 0)
+      return '<span style="color:red">'.number_format($num,2).'</span>';
+    else if ($style === NULL)
+      return number_format($num,2);
+    else
+      return '<span style="'.$style.'">'.number_format($num,2).'</span>';
+  }
+  static public function yrnav($base_url,$year) {
+    return 'Year: '.
+	    Sc::go(sprintf('%s%s',$base_url,$year-1),'&lt;&lt;').
+	    ' <input type="text" id="form_yearnav" name="yearnav" maxlength=4 size=4 patter="[0-9]" value="'.
+	    $year.'" onchange="chgev_yrnav(\''.Sc::url($base_url).'\')" /> '.
+	    Sc::go(sprintf('%s%s',$base_url,$year+1),'&gt;&gt;').' '.
+	    ' '.Sc::jslnk('chgev_yrnav(\''.Sc::url($base_url).'\')','Go');
+  }
 /*
   static public function radio($val,$opts = ['disabled']) {
     $tag = '<input type="radio"' .($val ? ' checked' : '');
@@ -170,7 +185,7 @@ abstract class Sc {
     $tag .= '/>';
     return $tag;
   }
-  
+
 
   static public function month($month,$year,$name) {
     $tag = '';

@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS nsEquity;
+CREATE TABLE IF NOT EXISTS nsEquity (
+  acctId INT NOT NULL DEFAULT 0,
+  positionDate DATE NOT NULL DEFAULT "1970-01-01",
+  amount DECIMAL (20,2) NOT NULL DEFAULT 0.0,
+  PRIMARY KEY (acctId,positionDate)
+) DEFAULT CHARSET='utf8'  COLLATE='utf8_general_ci';

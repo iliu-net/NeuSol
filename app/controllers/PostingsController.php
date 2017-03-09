@@ -25,7 +25,7 @@ class PostingsController extends Controller {
     if ($month < 1 or $month > 12) return false;
     return [(int)$mv[1],$month,(int)$mv[3],$mv[4]];
   }
-      
+
 
   public function index($f3,$params) {
     $acct = new Acct($this->db);
@@ -62,7 +62,6 @@ class PostingsController extends Controller {
         $f3->set('POST.categoryId',$f3->get('COOKIE.lastCategory'));
       }
     }
-
     $categories = new Category($this->db);
     $f3->set('categories_short',$categories->listSname());
     $cc = $categories->listDesc();
@@ -79,6 +78,17 @@ class PostingsController extends Controller {
     $f3->set('POST.acctId',$acctId);
     $day = date('d'); if ($day > '28') $day = '28';
     $f3->set('POST.postingDate',$year.'-'.$month.'-'.$day);
+
+    if ($acctId && $selcat == 'a') {
+      $f3->set('bal_title','Starting Balance');
+      $f3->set('bal_header','Balance');
+      $f3->set('balance',$posting->pitBalance($acctId,date('Y-m-d',mktime(12,0,0,$month,1,$year)-86400)));
+    } else {
+      $f3->set('bal_title','');
+      $f3->set('bal_header','Running Total');
+      $f3->set('balance',0.0);
+    }
+
     echo View::instance()->render('postings_list.html');
   }
   public function crud($f3,$params) {
@@ -139,7 +149,7 @@ class PostingsController extends Controller {
 
     $page = self::default_page($f3);
     if (isset($params['acct']) && isset($actlst[$params['acct']])) {
-      list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);	
+      list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
       $page = implode(',',[$params['acct'],$month,$year,$selcat]);
       $f3->set('JAR.expire',time()+86400*60);
       $f3->set('COOKIE.page',$page);
@@ -165,6 +175,8 @@ class PostingsController extends Controller {
     $posting = new Posting($this->db);
     list($amount,$start) = $posting->getBalance($acctId);
     $f3->set('postings',$posting->listPostings2($acctId,$start));
+    $f3->set('bal_title','Starting Balance');
+    $f3->set('bal_header','Balance');
     $f3->set('balance',$amount);
 
     $f3->set('POST.acctId',$acctId);
@@ -186,5 +198,4 @@ class PostingsController extends Controller {
     $f3->reroute($next.'msg/Balanced Account '.$acctId);
     return;
   }
-
 }

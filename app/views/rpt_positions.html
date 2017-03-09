@@ -1,0 +1,142 @@
+<?php
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  Sc::ui_script('/app/views/rpt.js');
+  Sc::ui_script('/app/views/yrnav.js');
+
+  list($first,$last,$gains) = [NULL,NULL,FALSE];
+  if (count($positions) >= 2) {
+    $gains = TRUE;
+    $temp = array_keys($positions);
+    $first = array_shift($temp);
+    $last = array_pop($temp);
+    unset($temp);
+  }
+  $graph = new phpGraph();
+  $g_hist = [ 'assets' => [] , 'liabilities' => [] ];
+  $g_line = [];
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <?php if ($mode == 'year') { ?>
+    <?= Sc::yrnav('/positions/rpt/'.$report.'/', $period) ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.$period.'-01-01/'.$period.'-12-31','Customize') ?>
+  <?php } ?>
+  <?php if ($mode == 'any') { ?>
+    <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
+   <?= Fm::text('rptStart',['value'=>$start,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+   <?= Fm::text('rptEnd',['value'=>$end,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+  <?= Sc::jslnk('custom_date()','Go') ?> :
+  <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4),'Year') ?>
+  <?php } ?>
+</div>
+<div id="bottom">
+ <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
+<?php if ($mode == 'year') { ?>
+<h3><?=$period?> Equity Positions</h3>
+<?php } else if ($mode == 'any') { ?>
+<h3>Report for <?=$start?> to <?=$end?></h3>
+<?php } else { ?>
+<h3>Positions Report</h3>
+<?php } ?>
+
+<table>
+  <thead>
+  <tr>
+    <th>Account</th>
+    <?php foreach (array_keys($positions) as $n) { ?>
+      <th><?= $n ?></th>
+    <?php } ?>
+    <?php if ($gains) { echo '<th>Perf</th>'; } ?>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach ($accounts as $acct=>$acct_desc) { ?>
+    <tr>
+     <td><?= $acct_desc ?></td>
+     <?php foreach ($positions as $n=>$pos) { ?>
+       <td align="right">
+	 <?= Sc::cnumfmt($pos[$acct]) ?>
+       </td>
+     <?php } ?>
+     <?php if ($gains) {
+	if ($positions[$first][$acct]!=0.0) {
+	  echo 
+		'<td align="right">'.
+		Sc::cnumfmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],'color:blue').
+		' % </td>';
+	} else {
+	  echo '<td><td>';
+	}
+     } ?>
+    </tr>
+  <?php } ?>
+  <tr>
+    <th>Totals</th>
+    <?php
+       $prev = FALSE;
+       $deltas = [];
+       foreach ($positions as $i => $pos) {
+         $sum = 0;
+         $g_hist['assets'][$i] = $g_hist['liabilities'][$i] = 0;
+         foreach ($pos as $n) {
+           $sum += $n;
+	   if ($n < 0) {
+	     $g_hist['liabilities'][$i] -= $n;
+	   } else {
+	     $g_hist['assets'][$i] += $n;
+	   }
+         }
+	 $g_line[$i] = $sum;    
+         if ($prev !== FALSE) {
+          $deltas[] = ($sum - $prev) * 100.0 / $prev;
+         } else {
+          $in = $sum;
+         }
+         $out = $prev = $sum;
+         echo '<th align="right">'.Sc::cnumfmt($sum,'color:blue').'</th>';
+       }
+       if ($gains) {
+         echo '<th align="right">';
+	 if ($in) echo Sc::cnumfmt(($out-$in)*100.0/$in,'color:blue').' %';
+         echo '</th>';
+       }
+    ?>
+  </tr>
+  <?php if (count($deltas)) {
+    echo '<tr><th>Gains</th><td></td>';
+    foreach ($deltas as $n) {
+      echo '<td align="right">'.Sc::cnumfmt($n,'color:blue').' % </td>';
+    }
+    echo '</tr>';
+  } ?>
+  </tbody>
+</table>
+
+<?php if (count($positions) >= 2) {
+  //$data = [ 'Se 1' => 100000, 'Se 2' => 200000, 'Se 3' => 300000, 'Se 4' => 400000 ];
+  //echo $graph->draw($data,['steps'=>50000,'type'=>'bar']);
+  //echo  $graph->draw($g_line,['type'=>'line','steps'=>50000]);
+  // $graph->draw($g_hist,['multi'=>TRUE,'type'=>['assets'=>]) ;
+  //echo '<pre>';
+  //print_r(['g_hist'=>$g_hist,'g_line'=>$g_line]); 
+  //echo '</pre>';
+} ?>
+
+<hr/>
+
+<table>
+  <tr><th align="left">Report</th><td><?= $report ?></td>
+  <tr><th align="left">Mode</th><td><?= $mode ?></td>
+  <?php if (isset($period)) { ?><tr align="left"><th>Period</th><td><?= $period ?></td><?php } ?>
+  <?php if (isset($start)) { ?><tr align="left"><th>Start</th><td><?= $start ?></td><?php } ?>
+  <?php if (isset($end)) { ?><tr align="left"><th>End</th><td><?= $end ?></td><?php } ?>
+  <?php if ($first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
+  <?php if ($last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
+</table>
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
+

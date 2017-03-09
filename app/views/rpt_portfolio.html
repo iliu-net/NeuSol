@@ -1,0 +1,74 @@
+<?php
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  Sc::ui_script('/app/views/rpt.js');
+  Sc::ui_script('/app/views/yrnav.js');
+  $graph = new phpGraph();
+
+  $sections = ['assets'=>[],'liabilities'=>[]];
+  $gdata = ['assets'=>[],'liabilities'=>[]];
+  $totals = ['assets'=>0,'liabilities'=>0];
+  foreach ($positions[$period] as $n=>$amt) {
+    $s = $amt < 0 ? 'liabilities' : 'assets';
+    $sections[$s][$accounts[$n].' ('.$accounts_short[$n].')'] = $amt;
+    $gdata[$s][$accounts_short[$n]] = $amt < 0 ? -$amt : $amt;
+    $totals[$s] += $amt;
+  }
+  $graph = new phpGraph();
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>  
+  <?= Sc::select($period,$avail_positions,'period',['onchange'=>'changePage();']) ?>
+</div>
+<div id="bottom">
+ <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
+<h3>Portfolio Report for <?=$period?></h3>
+
+<table>
+<thead>
+<tr><th>Assets</th><th>Liabilities</th><th>Total</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td align="right"><?= Sc::cnumfmt($totals['assets']) ?></td>
+  <td align="right"><?= Sc::cnumfmt($totals['liabilities']) ?></td>
+  <td align="right"><?= Sc::cnumfmt($totals['assets']+$totals['liabilities']) ?></td>
+</tr>
+</tbody>
+</table>
+
+
+<?php foreach (['assets','liabilities'] as $h) {?>
+<hr/>
+<h2><?= $h ?></h2>
+<table>
+<thead>
+<tr><th>Account</ht><th>Amount</th></tr>
+<tbody>
+<?php foreach ($sections[$h] as $i=>$j) { ?>
+<tr><td><?=$i?></td><td align="right"><?= Sc::cnumfmt($j) ?></td></tr>
+<?php } ?>
+<tr><th>Total</ht><td align="right"><?= Sc::cnumfmt($totals[$h]) ?></td></tr>
+</tbody>
+</table>
+<?= $graph->draw($gdata[$h],['type'=>'pie','diskLegends'=>true]) ?>
+<?php } ?>
+
+<hr/>
+
+<table>
+  <tr><th align="left">Report</th><td><?= $report ?></td>
+  <tr><th align="left">Mode</th><td><?= $mode ?></td>
+  <?php if (isset($period)) { ?><tr align="left"><th>Period</th><td><?= $period ?></td><?php } ?>
+  <?php if (isset($start)) { ?><tr align="left"><th>Start</th><td><?= $start ?></td><?php } ?>
+  <?php if (isset($end)) { ?><tr align="left"><th>End</th><td><?= $end ?></td><?php } ?>
+  <?php if ($first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
+  <?php if ($last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
+</table>
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
+

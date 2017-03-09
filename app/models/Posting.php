@@ -1,12 +1,32 @@
 <?php
 
 class Posting extends BaseModel {
-    public function table_name() { return 'nsPosting'; }
-    public function id_column() { return 'postingId'; }
+  public function table_name() { return 'nsPosting'; }
+  public function id_column() { return 'postingId'; }
 
-    public function getBalance($acct) {
-      $date = '1970-01-01';
-      $amount = 0.0;
+  public function pitBalance($acct,$date) {
+    list($amt,$bdate) = $this->getBalance($acct,NULL,NULL);
+    if ($amt === NULL) return NULL;
+
+    if ($date == $bdate) return $amt; // Trivial case...
+    if ($date > $bdate) {
+      $rows = $this->db->exec('SELECT SUM(amount) as sum FROM nsPosting '.
+			      'WHERE ? < postingDate AND postingDate <= ? '.
+			      'AND acctId = ?',[$bdate,$date,$acct]);
+    } else {
+      $rows = $this->db->exec('SELECT -SUM(amount) as sum FROM nsPosting '.
+			      'WHERE ? < postingDate  AND postingDate <= ?'.
+			      'AND acctId = ?',[$date,$bdate,$acct]);
+    }
+    foreach ($rows as $ln) {
+      //print_r($ln);
+      if ($ln['sum']) $amt += $ln['sum'];
+    }
+    return $amt;
+  }
+  public function getBalance($acct,$dftdate = '1970-01-01',$dftamt = 0.0) {
+      $date = $dftdate;
+      $amount = $dftamt;
       $rows = $this->db->exec('SELECT dateBalance,amount FROM nsBalance WHERE acctId = ?',$acct);
       foreach ($rows as $row) {
         $date = $row['dateBalance'];
