@@ -78,10 +78,7 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
     to the actual control placement.
     - Convert pikaday and others to Sc::render
   - Position report, historical, adding bar chart did not work (phpGraph is buggy!)
-- Documentation
-  - How to hack
-  - How to refresh UAT
-  - How to upgrade
+- Documentation (see github ticket)
 - Authentication
   - Install oindentd and configure
   - Add code for transaction auditing
@@ -98,6 +95,8 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## ChangeLog
 
+- 1.2.x: WIP
+  - Clean-ups
 - 1.2.1: Positions
   - Equity Positions
   - Tweaking summary, adding pie charts

@@ -10,6 +10,11 @@ class Acct extends BaseModel {
       if (count($rows) == 0) return 0;
       return $rows[0]['count'];
     }
+    public function delete($id) {
+      parent::delete($id);
+      $this->db->exec('DELETE FROM nsEquity WHERE acctId =?',$id);
+    }
+      
 
     public function listDesc() {
       return $this->listColumn('description');
