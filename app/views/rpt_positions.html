@@ -22,9 +22,13 @@
 <div id="topdiv">
   <?php if ($mode == 'year') { ?>
     <?= Sc::yrnav('/positions/rpt/'.$report.'/', $period) ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/p'.$period,'Year+') ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.$period.'-01-01/'.$period.'-12-31','Customize') ?>
-  <?php } ?>
-  <?php if ($mode == 'any') { ?>
+  <?php } else if ($mode == 'year+') { ?>
+    <?= Sc::yrnav('/positions/rpt/'.$report.'/p', $period) ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.$period,'Year') ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.($period-1).'-12-31/'.$period.'-12-31','Customize') ?>
+  <?php } else if ($mode == 'any') { ?>
     <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
    <?= Fm::text('rptStart',['value'=>$start,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
    <?= Fm::text('rptEnd',['value'=>$end,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>

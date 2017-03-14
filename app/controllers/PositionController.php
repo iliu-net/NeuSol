@@ -96,6 +96,12 @@ class PositionController extends Controller {
 	$start = $params['period'].'-01-01';
 	$end = $params['period'].'-12-31';
 	$f3->set('mode','year');
+      } else if (preg_match('/^p\d\d\d\d$/',$params['period'])) {
+	$year = intval(substr($params['period'],1,4));
+	$f3->set('period',$year);
+	$start = ($year-1).'-12-31';
+	$end = $year.'-12-31';
+	$f3->set('mode','year+');
       } else if (preg_match('/^\d\d\d\d-\d\d-\d\d$/',$params['period'])) {
 	$f3->set('period',$period = $params['period']);
 	$f3->set('mode','single');
