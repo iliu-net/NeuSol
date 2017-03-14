@@ -69,6 +69,7 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 ## TODO
 
 - Pending
+  - When entering positions data, hovering over account name should show account number
   - Importing an empty file gets us nowhere
   - The DAO for postings is not a clean encapsulation and uses SQL direct statements.
   - Add unit testing using [f3 unit-testing][f3testing]
@@ -100,6 +101,7 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 - 1.2.2: 2017.03
   - rpt_positions: Show asset/liabilities totals
+
 - 1.2.1: Positions
   - Equity Positions
   - Tweaking summary, adding pie charts
