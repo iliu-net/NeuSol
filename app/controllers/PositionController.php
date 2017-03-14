@@ -112,7 +112,13 @@ class PositionController extends Controller {
     } else if (isset($params['start']) && isset($params['end'])) {
       $f3->set('start',$start = $params['start']);
       $f3->set('end',$end = $params['end']);
-      $f3->set('mode','any');
+      if (preg_match('/^\d\d\d\d$/',$start) && preg_match('/^\d\d\d\d$/',$end)) {
+	$f3->set('start',$start = $start.'-12-31');
+	$f3->set('end',$end = $end.'-12-31');
+	$f3->set('mode','multiyear');
+      } else {
+	$f3->set('mode','any');
+      }
     } else {
       if ($report == 'rpt_portfolio') {
 	$f3->set('mode','single');
@@ -152,6 +158,8 @@ class PositionController extends Controller {
 	return;
       }
       $positions = $posDAO->getpos('? = positionDate',[$period]);
+    } else if ($f3->get('mode') == 'multiyear') {
+      $positions = $posDAO->getpos('? <= positionDate AND positionDate <= ? AND positionDate LIKE "%-12-31"',[$start,$end]);
     } else {
       $positions = $posDAO->getpos('? <= positionDate AND positionDate <= ?',[$start,$end]);
     }
