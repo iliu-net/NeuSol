@@ -13,6 +13,7 @@
     $last = array_pop($temp);
     unset($temp);
   }
+  $al_totals = ['a'=>[],'l'=>[]];
   $graph = new phpGraph();
   $g_hist = [ 'assets' => [] , 'liabilities' => [] ];
   $g_line = [];
@@ -47,6 +48,7 @@
     <th>Account</th>
     <?php foreach (array_keys($positions) as $n) { ?>
       <th><?= $n ?></th>
+      <?php $al_totals['a'][$n] = 0;$al_totals['l'][$n] = 0; ?>
     <?php } ?>
     <?php if ($gains) { echo '<th>Perf</th>'; } ?>
   </tr>
@@ -59,6 +61,7 @@
        <td align="right">
 	 <?= Sc::cnumfmt($pos[$acct]) ?>
        </td>
+       <?php $al_totals[$pos[$acct] < 0 ? 'l' : 'a'][$n] += $pos[$acct]; ?>
      <?php } ?>
      <?php if ($gains) {
 	if ($positions[$first][$acct]!=0.0) {
@@ -67,11 +70,37 @@
 		Sc::cnumfmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],'color:blue').
 		' % </td>';
 	} else {
-	  echo '<td><td>';
+	  echo '<td></td>';
 	}
      } ?>
     </tr>
   <?php } ?>
+  <tr>
+   <th colspan="<?= count($positions)+2 ?>"><hr/></th>
+  </tr>
+  <?php foreach (['a'=>'assets','l'=>'liabilities'] as $i=>$j) {?>
+   <tr>
+    <th><?=$j?></th>
+    <?php foreach ($al_totals[$i] as $num) { ?>
+      <td align="right"><?= Sc::cnumfmt($num) ?></td>
+    <?php } ?>
+    <?php 
+       if ($gains) {
+         if ($al_totals[$i][$first]!=0.0) {
+	   echo '<td align="right">'.
+		Sc::cnumfmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/$al_totals[$i][$first],'color:blue').
+		' % </td>';
+         } else {
+           echo '<td></td>';
+         }
+       }
+    ?>
+   </tr>
+  <?php } ?>
+  <tr>
+   <th colspan="<?= count($positions)+2 ?>"><hr/></th>
+  </tr>
+
   <tr>
     <th>Totals</th>
     <?php

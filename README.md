@@ -98,6 +98,8 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## ChangeLog
 
+- 1.2.2: 2017.03
+  - rpt_positions: Show asset/liabilities totals
 - 1.2.1: Positions
   - Equity Positions
   - Tweaking summary, adding pie charts
