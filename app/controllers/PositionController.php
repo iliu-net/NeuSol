@@ -41,6 +41,12 @@ class PositionController extends Controller {
     ksort($positions);
     $f3->set('positions',$positions);
 
+    $all = [];
+    foreach ($acct->all() as $j) {
+      $all[$j->acctId] = $j->cast();
+    }
+    $f3->set('acct_all',$all);
+
     echo View::instance()->render('positions.html');
   }
 
