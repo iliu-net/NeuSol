@@ -13,6 +13,7 @@
     $last = array_pop($temp);
     unset($temp);
   }
+  $al_totals = ['a'=>[],'l'=>[]];
   $graph = new phpGraph();
   $g_hist = [ 'assets' => [] , 'liabilities' => [] ];
   $g_line = [];
@@ -21,14 +22,26 @@
 <div id="topdiv">
   <?php if ($mode == 'year') { ?>
     <?= Sc::yrnav('/positions/rpt/'.$report.'/', $period) ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/p'.$period,'Year+') ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.$period.'-01-01/'.$period.'-12-31','Customize') ?>
-  <?php } ?>
-  <?php if ($mode == 'any') { ?>
+  <?php } else if ($mode == 'year+') { ?>
+    <?= Sc::yrnav('/positions/rpt/'.$report.'/p', $period) ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.$period,'Year') ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.($period-1).'-12-31/'.$period.'-12-31','Customize') ?>
+  <?php } else if ($mode == 'multiyear') { ?>
     <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
-   <?= Fm::text('rptStart',['value'=>$start,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
-   <?= Fm::text('rptEnd',['value'=>$end,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+    <input type="text" id="form_startyear" name="startyear" maxlength=4 size=4 patter="[0-9]" value="<?=substr($start,0,4)?>" onchange="mychg()" />
+    <input type="text" id="form_endyear" name="endyear" maxlength=4 size=4 patter="[0-9]" value="<?=substr($end,0,4)?>" onchange="mychg()" />
+    <?= Sc::jslnk('mychg()','Go') ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/p'.substr($start,0,4),'Year+') ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.$start.'/'.$end,'Any') ?>
+  <?php } else if ($mode == 'any') { ?>
+    <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
+    <?= Fm::text('rptStart',['value'=>$start,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+    <?= Fm::text('rptEnd',['value'=>$end,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
   <?= Sc::jslnk('custom_date()','Go') ?> :
-  <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4),'Year') ?>
+  <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4),'Year') ?> :
+  <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4).'/'.substr($end,0,4),'Multi-Year') ?>
   <?php } ?>
 </div>
 <div id="bottom">
@@ -47,6 +60,7 @@
     <th>Account</th>
     <?php foreach (array_keys($positions) as $n) { ?>
       <th><?= $n ?></th>
+      <?php $al_totals['a'][$n] = 0;$al_totals['l'][$n] = 0; ?>
     <?php } ?>
     <?php if ($gains) { echo '<th>Perf</th>'; } ?>
   </tr>
@@ -59,6 +73,7 @@
        <td align="right">
 	 <?= Sc::cnumfmt($pos[$acct]) ?>
        </td>
+       <?php $al_totals[$pos[$acct] < 0 ? 'l' : 'a'][$n] += $pos[$acct]; ?>
      <?php } ?>
      <?php if ($gains) {
 	if ($positions[$first][$acct]!=0.0) {
@@ -67,11 +82,37 @@
 		Sc::cnumfmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],'color:blue').
 		' % </td>';
 	} else {
-	  echo '<td><td>';
+	  echo '<td></td>';
 	}
      } ?>
     </tr>
   <?php } ?>
+  <tr>
+   <th colspan="<?= count($positions)+2 ?>"><hr/></th>
+  </tr>
+  <?php foreach (['a'=>'assets','l'=>'liabilities'] as $i=>$j) {?>
+   <tr>
+    <th><?=$j?></th>
+    <?php foreach ($al_totals[$i] as $num) { ?>
+      <td align="right"><?= Sc::cnumfmt($num) ?></td>
+    <?php } ?>
+    <?php 
+       if ($gains) {
+         if ($al_totals[$i][$first]!=0.0) {
+	   echo '<td align="right">'.
+		Sc::cnumfmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/$al_totals[$i][$first],'color:blue').
+		' % </td>';
+         } else {
+           echo '<td></td>';
+         }
+       }
+    ?>
+   </tr>
+  <?php } ?>
+  <tr>
+   <th colspan="<?= count($positions)+2 ?>"><hr/></th>
+  </tr>
+
   <tr>
     <th>Totals</th>
     <?php

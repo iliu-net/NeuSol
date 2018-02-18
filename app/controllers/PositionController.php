@@ -41,6 +41,12 @@ class PositionController extends Controller {
     ksort($positions);
     $f3->set('positions',$positions);
 
+    $all = [];
+    foreach ($acct->all() as $j) {
+      $all[$j->acctId] = $j->cast();
+    }
+    $f3->set('acct_all',$all);
+
     echo View::instance()->render('positions.html');
   }
 
@@ -96,6 +102,12 @@ class PositionController extends Controller {
 	$start = $params['period'].'-01-01';
 	$end = $params['period'].'-12-31';
 	$f3->set('mode','year');
+      } else if (preg_match('/^p\d\d\d\d$/',$params['period'])) {
+	$year = intval(substr($params['period'],1,4));
+	$f3->set('period',$year);
+	$start = ($year-1).'-12-31';
+	$end = $year.'-12-31';
+	$f3->set('mode','year+');
       } else if (preg_match('/^\d\d\d\d-\d\d-\d\d$/',$params['period'])) {
 	$f3->set('period',$period = $params['period']);
 	$f3->set('mode','single');
@@ -106,7 +118,13 @@ class PositionController extends Controller {
     } else if (isset($params['start']) && isset($params['end'])) {
       $f3->set('start',$start = $params['start']);
       $f3->set('end',$end = $params['end']);
-      $f3->set('mode','any');
+      if (preg_match('/^\d\d\d\d$/',$start) && preg_match('/^\d\d\d\d$/',$end)) {
+	$f3->set('start',$start = $start.'-12-31');
+	$f3->set('end',$end = $end.'-12-31');
+	$f3->set('mode','multiyear');
+      } else {
+	$f3->set('mode','any');
+      }
     } else {
       if ($report == 'rpt_portfolio') {
 	$f3->set('mode','single');
@@ -146,6 +164,8 @@ class PositionController extends Controller {
 	return;
       }
       $positions = $posDAO->getpos('? = positionDate',[$period]);
+    } else if ($f3->get('mode') == 'multiyear') {
+      $positions = $posDAO->getpos('? <= positionDate AND positionDate <= ? AND positionDate LIKE "%-12-31"',[$start,$end]);
     } else {
       $positions = $posDAO->getpos('? <= positionDate AND positionDate <= ?',[$start,$end]);
     }
