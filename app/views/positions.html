@@ -4,6 +4,14 @@
   Sc::x_css_inc('/ui/css/pikaday.css');
   Sc::ui_script('/app/views/positions.js');
   Sc::ui_script('/app/views/yrnav.js');
+
+  function acct_tip($dat) {
+    if (!isset($dat) || !is_array($dat)) return '';
+    if (isset($dat['acctNo'])) return (isset($dat['symbol']) ? $dat['symbol'].' ' : '').$dat['acctNo'];
+    if (isset($dat['sname'])) return $dat['sname'];
+    return '';
+  }
+
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
@@ -36,7 +44,11 @@
   <tbody>
   <?php foreach ($accounts as $acct=>$acct_desc) { ?>
     <tr>
-     <td><?= $acct_desc ?></td>
+     <td>
+       <span title="<?= acct_tip($acct_all[$acct]) ?>">
+	<?= $acct_desc ?>
+       </span>
+     </td>
      <?php foreach ($positions as $n=>$pos) { ?>
        <td>
 	 <?= Fm::text('i'.$acct.'x'.str_replace('-','_',$n),['value'=>sprintf("%.2f",$pos[$acct]),'size'=>6,'maxlenght'=>12,'style'=>'text-align:right;']) ?>
