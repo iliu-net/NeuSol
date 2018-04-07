@@ -97,6 +97,8 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 ## ChangeLog
 
 - 1.2.x: WIP
+- 1.2.3: balance
+  - Add controls to make it easier to balance accounts
 - 1.2.2: 2017.03
   - rpt_positions: Show asset/liabilities totals
   - Clean-ups
