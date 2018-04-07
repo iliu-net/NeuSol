@@ -56,9 +56,10 @@
        <td>
 	 <?= Sc::jslnk('edit_post_'.$row->postingId.'()',"Edit") ?>
 	 <?= Sc::go('/postings/delete/'.$row->postingId,'Delete',['confirm'=>'Are you sure?']) ?>
+	 <?= isset($b_action) && isset($balance) ? Sc::jslnk('balance_acct_byEntry('."'".$row->postingDate."'".','.$balance.')',"Bal") : '' ?>
        </td>
      </tr>
-   <?php if (isset($balance)) { Sc::f3()->set('POST.amount',$balance);  } ?>
+   <?php if (isset($balance)) { Sc::f3()->set('POST.amountBalance',$balance);  } ?>
    <?php } ?>
   </tbody>
 </table>

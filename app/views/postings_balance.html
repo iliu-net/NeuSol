@@ -6,8 +6,8 @@
   Sc::ui_script('/ui/scripts/pikaday.js');
   Sc::x_css_inc('/ui/css/pikaday.css');
   //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
-
   Sc::f3()->set('form_action_url','/postings/crud/balance');
+  Sc::f3()->set('b_action', true);
 
 ?>
 <?= View::instance()->render('header.html') ?>
@@ -26,7 +26,7 @@
 <form action="<?= Sc::url('/balance/new')?>" method="post" id="form_new_balance_form">
 <input type="hidden" name="acctId" id="form_acctId" value="<?=$POST['acctId']?>" />
 Date: <?=Fm::text('dateBalance',['default'=>date('Y-m-d'),'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
-Amount: <?= Fm::text('amount',['size'=>7,'maxlength'=>20,'required']) ?>
+Amount: <?= Fm::text('amountBalance',['size'=>7,'maxlength'=>20,'required']) ?>
 <input type="submit" name="submit" value="Update" id="form_new_balance_submit"/>
 </form
 

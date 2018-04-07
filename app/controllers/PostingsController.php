@@ -191,7 +191,7 @@ class PostingsController extends Controller {
     echo '</pre>';*/
     $acctId = $f3->get('POST.acctId');
     $dateBalance = $f3->get('POST.dateBalance');
-    $amount = $f3->get('POST.amount');
+    $amount = $f3->get('POST.amountBalance');
 
     $posting = new Posting($this->db);
     $posting->setBalance($acctId,$dateBalance,$amount);

@@ -17,4 +17,9 @@ function edit_post(p_id, p_date, p_descr, p_catid, p_catgrp,p_amt,p_acct) {
   document.getElementById("form_command").value= "update";
   document.getElementById("form_submit").value= "Edit";
 }
+function balance_acct_byEntry(date_value,balance_value) {
+  document.getElementById("form_dateBalance").value = date_value;
+  document.getElementById("form_amountBalance").value = balance_value;
+}
+
 
