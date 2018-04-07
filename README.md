@@ -97,6 +97,8 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 ## ChangeLog
 
 - 1.2.x: WIP
+- 1.2.4: 2018.01
+  - 
 - 1.2.3: balance
   - Add controls to make it easier to balance accounts
 - 1.2.2: 2017.03
