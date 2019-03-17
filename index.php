@@ -12,7 +12,7 @@ if (php_sapi_name() == 'cli') {
 $f3=require('lib/f3/base.php');
 $f3->config('config/config.ini');
 
-define(NEUHOME,basename(dirname(realpath(__FILE__))));
+define('NEUHOME',basename(dirname(realpath(__FILE__))));
 if (NEUHOME == 'NeuDev') {
   define('NONPROD',1);
   $f3->config('config/nonprod-config.ini');
