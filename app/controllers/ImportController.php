@@ -83,7 +83,7 @@ class ImportController extends Controller {
     foreach (glob($f3->get('importers').'/*.php') as $cf) {
       if ((include $cf) === FALSE) continue;
       $className = basename($cf,'.php');
-      if (${className}::detect($f3,$name,$file)) {
+      if ($className::detect($f3,$name,$file)) {
         $importer = $className;
 	break;
       }
@@ -92,7 +92,7 @@ class ImportController extends Controller {
       //$f3->reroute('/import/msg/Format not recognized: '.Sc::esc($name));
       return;
     }
-    $rows = ${className}::import($f3,$name,$file,$defacct);
+    $rows = $className::import($f3,$name,$file,$defacct);
     if (count($rows) == 0) {
       //$f3->reroute('/import/msg/No data imported');
       return;

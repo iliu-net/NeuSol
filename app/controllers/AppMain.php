@@ -46,7 +46,7 @@ class AppMain extends Controller{
 		WHERE nsCategory.categoryId = nsPosting.categoryId AND postingDate > ? AND nsCategory.categoryTypeId = ? AND acctId in ('.$accounts.')
 		GROUP BY nsPosting.categoryId',[$start,1]);
     foreach ($rows as $row) {
-       if ($row['totals'] > 0) cotninue;
+       if ($row['totals'] > 0) continue;
        $reports[$row['sname']] = -$row['totals'];
     }
 

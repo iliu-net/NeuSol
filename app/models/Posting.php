@@ -76,7 +76,7 @@ class Posting extends BaseModel {
       $this->db->exec('INSERT INTO '.$this->table().'Details (postingId,text,detail) VALUES (?,?,?)',[$lastId,$row[CN_TEXT],$row[CN_DETAIL]]);
       */
       $this->db->exec('INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
-		[$row[CN_ACCOUNT],$row[CN_CATEGORY],$row[CN_CATGRP],$row[CN_DATE],$row[CN_XID],$row[CN_DESCRIPTION],$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
+		[$row[CN_ACCOUNT],$row[CN_CATEGORY],intval($row[CN_CATGRP]),$row[CN_DATE],$row[CN_XID],substr($row[CN_DESCRIPTION],0,40),$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
 
       //DEBUG
       /*file_put_contents('data/log.txt',print_r(['INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
