@@ -76,7 +76,7 @@ class Posting extends BaseModel {
       $this->db->exec('INSERT INTO '.$this->table().'Details (postingId,text,detail) VALUES (?,?,?)',[$lastId,$row[CN_TEXT],$row[CN_DETAIL]]);
       */
       $this->db->exec('INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
-		[$row[CN_ACCOUNT],$row[CN_CATEGORY],intval($row[CN_CATGRP]),$row[CN_DATE],$row[CN_XID],substr($row[CN_DESCRIPTION],0,40),$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
+		[$row[CN_ACCOUNT],intval($row[CN_CATEGORY]),intval($row[CN_CATGRP]),$row[CN_DATE],$row[CN_XID],substr($row[CN_DESCRIPTION],0,40),$row[CN_AMOUNT],$row[CN_TEXT],$row[CN_DETAIL]]);
 
       //DEBUG
       /*file_put_contents('data/log.txt',print_r(['INSERT INTO '.$this->table().' (acctId,categoryId,catgroup,postingDate,xid,description,amount,text,detail) VALUES (?,?,?,?,?,?,?,?,?)',
@@ -105,6 +105,10 @@ class Posting extends BaseModel {
     }
     public function listPostings2($acct,$start) {
       $this->load(['acctId=? AND postingDate > ?',$acct,$start],['order'=>'postingDate ASC']);
+      return $this->query;
+    }
+    public function search($params) {
+      $this->load($params,['order'=>'postingDate ASC']);
       return $this->query;
     }
 

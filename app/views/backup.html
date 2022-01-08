@@ -9,13 +9,14 @@
 
 </div>
 <div id="bottom">
+ <p><em>Note:</em> Restoring large datasets may time-out.  Used the CLI instead.</p>
  <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
  <table>
   <tr><th>Backup</th><th>Size</th><th>Options</th></tr>
   <?php foreach ($backups as $i => $j) { ?>
     <tr>
       <td><?= $i ?></td>
-      <td><?= number_format($j['size']) ?></td>
+      <td align="right"><?= number_format($j['size']) ?></td>
       <td>
 	<?= Sc::go('/backup/fetch/'.$i,'Download') ?>
 	<?= Sc::go('/backup/restore/'.$i,'Restore',['confirm'=>"Are you sure you want to restore from $i?"]) ?>

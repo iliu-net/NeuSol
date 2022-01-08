@@ -25,8 +25,6 @@ class PostingsController extends Controller {
     if ($month < 1 or $month > 12) return false;
     return [(int)$mv[1],$month,(int)$mv[3],$mv[4]];
   }
-
-
   public function index($f3,$params) {
     $acct = new Acct($this->db);
     $actlst = $acct->listDesc();
@@ -50,6 +48,17 @@ class PostingsController extends Controller {
        $page = $f3->get('COOKIE.page');
     }
     list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
+
+    if ($month == 12) {
+      $f3->set('next_page',implode(',',[$acctId,1,$year+1,'a']));
+    } else {
+      $f3->set('next_page',implode(',',[$acctId,$month+1,$year,'a']));
+    }
+    if ($month == 1) {
+      $f3->set('prev_page',implode(',',[$acctId,12,$year-1,'a']));
+    } else {
+      $f3->set('prev_page',implode(',',[$acctId,$month-1,$year,'a']));
+    }
 
     $f3->set('account_id',$acctId);
     $f3->set('month',$month);
@@ -118,6 +127,10 @@ class PostingsController extends Controller {
       // Create
       $posting->add();
       $msg = 'Created entry';
+    }
+    if ($f3->exists('POST.next_url')) {
+      $f3->reroute($f3->get('POST.next_url'));
+      return;
     }
     $acct = $f3->get('POST.acctId');
     $date = $f3->get('POST.postingDate');
@@ -198,4 +211,144 @@ class PostingsController extends Controller {
     $f3->reroute($next.'msg/Balanced Account '.$acctId);
     return;
   }
+  public function search($f3,$params) {
+    $acct = new Acct($this->db);
+    $actlst = $acct->listDesc();
+    if (count($actlst) == 0) {
+      $f3->reroute('/acct/msg/No accounts found, please create one!');
+      return '';
+    }
+    $f3->set('accounts_long',$actlst);
+    $actsel = [ 0 => "** All Accounts **" ];
+    foreach ($actlst as $i=>$j) {
+      $actsel[$i] = $j;
+    }
+    $f3->set('accounts',$actsel);
+
+    $categories = new Category($this->db);
+    $f3->set('categories_short',$categories->listSname());
+    $cc = $categories->listDesc();
+    $f3->set('categories_long',$cc);
+    $catopts = [ 'a' => "** All Categories **", '0' => 'No category' ];
+    foreach ($cc as $i=>$j) {
+      $catopts[$i] = $j;
+    }
+    $f3->set('categories_opt',$catopts);
+
+    /*** SEARCHING ***/
+    $actId = 0;
+    $selcat = 'a';
+    if ($f3->exists('GET.account')) {
+      $acctId = $f3->get('GET.account');
+      if (!isset($actsel[$acctId])) $acctId = 0;
+    }
+    if ($f3->exists('GET.category')) {
+      $selcat = $f3->get('GET.category');
+      if (!isset($catopts[$selcat])) $selcat = 'a';
+    }
+    if ($f3->exists('GET.start_date')) {
+      if (preg_match('/^(\d\d\d\d)-(\d\d)-(\d\d$)/',$f3->get('GET.start_date'),$mv)) {
+	if (checkdate(intval($mv[2]),intval($mv[3]),intval($mv[1]))) {
+	  $start_date = $f3->get('GET.start_date');
+	}
+      }
+    }
+    if (!isset($start_date)) $start_date = date('Y-m').'-01';
+    if ($f3->exists('GET.end_date')) {
+      if (preg_match('/^(\d\d\d\d)-(\d\d)-(\d\d$)/',$f3->get('GET.end_date'),$mv)) {
+	if (checkdate(intval($mv[2]),intval($mv[3]),intval($mv[1]))) {
+	  $end_date = $f3->get('GET.end_date');
+	}
+      }
+    }
+    if (!isset($end_date)) $end_date = date('Y-m-t',strtotime($start_date));
+    $f3->set('account_id',$acctId);
+    $f3->set('category_page',$selcat);
+    $f3->set('start_date',$start_date);
+    $f3->set('end_date',$end_date);
+
+    // Initialize other form entries...
+    foreach (['desc_search','min_amt','max_amt','full_text'] as $ff) {
+      if ($f3->exists('GET.'.$ff)) {
+	$f3->set($ff,$f3->get('GET.'.$ff));
+      } else {
+	$f3->set($ff,'');
+      }
+    }
+
+    # OK... create search criteria
+    $where = 'postingDate BETWEEN ? AND ?';
+    $vals = [ null, $start_date, $end_date ];
+    if ($acctId) {
+      $where .= ' AND acctId = ?';
+      $vals[] = $acctId;
+    }
+    if ($selcat != 'a') {
+      $where .= ' AND categoryId = ?';
+      $vals[] = $selcat;
+    }
+    foreach (['desc_search'=>'description','full_text'=>'text'] as $ff=>$col) {
+      if (!$f3->exists('GET.'.$ff)) continue;
+      $cond = $f3->get('GET.'.$ff);
+      if ($cond == '') continue;
+      $not = '';
+      if (substr($cond,0,1) == '!') {
+	$not = 'NOT ';
+	$cond = substr($cond,1);
+      }
+      if ($cond == '') continue;
+      $type = substr($cond,0,1);
+      switch ($type) {
+      case '~':
+	# basic regexp
+	$where .= ' AND '.$not.$col.' REGEXP ?';
+	$vals[] = substr($cond,1);
+	break;
+      case '=':
+      case '<':
+      case '>':
+	# basic comparison
+	$where .= ' AND '.$not.$col.' '.$type.' ?';
+	$vals[] = substr($cond,1);
+	break;
+      case '%':
+	# like
+	$where .= ' AND '.$not.$col.' LIKE ?';
+	$vals[] = substr($cond,1);
+	break;
+      default:
+	$where .= ' AND '.$not.'LOWER('.$col.') REGEXP ?';
+	$vals[] = strtolower($cond);
+	break;
+      }
+    }
+    foreach (['min_amt'=>'>=','max_amt'=>'<='] as $ff => $op) {
+      if (!$f3->exists('GET.'.$ff)) continue;
+      $cond = $f3->get('GET.'.$ff);
+      if ($cond == '') continue;
+      $where .= ' AND amount '.$op.' ?';
+      $vals[] = intval($cond);
+    }
+
+    $posting = new Posting($this->db);
+    $vals[0] = $where;
+    $f3->set('postings',$posting->search($vals));
+
+    $f3->set('POST.acctId',$acctId);
+    $f3->set('POST.postingDate',date('Y-m-d'));
+    $f3->set('next_url',$f3->get('PARAMS.0').'?'.$f3->get('QUERY'));
+
+    if ($acctId && $selcat == 'a') {
+      $f3->set('bal_title','Starting Balance');
+      $f3->set('bal_header','Balance');
+      $f3->set('balance',$posting->pitBalance($acctId,date('Y-m-d',mktime(12,0,0,$month,1,$year)-86400)));
+    } else {
+      $f3->set('bal_title','');
+      $f3->set('bal_header','Running Total');
+      $f3->set('balance',0.0);
+    }
+
+    echo View::instance()->render('postings_search.html');
+  }
+
 }

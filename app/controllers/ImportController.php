@@ -1,4 +1,11 @@
 <?php
+function rule_preg_match($pattern, $text) {
+  if (substr($pattern,0,1) != '/') {
+    $pattern = '/'.$pattern.'/i';
+  }
+  return preg_match($pattern,$text);
+}
+
 class ImportController extends Controller {
   public function getfile($f3,$params) {
     $acctsDAO = new Acct($this->db);
@@ -24,12 +31,20 @@ class ImportController extends Controller {
       $f3->reroute('/import/msg/ROW Data error: '.$msg);
       return;
     }
-    if (!$f3->exists('POST.rowdata')) {
+    if (!$f3->exists('POST.override')) {
       $f3->reroute('/import/msg/RRMAP missing');
       return;
     }
     $rr_map = self::get_rrmap($f3->get('POST.override'));
     BaseImport::init($f3,$this->db);
+
+    // Create any quick add new rules...
+    $qadd_rules = self::get_qrules($f3->get('POST.qrules'));
+    $msg = self::add_rules($this->db, $qadd_rules);
+    if ($msg != '') {
+      $this->previewRows($f3,$rows,$rr_map,$msg);
+      return;
+    }
 
     if ($command == 'preview') {
       $this->previewRows($f3,$rows,$rr_map);
@@ -39,13 +54,25 @@ class ImportController extends Controller {
     // Apply overrides...
     $this->applyOverrides($f3,$rows,$rr_map);
 
+    // Update rule stats...
+    self::update_rule_stats($this->db,$rows);
+
     // Insert rows (and triggers)
     $k = $this->insertRows($f3,$rows,$rr_map);
     // report results
     $f3->reroute('/import/msg/ROWS INSERTED: '.$k);
 
+    //~ echo Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
+    //~ echo '<pre>';
+    //~ print_r($rows);
+    //~ print_r($rr_map);
+    //~ print_r($qadd_rules);
+    //~ print_r($f3->get('POST.qrules'));
+
+    //~ echo '</pre>';
+    //~ echo Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
+
     /*
-    echo Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
     echo '<pre>';
     echo "\n=====\n";
     var_dump($rr_map);
@@ -80,7 +107,11 @@ class ImportController extends Controller {
     echo '<pre>';*/
     $importer = NULL;
     global $debug;
-    foreach (glob($f3->get('importers').'/*.php') as $cf) {
+
+    $implist = array_merge(glob($f3->get('importers').'/*.php'),
+				glob('app/importers/*.php'));
+
+    foreach ($implist as $cf) {
       if ((include $cf) === FALSE) continue;
       $className = basename($cf,'.php');
       if ($className::detect($f3,$name,$file)) {
@@ -89,7 +120,7 @@ class ImportController extends Controller {
       }
     }
     if (is_null($importer)) {
-      //$f3->reroute('/import/msg/Format not recognized: '.Sc::esc($name));
+      $f3->reroute('/import/msg/Format not recognized: '.Sc::esc($name));
       return;
     }
     $rows = $className::import($f3,$name,$file,$defacct);
@@ -104,11 +135,23 @@ class ImportController extends Controller {
     $f3->set('POST.filename',$name);
     $f3->set('POST.importer',$importer);
 
-    $this->previewRows($f3,$rows,$rr_map);    
+    $this->previewRows($f3,$rows,$rr_map);
   }
-  public function previewRows($f3,&$rows,&$rr_map) {
+  public function previewRows($f3,&$rows,&$rr_map,$imsg=NULL) {
     list ($status,$msg) = $this->applyRules($f3,$rows,$rr_map);
-    if ($status) $f3->set('PARAMS.msg','<pre>'.$msg.'</pre>');
+    if ($status) {
+      if ($imsg) {
+	$f3->set('PARAMS.msg',
+			"Add Rules:\n".
+			$imsg .
+			"Apply Rules:\n".
+			$msg);
+      } else {
+	$f3->set('PARAMS.msg',$msg);
+      }
+    } else {
+	if ($imsg) $f3->set('PARAMS.msg',$imsg);
+    }
 
     $this->tagDuplicates($f3,$rows,$rr_map);
 
@@ -131,16 +174,65 @@ class ImportController extends Controller {
       if ($grp != '') $rows[$rownum][CN_CATGRP] = $grp;
     }
   }
-  public function applyRules($f3,&$rows,&$rr_map) {
-    $rules = trim(file_get_contents($f3->get('rules_file')));
+  public function applyRules($f3,&$rows,&$rrmap) {
+    $phprules = trim(file_get_contents($f3->get('rules_file')));
     $importer = $f3->get('POST.importer');
     $account_numbers = $f3->get('accounts_numbers');
 
+    //~ echo '<pre>';
+    //~ print_r($rr_map);
+    //~ echo '</pre>';
     foreach ($rows as &$row) {
       $uid = BaseImport::row_uuid($row);
       if (isset($rrmap[$uid])) continue;
-      if (eval('?>'.$rules) === FALSE) {
+
+      $old = serialize($row);
+      if (eval('?>'.$phprules) === FALSE) {
         return [-1,print_r(error_get_last(),true)];
+      }
+      $new = serialize($row);
+      if (!isset($row['PHPRULE_MATCH'])) {
+	$row['PHPRULE_MATCH'] = $new != $old;
+      }
+      if (!$row['PHPRULE_MATCH']) {
+	# OK, use the rules table from v1.3
+	if (!isset($rules)) {
+	  $rules = (new Rule($this->db))->all();
+	  Rule::sort_rules($rules);
+	}
+	$found = false;
+	foreach ($rules as $rr) {
+	  if (!is_null($rr->acctId)) {
+	    if ($rr->acctId != $row[CN_ACCOUNT]) continue;
+	  }
+	  if (!is_null($rr->desc_re)) {
+	    if (!rule_preg_match($rr->desc_re,$row[CN_DESCRIPTION])) continue;
+	  }
+	  if (!is_null($rr->text_re)) {
+	    if (!rule_preg_match($rr->text_re,$row[CN_TEXT])) continue;
+	  }
+	  if (!is_null($rr->detail_re)) {
+	    if (!rule_preg_match($rr->detail_re,$row[CN_DETAIL])) continue;
+	  }
+	  if (!is_null($rr->min_amount)) {
+	    if ($row[CN_AMOUNT] < $rr->min_amount) continue;
+	  }
+	  if (!is_null($rr->max_amount)) {
+	    if ($row[CN_AMOUNT] > $rr->max_amount) continue;
+	  }
+	  // If we got here that means that we matched all specified
+	  // criterias
+	  $row[CN_CATEGORY] = $rr->categoryId;
+	  if (!is_null($rr->catgroup)) $row[CN_CATGRP] = $rr->catgroup;
+	  $row['RULE_MATCH'] = $rr->ruleId;
+	  $found = true;
+	  break;
+	}
+	if (!$found && isset($row['RULE_MATCH'])) {
+	  $row[CN_CATEGORY] = '';
+	  $row[CN_CATGRP] = '';
+	  unset($row['RULE_MATCH']);
+	}
       }
     }
     return [0,''];
@@ -188,6 +280,10 @@ class ImportController extends Controller {
       if (isset($rr_map[$uid])) {
         if ($rr_map[$uid][1] == 'S' || $rr_map[$uid][1] == 'D') continue; // SKIP row!
       }
+
+      //~ echo('<pre>');
+      //~ print_r($row);
+      //~ echo ('</pre>');
       // Insert row...
       //$posting->importRow($row);
       $posting->newPosting($row);
@@ -285,7 +381,60 @@ class ImportController extends Controller {
     $html .= '</span></td>';
     return $html;
   }
+  static public function get_qrules($txt) {
+    $qrules = [];
 
+    foreach (explode("\n",$txt) as $ln) {
+      $ln = trim($ln);
+      if ($ln == "") continue;
+
+      if (!isset($count)) {
+        $count = (int)$ln;
+        continue;
+      }
+      $ln = explode("\t",$ln,5);
+      # $uid, $rownum, $catopt, $catgrp, $desc_re
+      if (count($ln) != 5) continue; // No RE, so skip it!
+      $uid = array_shift($ln);
+      if (intval($ln[1]) == 0) continue; // No matchin $catopt
+      $qrules[$uid] = $ln;
+    }
+    return $qrules;
+  }
+  static public function add_rules($db, $qadd_list) {
+    $msg = '';
+
+    $rm = new Rule($db);
+
+    foreach ($qadd_list as $uid => $rr) {
+      list($rownum, $catopt, $catgrp, $desc_re) = $rr;
+      $chk = $rm->qcheck($desc_re);
+      if ($chk) {
+	$msg .= 'Duplicate rule match /'.$desc_re.'/'.PHP_EOL;
+	continue;
+      }
+      $rm->reset();
+
+      $rm->pri = 65;
+      $rm->categoryId = $catopt;
+      if ($catgrp) $rm->catgroup = $catgrp;
+      $rm->desc_re = $desc_re;
+      $rm->remark = 'Quick Rule ('.date('Y-m-d').')';
+      $rm->add();
+      $rm->reset();
+    }
+    return $msg;
+  }
+  static public function update_rule_stats($db, $rows) {
+    foreach ($rows as $rr) {
+      if (!$rr['RULE_MATCH']) continue;
+      if (!isset($rm)) {
+	$rm = new Rule($db);
+	$rm->clearStats();
+      }
+      $rm->updateRuleStat($rr['RULE_MATCH']);
+    }
+  }
   static public function get_rrmap($txt) {
     $rrmap = [];
 
@@ -327,7 +476,7 @@ class ImportController extends Controller {
     //$enc = array_shift($enc);
     //file_put_contents('data/log.js',$enc);
     return $enc;
-  } 
+  }
   static public function decode($txt) {
     //file_put_contents('data/log.txt',$txt);
     //$txt = pack('H*',$txt);

@@ -107,16 +107,27 @@ class BackupController extends Controller{
       }
     }
   }
-  static public function restoreSql($db,$fp) {
+  static public function restoreSql($db,$fp,$fsz=0) {
     /* This is just a very basic implementation */
+    $count = 0;
     while (!feof($fp)) {
       $sql = '';
       while (($ln=fgets($fp)) !== FALSE) {
+	$count += strlen($ln);
         $sql .= $ln;
 	if (substr(rtrim($ln),-1,1) == ';') break;
       }
+      if (php_sapi_name() == 'cli') {
+	if ($fsz) {
+	  echo "\r" . number_format($count*100.0/$fsz,3) . ' % ';
+	} else {
+	  echo "\r" . number_format($count);
+	}
+      }
+
       if ($sql) $db->exec($sql);
     }
+    if (php_sapi_name() == 'cli') echo PHP_EOL;
   }
 
   static public function zipBackup($f3,$db,$fname) {
@@ -146,8 +157,9 @@ class BackupController extends Controller{
 	echo "Unpacking SQL\n";
 	$fp = fopen('php://temp','r+');
 	fwrite($fp,$zip->getFromIndex($i));
+	$fsz = ftell($fp);
 	rewind($fp);
-	self::restoreSql($db,$fp);
+	self::restoreSql($db,$fp,$fsz);
 	fclose($fp);
       } else {
 	echo "Extracting ".$stat['name'].PHP_EOL;
@@ -176,13 +188,15 @@ class BackupController extends Controller{
   }
   public function obackup($f3) {
     list($args,) = Sc::cli_only();
-    if (count($args) == 0) {
-      $fp = STDOUT;
-      $close = FALSE;
-    } else {
+
+    $fp = STDOUT;
+    $close = FALSE;
+    if (count($args) > 0) {
       $name = array_shift($args);
-      $fp = fopen(Sc::cli_path($name),"w");
-      $close = TRUE;
+      if ($name != '-') {
+	$fp = fopen(Sc::cli_path($name),"w");
+	$close = TRUE;
+      }
     }
     self::backupSql($this->db, $fp, $args);
     if ($close) fclose($fp);
@@ -192,12 +206,21 @@ class BackupController extends Controller{
     if (count($args) == 0) {
       $fp = STDIN;
       $close = FALSE;
+      $sz = 0;
     } else {
       $name = array_shift($args);
       $fp = fopen(Sc::cli_path($name),"r");
       $close = TRUE;
+      $sz = filesize(Sc::cli_path($name));
     }
-    self::restoreSql($this->db,$fp);
+    if (php_sapi_name() == 'cli') {
+      // disable output buffering
+      while (ob_get_level()) ob_end_flush();
+      // turn implicit flush
+      ob_implicit_flush(1);
+    }
+
+    self::restoreSql($this->db,$fp,$sz);
     if ($close) fclose($fp);
   }
   public function restore($f3,$params) {
@@ -206,7 +229,12 @@ class BackupController extends Controller{
       if (count($args) == 0) die("No Backup File specified\n");
 
       $zipname = Sc::cli_path(array_shift($args));
-      if (!is_file) die("$zipname: Does not exist\n");
+      if (!is_file($zipname)) die("$zipname: Does not exist\n");
+
+      // disable output buffering
+      while (ob_get_level()) ob_end_flush();
+      // turn implicit flush
+      ob_implicit_flush(1);
 
       echo 'Restoring from backup file '.$zipname.PHP_EOL;
       self::zipRestore($f3,$this->db,$zipname);

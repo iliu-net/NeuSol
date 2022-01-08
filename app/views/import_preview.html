@@ -7,12 +7,13 @@
 <div id="topdiv">
    <?= Sc::jslnk("do_submit('post');","Import") ?> :
    <?= Sc::jslnk("do_submit('preview');","Re-Apply Rules") ?> :
+   <?= Sc::go('/rule','Rules',['target'=>'_blank']) ?> :
 </div>
 <div id="bottom">
 <h3>Import Rows</h3>
 <div id="main_top_area"/>
 
-<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.strtr(trim($PARAMS['msg']),'\n','<br/>').'</div>' : '' ?>
 
 </div>
 <div id="preview_rows">
@@ -26,6 +27,7 @@
     <th>Category</th>
     <th>Amount</th>
     <th>xid</th>
+    <th>Actions</th>
   </tr>
   </thead>
   <tbody>
@@ -42,11 +44,29 @@ foreach ($rows as $row) {
     <?= ImportController::td($row,$accounts_long[$row[CN_ACCOUNT]]) ?>
     <?= ImportController::td($row,$row[CN_DATE]) ?>
     <?= ImportController::td($row,$row[CN_DESCRIPTION]) ?>
-    <?= ImportController::category($f3,$row,$i++,$rr_map,$categories_long) ?>
+    <?= ImportController::category($f3,$row,$i,$rr_map,$categories_long) ?>
     <?= ImportController::amount($row) ?>
     <?= ImportController::td($row,$row[CN_XID]) ?>
+    <td>
+      <?php if ($row['PHPRULE_MATCH']) { ?>
+	PHP rule match
+      <?php } elseif ($row['RULE_MATCH']) { ?>
+	Rule#<?= $row['RULE_MATCH'] ?>:
+	<?= Sc::go('/rule/update/'.$row['RULE_MATCH'],'edit',['target'=>'_blank']) ?>
+	<?= Sc::go('/rule/delete/'.$row['RULE_MATCH'],'delete',['target'=>'_blank','confirm'=>'Are you sure?']) ?>
+      <?php } else { ?>
+	<div id="qadd_cmd<?= $i ?>" style="display: block">
+	  <?= Sc::jslnk("qadd_link($i);",'add rule') ?>
+	</div>
+	<div id="qadd_form<?= $i ?>" style="display: none">
+	  <input type="hidden" value="0" id="qadd<?= $i ?>" />
+	  <input type="text" value="<?=trim($row[CN_DESCRIPTION]) ?>" id="desc_re<?= $i ?>"/>
+	  <?= Sc::jslnk("qadd_cancel($i);",'cancel') ?>
+	</div>
+      <?php } ?>
+    </td>
   </tr>
-<?php } ?>
+<?php ++$i; } ?>
   </tbody>
 </table>
 <input type="hidden" id="rowcount" name="rowcount" value="<?=$i?>"/>
@@ -60,9 +80,10 @@ foreach ($rows as $row) {
   <input type="hidden" id="command_msg" name="command" value=""/>
   <textarea name="rowdata" wrap="hard"><?=$rowdata?></textarea>
   <textarea name="override" id="override"></textarea>
+  <textarea name="qrules" id="qrules"></textarea>
  </form>
 </div>
-<!---  
+<!---
 <script type="text/javascript">
 //window.onload = function() {
 //  UltimateScrollingTable("main_table",0,0,1);

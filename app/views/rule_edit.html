@@ -1,0 +1,39 @@
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/rule','Listing') ?>
+</div>
+<div id="bottom">
+<h3><?=$page_head?> </h3>
+<?= isset($msg) ? '<div id="showmsg">'.$msg.'</div>' : '' ?>
+
+
+<form action="<?= $form_action ?>" method="POST">
+ <?php if (isset($POST['ruleId'])) { ?>
+ <p><?= Fm::text('ruleId',['label'=>'Id: ','readonly']); ?></p>
+ <?php } ?>
+ <h4>Rule</h4>
+ <p><?= Fm::text('pri',['label'=>'Priority: ','maxlength'=>8,'required','pattern'=>'[-0-9]+','default'=>50])?> </p>
+ <h4>Match criteria</h4>
+ <p><?= Fm::select('acctId',$accounts,['label'=>'Account: '])?> </p>
+ <p><?= Fm::text('desc_re',['label'=>'RE Desc: ','maxlength'=>40])?> </p>
+ <p><?= Fm::text('text_re',['label'=>'RE Text: ','maxlength'=>80])?> </p>
+ <p><?= Fm::text('detail_re',['label'=>'RE Detail: ','maxlength'=>80])?> </p>
+ <p>&nbsp;</p>
+ <p><?= Fm::text('min_amount',['label'=>'Min Amount: ','maxlength'=>8])?> </p>
+ <p><?= Fm::text('max_amount',['label'=>'Max Amount: ','maxlength'=>8])?> </p>
+ <h4>Target</h4>
+ <p><?= Fm::select('categoryId',$categories,['label'=>'Category: '])?> </p>
+ <p><?= Fm::text('catgroup',['label'=>'Cat Group: ','maxlength'=>8,'pattern'=>'[0-9]*'])?> </p>
+ <h4>Remarks</h4>
+ <p><?= Fm::txtarea('remark',['label'=>'&nbsp;','rows'=>4,'cols'=>50]) ?></p>
+
+ <div class="control-group">
+   <input type="hidden" name="<?= $form_command ?>" value="<?= $form_command ?>"/>
+   <input type="submit" name="submit" value="<?= $form_label ?>"/>
+ </div>
+</form>
+
+
+</div>
+<?= View::instance()->render('footer.html') ?>
+

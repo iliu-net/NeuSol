@@ -2,9 +2,11 @@
 <html lang="en">
  <head>
   <title><?= $site ?></title>
+  <link rel="icon" type="image/x-icon" href="<?=Sc::url('/ui/NeuSol_logo.png')?>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Include headers -->
   <style type="text/css">
-  <?php 
+  <?php
     $sidebar_width = isset($sidebar_width) ? $sidebar_width : '150px';
     $topbar_height = isset($topbar_height) ? $topbar_height : '30px';
   ?>
@@ -62,7 +64,7 @@ th {
 }
 
 /* Make sure that forms are aligned */
-  
+
 form  { display: table;      }
 p     { display: table-row;  }
 label { display: table-cell; }
@@ -112,6 +114,10 @@ div {
       <li><?= Sc::go('/balance','Balance Account') ?></li>
       <li><?= Sc::go('/positions','Positions') ?></li>
      </ul>
+     <h3>Search</h3>
+     <ul>
+      <li><?= Sc::go('/postings/search','Postings') ?></li>
+     </ul>
      <h3>Reports</h3>
      <ul>
       <li><?= Sc::go('/rpt_summary','Summary') ?></li>
@@ -123,6 +129,7 @@ div {
       <li><?= Sc::go('/acct','Accounts') ?></li>
       <li><?= Sc::go('/category','Categories') ?></li>
       <li><?= Sc::go('/categorytype','Category Types') ?></li>
+      <li><?= Sc::go('/rule','Rules') ?></li>
      </ul>
      <h4>Admin</h4>
      <ul>
@@ -136,7 +143,8 @@ div {
 -->
     <hr/>
     <p>
-      DB_Schema <?=file_get_contents('schema.version')?> 
+      App Version <?=file_get_contents('app.version')?><br/>
+      DB_Schema <?=file_get_contents('schema.version')?><br/>
       <img src="<?=Sc::url('/ui/Fat-Free_Framework_logo.png')?>" style="width: 120px; height: 45px" />
       <?= $VERSION ?>
     </p>

@@ -1,0 +1,58 @@
+<?php
+  Sc::ui_script('/ui/scripts/sorttable.js');
+  Sc::ui_script('/app/views/postings_search.js');
+  //Sc::ui_script('/app/views/postings_form.js');
+  Sc::ui_script('/ui/scripts/moment.min.js');
+  Sc::ui_script('/ui/scripts/pikaday.js');
+  Sc::x_css_inc('/ui/css/pikaday.css');
+  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+  <form method="GET" id="form_search">
+    <?= Sc::select($account_id,$accounts,'account') ?>
+    <?= Sc::select($category_page,$categories_opt,'category') ?>
+    <br/>
+    From <?= Fm::text('start_date',['size'=>7,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','value'=>$start_date]) ?>
+    To <?= Fm::text('end_date',['size'=>7,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','value'=>$end_date]) ?>
+    :
+    Amount [
+      Min: <?= Fm::text('min_amt',['size'=>5,'maxlength'=>20,'value'=>$min_amt]) ?>
+      Max: <?= Fm::text('max_amt',['size'=>5,'maxlength'=>20,'value'=>$max_amt]) ?>
+    ]
+    <br/>
+    Description: <?= Fm::text('desc_search',['size'=>20,'maxlength'=>20, 'value'=>$desc_search]) ?>
+    <br/>
+    Text Search: <?= Fm::text('full_text',['size'=>20,'maxlength'=>20, 'value'=>$full_text]) ?>
+    <br/>
+
+    <div class="control-group">
+      <input type="submit" value="Search" id="form_submit_search" />
+      <button onclick="reset_search()">Reset</button>
+    </div>
+  </form>
+  <?= View::instance()->render('postings_form.html') ?>
+</div>
+<div id="bottom">
+<h3>Postings</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+
+<?php if (count($postings) == 1) { ?>
+<p>Found <strong>one</strong> match.</p>
+<?php } else { ?>
+<p>Found <strong><?= count($postings) ?></strong> matches.</p>
+<?php } ?>
+
+<?= View::instance()->render('postings_table.html') ?>
+
+<hr/>
+<strong>Text search:</strong> Normally it does a case insensitive regex search.
+<p>! : reverse search</p>
+<p>=,&gt;,&lt; : logical operation</p>
+<p>% : like search</p>
+<p>~ : Basic regexp</p>
+
+</div>
+
+<?= View::instance()->render('footer.html') ?>
+<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>

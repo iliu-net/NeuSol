@@ -28,6 +28,9 @@ Category | group
   } else {
     echo '<input type="hidden" name="acctId" id="form_acctId" value="'.$POST['acctId'].'" />';
   }
+  if (isset($next_url)) {
+   echo '<input type="hidden" name="next_url" value="'.$next_url.'" />';
+  }
  ?>
  Id: <?= Fm::text('postingId',['readonly','placeholder'=>'New','size'=>5]) ?>
  <span style="float: right">
@@ -43,7 +46,7 @@ Category | group
   <br/>
   <?= Fm::text('description',['maxlength'=>40,'required']) ?>
   <br/>
-  <?php 
+  <?php
     if (isset($categories_long)) {
      ?>  Category: <br/>
      <?= Fm::select('categoryId',$categories_long) ?>

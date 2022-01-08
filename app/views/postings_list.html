@@ -11,12 +11,17 @@
 <div id="topdiv">
   <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/postings/index') ?>"/>
   <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changePage();']) ?>
+
+  : <?= Sc::go('/postings/index/'.$prev_page,'<<') ?> :
   <?= Sc::select($month,[
 	1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',
 	7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
 	],'month',['onchange'=>'changePage();']) ?>
   <input type="text" id="form_year" name="year" maxlength=4 size=4 pattern="[0-9]" value="<?=$year?>" onchange="changePage()" required/>
+  : <?= Sc::go('/postings/index/'.$next_page,'>>') ?> :
+
   <?= Sc::select($category_page,$categories_opt,'category',['onchange'=>'changePage();']) ?>
+
 
   <?= View::instance()->render('postings_form.html') ?>
 </div>

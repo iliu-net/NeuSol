@@ -1,0 +1,65 @@
+<?php
+  Sc::ui_script('/ui/scripts/sorttable.js');
+?>
+<?= View::instance()->render('header.html') ?>
+<div id="topdiv">
+ <?= Sc::go('/rule/create','Add New') ?>
+</div>
+<div id="bottom">
+<h3>Rules</h3>
+<?= isset($PARAMS['msg']) ? '<div id="showmsg">'.$PARAMS['msg'].'</div>' : '' ?>
+<table class="sortable">
+  <thead>
+  <tr>
+    <th>Pri</th>
+    <th>Target<br/>Category</th>
+    <th>Match Criteria</th>
+    <th>Comments</th>
+    <th>Last<br/>match</th>
+    <th>Total</th>
+    <th>YTD</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($rules as $rr) { ?>
+    <tr>
+      <td><?= $rr['pri'] ?></td>
+      <td>
+	<?= $categories[$rr['categoryId']] ?>
+	<?= is_null($rr['catgroup']) ? '' : $rr['catgroup'] ?>
+      </td>
+      <td>
+	<?php
+	  if (!is_null($rr['acctId'])) {
+	    echo 'acct is <strong>"'.$accounts[$rr['acctId']].'"</strong><br/>';
+	  }
+	  foreach (['desc_re','text_re','detail_re','min_amount','max_amount'] as $ff) {
+	    if (is_null($rr[$ff])) continue;
+	    if ($ff == 'min_amount' || $ff == 'max_amount') {
+	      echo $ff . ' = <strong>'.$rr[$ff].'</strong><br/>';
+	    } else {
+	      echo $ff . ' ~ <strong>/'.$rr[$ff].'/</strong><br/>';
+	    }
+	  }
+	?>
+      </td>
+      <td><?= is_null($rr['remark']) ? '&nbsp;' : strtr(trim($rr['remark']),"\n",'<br/>') ?></td>
+      <td><?= $rr['last_match'] == '1970-01-01' ? 'Never' : $rr['last_match'] ?></td>
+      <?php
+	foreach (['total_matches', 'ytd_matches'] as $ff) {
+	  echo '<td align="right"> '.number_format($rr[$ff]).' </td>';
+	}
+      ?>
+      <td>
+	<?= Sc::go('/rule/update/'.$rr['ruleId'],'Edit') ?>
+	<?= Sc::go('/rule/delete/'.$rr['ruleId'],'Delete',['confirm'=>'Are you sure?']) ?>
+      </td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+</div>
+
+<?= View::instance()->render('footer.html') ?>
+
