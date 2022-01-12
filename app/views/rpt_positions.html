@@ -26,7 +26,7 @@
     <?= Sc::go('/positions/rpt/'.$report.'/'.$period.'-01-01/'.$period.'-12-31','Customize') ?>
   <?php } else if ($mode == 'year+') { ?>
     <?= Sc::yrnav('/positions/rpt/'.$report.'/p', $period) ?> :
-    <?= Sc::go('/positions/rpt/'.$report.'/'.$period,'Year') ?> :
+    <?= Sc::go('/positions/rpt/'.$report.'/'.$period,'Year-') ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.($period-1).'-12-31/'.$period.'-12-31','Customize') ?>
   <?php } else if ($mode == 'multiyear') { ?>
     <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
@@ -77,7 +77,7 @@
      <?php } ?>
      <?php if ($gains) {
 	if ($positions[$first][$acct]!=0.0) {
-	  echo 
+	  echo
 		'<td align="right">'.
 		Sc::cnumfmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],'color:blue').
 		' % </td>';
@@ -96,7 +96,7 @@
     <?php foreach ($al_totals[$i] as $num) { ?>
       <td align="right"><?= Sc::cnumfmt($num) ?></td>
     <?php } ?>
-    <?php 
+    <?php
        if ($gains) {
          if ($al_totals[$i][$first]!=0.0) {
 	   echo '<td align="right">'.
@@ -129,7 +129,7 @@
 	     $g_hist['assets'][$i] += $n;
 	   }
          }
-	 $g_line[$i] = $sum;    
+	 $g_line[$i] = $sum;
          if ($prev !== FALSE) {
           $deltas[] = ($sum - $prev) * 100.0 / $prev;
          } else {
@@ -161,7 +161,7 @@
   //echo  $graph->draw($g_line,['type'=>'line','steps'=>50000]);
   // $graph->draw($g_hist,['multi'=>TRUE,'type'=>['assets'=>]) ;
   //echo '<pre>';
-  //print_r(['g_hist'=>$g_hist,'g_line'=>$g_line]); 
+  //print_r(['g_hist'=>$g_hist,'g_line'=>$g_line]);
   //echo '</pre>';
 } ?>
 

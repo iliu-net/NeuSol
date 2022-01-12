@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Calculator</title>
+    <link rel="icon" type="image/x-icon" href="<?=Sc::url('/ui/NeuSol_logo.png')?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- link rel="stylesheet" href="style.css" -->
+    <!-- script src="script.js" --><!-- /script -->
+  </head>
+  <body>
+<TABLE BORDER=4>
+<TR>
+<TD>
+<INPUT TYPE="text" Size="16" id="input-id">
+<br>
+</TD>
+</TR>
+<TR>
+<TD>
+<INPUT TYPE="button" NAME="one"   VALUE="  1  " OnClick="add_chr('1')">
+<INPUT TYPE="button" NAME="two"   VALUE="  2  " OnCLick="add_chr('2')">
+<INPUT TYPE="button" NAME="three" VALUE="  3  " OnClick="add_chr('3')">
+<INPUT TYPE="button" NAME="plus"  VALUE="  +  " OnClick="add_chr2(' + ')">
+<br>
+<INPUT TYPE="button" NAME="four"  VALUE="  4  " OnClick="add_chr('4')">
+<INPUT TYPE="button" NAME="five"  VALUE="  5  " OnCLick="add_chr('5')">
+<INPUT TYPE="button" NAME="six"   VALUE="  6  " OnClick="add_chr('6')">
+<INPUT TYPE="button" NAME="minus" VALUE="  -  " OnClick="add_chr2(' - ')">
+<br>
+<INPUT TYPE="button" NAME="seven" VALUE="  7  " OnClick="add_chr('7')">
+<INPUT TYPE="button" NAME="eight" VALUE="  8  " OnCLick="add_chr('8')">
+<INPUT TYPE="button" NAME="nine"  VALUE="  9  " OnClick="add_chr('9')">
+<INPUT TYPE="button" NAME="times" VALUE="  x  " OnClick="add_chr2(' * ')">
+<br>
+<INPUT TYPE="button" NAME="clear" VALUE="  c  " OnClick="reset_inp()">
+<INPUT TYPE="button" NAME="zero"  VALUE="  0  " OnClick="add_chr('0')">
+<INPUT TYPE="button" NAME="DoIt"  VALUE="  =  " OnClick="calc_inp()">
+<INPUT TYPE="button" NAME="div"   VALUE="  /  " OnClick="add_chr2(' / ')">
+<br>
+</TD>
+</TR>
+</TABLE>
+
+<p align="center"><font face="arial" size="-2">This free script provided by</font><br>
+<font face="arial, helvetica" size="-2"><a href="http://javascriptkit.com" target="_blank">JavaScript
+Kit</a></font></p>
+</body>
+</html>
+<script>
+var reset = false;
+function add_chr(e) {
+  inputId = document.getElementById('input-id');
+  if (reset) {
+    reset = false;
+    inputId.value = "";
+  }
+  inputId.value += e;
+}
+function add_chr2(e) {
+  inputId = document.getElementById('input-id');
+  reset = false;
+  inputId.value += e;
+}
+
+function reset_inp() {
+  inputId = document.getElementById('input-id');
+  inputId.value = "";
+}
+function calc_inp() {
+  inputId = document.getElementById('input-id');
+  inputId.value = eval(inputId.value);
+  reset = true;
+  inputId.select();
+}
+inputId = document.getElementById('input-id');
+inputId.addEventListener('keyup', function onEvent(e) {
+    if (e.keyCode === 13) {
+      calc_inp();
+
+    }
+});
+</script>
+

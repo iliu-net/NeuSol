@@ -1,0 +1,13 @@
+#!/bin/sh
+rc=0
+type php >/dev/null 2>&1 || exit 0
+find . -name '*.php' -type f | grep -v /submodules/ | (while read f
+do
+  php -l "$f" || rc=1
+done
+exit $rc)
+exit $?
+
+
+
+

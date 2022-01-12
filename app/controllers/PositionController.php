@@ -129,9 +129,13 @@ class PositionController extends Controller {
       if ($report == 'rpt_portfolio') {
 	$f3->set('mode','single');
       } else {
-	$f3->set('mode','year');
+	//~ $f3->set('mode','year');
+	//~ $f3->set('period',$period = date('Y'));
+	//~ $start = $period.'-01-01';
+	//~ $end = $period.'-12-31';
+	$f3->set('mode','year+');
 	$f3->set('period',$period = date('Y'));
-	$start = $period.'-01-01';
+	$start = (((int)$period)-1).'-12-31';
 	$end = $period.'-12-31';
       }
     }

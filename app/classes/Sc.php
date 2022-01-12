@@ -12,7 +12,7 @@ abstract class Sc {
     return [array_slice($argv,2),array_slice($argv,0,2)];
   }
   static public function cli_path($name) {
-    if ($name{0} == '/') return $name;
+    if (substr($name,0,1) == '/') return $name;
     return WORKING_DIR.'/'.$name;
   }
 
@@ -82,6 +82,49 @@ abstract class Sc {
 
   static public function url($path) {
     return Base::instance()->get("BASE").$path;
+  }
+  static public function gowin($path,$text,$opts = []) {
+    $opts['onclick'] = 'window.open('."'".Sc::url($path)."'";
+    if (isset($opts['pagename'])) {
+      $opts['onclick'] .= ",'".$opts['pagename']."'";
+      unset($opts['pagename']);
+    } else {
+      $opts['onclick'] .= ",'$text'";
+    }
+    $opts['onclick'] .= ",'"; // Add features...
+    $q='';
+    foreach (['top','left','width','height'] as $k) {
+      if (isset($opts[$k])) {
+	$opts['onclick'] .= $q . $k . '=' . $opts[$k];
+	$q = ',';
+	unset($opts[$k]);
+      }
+    }
+    $features = ['menubar','toolbar','location','status','scrollbars','resizable','popup'];
+    foreach ($opts as $k => $v) {
+      if (!preg_match('/^\d+$/',$k)) continue;
+      if (!in_array($v,$features)) continue;
+      $opts['onclick'] .= $q.$v;
+      $q = ',';
+      unset($opts[$k]);
+    }
+    $opts['onclick'] .= "'";
+    $opts['onclick'] .= ');';
+    $opts['onclick'] .= 'return false;';
+
+    $tag = '';
+    $tag .= '<a href="#"';
+    foreach ($opts as $k => $v) {
+      if (preg_match('/^\d+$/',$k)) {
+        $tag .= ' '.$v;
+      } else {
+	$tag .= ' '.$k.'="'.$v.'"';
+      }
+    }
+    $tag .= '>';
+    $tag .= $text;
+    $tag .= '</a>';
+    return $tag;
   }
   static public function go($path,$text,$opts = []) {
     if (isset($opts['confirm'])) {

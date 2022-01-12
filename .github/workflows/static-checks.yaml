@@ -1,0 +1,17 @@
+name: static checks
+on: [push]
+jobs:
+  job-id:
+    runs-on: ubuntu-latest
+    if: startswith(github.ref,'refs/heads/')
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: static checks
+        run: |
+          echo ${{ github.event_name }}
+          if [ -d wfscripts/checks ] ; then
+            run-parts wfscripts/checks || exit 1
+          fi
+

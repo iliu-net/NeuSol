@@ -9,6 +9,18 @@ if (php_sapi_name() == 'cli') {
   $routes='config/routes.ini';
 }
 
+# Add reverse proxy support...
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+  if (strpos($_SERVER['HTTP_X_FORWARDED_HOST'],':')) {
+    list($_SERVER['SERVER_NAME'],$_SERVER['SERVER_PORT']) = explode(':',$_SERVER['HTTP_X_FORWARDED_HOST'],2);
+  } else {
+    $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+    $_SERVER['SERVER_PORT'] = 80;
+    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+      if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') $_SERVER['SERVER_PORT'] = 443;
+    }
+  }
+}
 $f3=require('lib/f3/base.php');
 $f3->config('config/config.ini');
 

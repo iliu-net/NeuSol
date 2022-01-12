@@ -26,7 +26,7 @@ The code is structured as follows:
     2. BackupController : Handles backups and restores
     3. ImportController : Manages bulk imports
     4. RptSummary : Generate year summary reports
-  - views : Mostly PHP templates as HTML with embedded <?= PHP ?> codes.  But also JavaScript is 
+  - views : Mostly PHP templates as HTML with embedded <?= PHP ?> codes.  But also JavaScript is
     in there.
 - config : [FatFree][f3] configuration files.
 - data : contains data that will be editable from the web interface.
@@ -44,15 +44,15 @@ The code is structured as follows:
 
 ## Requirements
 
-- Web Server (Tested on Apache 2.4.6)
-- PHP 5.4
-- MariaDB (Tested on 5.5.47)
+- Web Server (Tested on Apache 2.4.52)
+- PHP (Tested on 7.4.26)
+- MariaDB (Tested on 10.3.32)
 
 The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## Installation
 
-1. Create a directory in your web server, e.g. `NeuSol`.  
+1. Create a directory in your web server, e.g. `NeuSol`.
    The name `NeuDev` is special for a test instance.  In that case the
    `nonprod-config.ini` is also read and needs to be configured.
 2. git clone --recursive https://github.com/iliu-net/NeuSol.git NeuSol
@@ -66,37 +66,38 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
    - php index.php /orestore scripts/init.sql
 7. Point your web-browser to your app directory.
 
+## Customizations
+
+- More in-depth business rules can be created in:
+  - data/rules.php
+  - data/triggers.php
+- Custom importers can be added in:
+  - data/Importers/*.php
+
+
 ## TODO
 
 - Pending
-  - When entering positions data, hovering over account name should show account number
-  - Importing an empty file gets us nowhere
   - The DAO for postings is not a clean encapsulation and uses SQL direct statements.
   - Add unit testing using [f3 unit-testing][f3testing]
-  - iPhone Entry screen
   - Sc::render -- add support for adding pre-conditions and post-conditions
     For example, right now pikaday requires adding stuff in header, footer, in addition
     to the actual control placement.
     - Convert pikaday and others to Sc::render
-  - Position report, historical, adding bar chart did not work (phpGraph is buggy!)
-- Documentation (see github ticket)
-- Authentication
-  - Install oindentd and configure
-  - Add code for transaction auditing
-- Rules Editor
-  - Rules editor should open a different screen.
-  - Code editor:
-    - [ACE](https://ace.c9.io/#nav=about)
-    - [CodeMirror](https://codemirror.net/)
-  - Condition
-    - PHP snipped that returns a constant
-    - no match, no match + stop, match + stop, match + excute rule, match + execute rule + stop
-  - Rule
-    - API for adding additional rows, classify, set flags
 
 ## ChangeLog
 
-- 1.2.x: WIP
+- 1.3.1:
+  - positions show account numbers
+  - fixed php7.4 compatibility
+  - reverse proxy fixes
+  - ... etc...
+- 1.3.0:
+  - updated sub modules
+  - search postings
+  - dynamic rules
+  - month navigation
+  - misc improvements
 - 1.2.3: balance
   - Add controls to make it easier to balance accounts
 - 1.2.2: 2017.03

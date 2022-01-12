@@ -124,6 +124,10 @@ div {
       <li><?= Sc::go('/positions/rpt/rpt_portfolio','Portfolio') ?></li>
       <li><?= Sc::go('/positions/rpt','Historical') ?></li>
      </ul>
+     <h3>Tools</h3>
+     <ul>
+      <li><?= Sc::gowin('/ui/calc.html','Calculator',['width'=>210,'height'=>240]) ?></li>
+     </ul>
      <h3>Setup</h3>
      <ul>
       <li><?= Sc::go('/acct','Accounts') ?></li>
@@ -143,10 +147,16 @@ div {
 -->
     <hr/>
     <p>
-      App Version <?=file_get_contents('app.version')?><br/>
+      <a href="https://github.com/iliu-net/NeuSol"><img src="<?= Sc::url('/ui/github.png') ?>"></a><br/>
+      App Version <?=file_get_contents('VERSION')?><br/>
       DB_Schema <?=file_get_contents('schema.version')?><br/>
       <img src="<?=Sc::url('/ui/Fat-Free_Framework_logo.png')?>" style="width: 120px; height: 45px" />
       <?= $VERSION ?>
+      <?php if (isset($_SERVER['HTTP_REMOTE_USER'])) {
+	echo '<hr/>Remote User: '.$_SERVER['HTTP_REMOTE_USER'];
+      }
+      ?>
+      <hr/>
     </p>
   </div>
   <div id="right">

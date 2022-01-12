@@ -1,18 +1,21 @@
 <?php
 
 class PostingsController extends Controller {
-  static function default_page($f3) {
-    $acctId = '';
-    if ($f3->exists('accounts_long')) {
-      foreach ($f3->get('accounts_long') as $a=>$b) {
-	$acctId = $a;
-	break;
+  static function default_page($f3,$forced=true) {
+    if ($forced) {
+      if ($f3->exists('accounts_long')) {
+	foreach ($f3->get('accounts_long') as $a=>$b) {
+	  $acctId = $a;
+	  break;
+	}
+      } else {
+	foreach ($f3->get('accounts') as $a=>$b) {
+	  $acctId = $a;
+	  break;
+	}
       }
     } else {
-      foreach ($f3->get('accounts') as $a=>$b) {
-	$acctId = $a;
-	break;
-      }
+      $acctId = '0';
     }
     $month = date('n');
     $year = date('Y');
@@ -39,7 +42,7 @@ class PostingsController extends Controller {
     }
     $f3->set('accounts',$actsel);
 
-    $page = self::default_page($f3);
+    $page = self::default_page($f3,false);
     if (isset($params['page']) && self::valid_page($f3,$params['page'])) {
       $page = $params['page'];
       $f3->set('JAR.expire',time()+86400*60);
@@ -160,7 +163,7 @@ class PostingsController extends Controller {
     }
     $f3->set('accounts',$actlst);
 
-    $page = self::default_page($f3);
+    $page = self::default_page($f3,true);
     if (isset($params['acct']) && isset($actlst[$params['acct']])) {
       list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
       $page = implode(',',[$params['acct'],$month,$year,$selcat]);

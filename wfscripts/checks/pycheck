@@ -1,0 +1,15 @@
+#!/bin/sh
+rc=0
+find . -name '*.py' -type f | grep -v /.venv/ | (while read f
+do
+  out=$(python -m py_compile "$f")
+  [ -z "$out" ] && continue
+  echo "$out"
+  rc=1
+done
+exit $rc)
+exit $?
+
+
+
+

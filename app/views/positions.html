@@ -15,7 +15,7 @@
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
-  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/') ?>"/>  
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/') ?>"/>
   <?php if (count($positions)) { ?>
   <?= Sc::jslnk("do_submit();","Save") ?> :
   <?php } ?>
@@ -35,7 +35,7 @@
 <table>
   <thead>
   <tr>
-    <th>Account</th>
+    <th>Account</th><th>Number</th>
     <?php foreach (array_keys($positions) as $n) { ?>
       <th><?= $n ?></th>
     <?php } ?>
@@ -47,6 +47,11 @@
      <td>
        <span title="<?= acct_tip($acct_all[$acct]) ?>">
 	<?= $acct_desc ?>
+       </span>
+     </td>
+     <td>
+       <span title="<?= acct_tip($acct_all[$acct]) ?>">
+        <?= $acct_all[$acct]['acctNo'] ?>
        </span>
      </td>
      <?php foreach ($positions as $n=>$pos) { ?>

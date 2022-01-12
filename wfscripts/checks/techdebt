@@ -1,0 +1,6 @@
+#!/bin/sh
+rc=0
+find . -type f  \
+	| grep -v /submodules/ \
+	| xargs grep [tT]ODO:  \
+	| sed -e 's!:.*\([tT]ODO\):!: \1:!'

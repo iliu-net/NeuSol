@@ -58,7 +58,7 @@ abstract class AbnAmroImporter implements ImporterInterface {
 	 if ($i == $IC_NCOLS) break;
 	 $row[$j] = $dat[$i++];
       }
-      if ($dat[$IC_TEXT]{0} == '/') {
+      if (substr($dat[$IC_TEXT],0,1) == '/') {
 	 $row['AMRO_TYPE'] = 'TRTP';
 	 $l = explode("/",substr($dat[$IC_TEXT],1));
 
@@ -171,4 +171,3 @@ abstract class AbnAmroImporter implements ImporterInterface {
 
 
 }
-  
