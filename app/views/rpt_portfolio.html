@@ -1,9 +1,9 @@
 <?php
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  Sc::ui_script('/app/views/rpt.js');
-  Sc::ui_script('/app/views/yrnav.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  CompatV1::ui_script('/app/views/rpt.js');
+  CompatV1::ui_script('/app/views/yrnav.js');
   $graph = new phpGraph();
 
   $sections = ['assets'=>[],'liabilities'=>[]];
@@ -20,7 +20,7 @@
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>  
-  <?= Sc::select($period,$avail_positions,'period',['onchange'=>'changePage();']) ?>
+  <?= CompatV1::select($period,$avail_positions,'period',['onchange'=>'changePage();']) ?>
 </div>
 <div id="bottom">
  <?= isset($msg) ? '<div id="showmsg">'.Sc::f3()->get('msg').'</div>' : '' ?>
@@ -32,9 +32,9 @@
 </thead>
 <tbody>
 <tr>
-  <td align="right"><?= Sc::cnumfmt($totals['assets']) ?></td>
-  <td align="right"><?= Sc::cnumfmt($totals['liabilities']) ?></td>
-  <td align="right"><?= Sc::cnumfmt($totals['assets']+$totals['liabilities']) ?></td>
+  <td align="right"><?= CNum::fmt($totals['assets']) ?></td>
+  <td align="right"><?= CNum::fmt($totals['liabilities']) ?></td>
+  <td align="right"><?= CNum::fmt($totals['assets']+$totals['liabilities']) ?></td>
 </tr>
 </tbody>
 </table>
@@ -48,9 +48,9 @@
 <tr><th>Account</ht><th>Amount</th></tr>
 <tbody>
 <?php foreach ($sections[$h] as $i=>$j) { ?>
-<tr><td><?=$i?></td><td align="right"><?= Sc::cnumfmt($j) ?></td></tr>
+<tr><td><?=$i?></td><td align="right"><?= CNum::fmt($j) ?></td></tr>
 <?php } ?>
-<tr><th>Total</ht><td align="right"><?= Sc::cnumfmt($totals[$h]) ?></td></tr>
+<tr><th>Total</ht><td align="right"><?= CNum::fmt($totals[$h]) ?></td></tr>
 </tbody>
 </table>
 <?= $graph->draw($gdata[$h],['type'=>'pie','diskLegends'=>true]) ?>

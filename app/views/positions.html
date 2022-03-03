@@ -1,9 +1,9 @@
 <?php
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  Sc::ui_script('/app/views/positions.js');
-  Sc::ui_script('/app/views/yrnav.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  CompatV1::ui_script('/app/views/positions.js');
+  CompatV1::ui_script('/app/views/yrnav.js');
 
   function acct_tip($dat) {
     if (!isset($dat) || !is_array($dat)) return '';
@@ -19,7 +19,7 @@
   <?php if (count($positions)) { ?>
   <?= Sc::jslnk("do_submit();","Save") ?> :
   <?php } ?>
-  <?= Sc::yrnav('/positions/year/', $year) ?> :
+  <?= PositionController::yrnav('/positions/year/', $year) ?> :
   <span id="add_column_menu"><?= Sc::jslnk("addcol();","Add Column") ?></span>
   <span id="add_date" style="display: none">
    <?= Fm::text('posDate',['value'=>$year.date('-m-d'),'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','onchange'=>'go_add_col()']) ?>

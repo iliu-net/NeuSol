@@ -1,9 +1,9 @@
 <?php
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  Sc::ui_script('/app/views/rpt.js');
-  Sc::ui_script('/app/views/yrnav.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  CompatV1::ui_script('/app/views/rpt.js');
+  CompatV1::ui_script('/app/views/yrnav.js');
 
   list($first,$last,$gains) = [NULL,NULL,FALSE];
   if (count($positions) >= 2) {
@@ -21,11 +21,11 @@
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <?php if ($mode == 'year') { ?>
-    <?= Sc::yrnav('/positions/rpt/'.$report.'/', $period) ?> :
+    <?= PositionController::yrnav('/positions/rpt/'.$report.'/', $period) ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/p'.$period,'Year+') ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.$period.'-01-01/'.$period.'-12-31','Customize') ?>
   <?php } else if ($mode == 'year+') { ?>
-    <?= Sc::yrnav('/positions/rpt/'.$report.'/p', $period) ?> :
+    <?= PositionController::yrnav('/positions/rpt/'.$report.'/p', $period) ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.$period,'Year-') ?> :
     <?= Sc::go('/positions/rpt/'.$report.'/'.($period-1).'-12-31/'.$period.'-12-31','Customize') ?>
   <?php } else if ($mode == 'multiyear') { ?>
@@ -71,7 +71,7 @@
      <td><?= $acct_desc ?></td>
      <?php foreach ($positions as $n=>$pos) { ?>
        <td align="right">
-	 <?= Sc::cnumfmt($pos[$acct]) ?>
+	 <?= CNum::fmt($pos[$acct]) ?>
        </td>
        <?php $al_totals[$pos[$acct] < 0 ? 'l' : 'a'][$n] += $pos[$acct]; ?>
      <?php } ?>
@@ -79,7 +79,7 @@
 	if ($positions[$first][$acct]!=0.0) {
 	  echo
 		'<td align="right">'.
-		Sc::cnumfmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],'color:blue').
+		CNum::fmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],2,'color:blue').
 		' % </td>';
 	} else {
 	  echo '<td></td>';
@@ -94,13 +94,13 @@
    <tr>
     <th><?=$j?></th>
     <?php foreach ($al_totals[$i] as $num) { ?>
-      <td align="right"><?= Sc::cnumfmt($num) ?></td>
+      <td align="right"><?= CNum::fmt($num) ?></td>
     <?php } ?>
     <?php
        if ($gains) {
          if ($al_totals[$i][$first]!=0.0) {
 	   echo '<td align="right">'.
-		Sc::cnumfmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/$al_totals[$i][$first],'color:blue').
+		CNum::fmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/$al_totals[$i][$first],2,'color:blue').
 		' % </td>';
          } else {
            echo '<td></td>';
@@ -136,11 +136,11 @@
           $in = $sum;
          }
          $out = $prev = $sum;
-         echo '<th align="right">'.Sc::cnumfmt($sum,'color:blue').'</th>';
+         echo '<th align="right">'.CNum::fmt($sum,2,'color:blue').'</th>';
        }
        if ($gains) {
          echo '<th align="right">';
-	 if ($in) echo Sc::cnumfmt(($out-$in)*100.0/$in,'color:blue').' %';
+	 if ($in) echo CNum::fmt(($out-$in)*100.0/$in,2,'color:blue').' %';
          echo '</th>';
        }
     ?>
@@ -148,7 +148,7 @@
   <?php if (count($deltas)) {
     echo '<tr><th>Gains</th><td></td>';
     foreach ($deltas as $n) {
-      echo '<td align="right">'.Sc::cnumfmt($n,'color:blue').' % </td>';
+      echo '<td align="right">'.CNum::fmt($n,2,'color:blue').' % </td>';
     }
     echo '</tr>';
   } ?>

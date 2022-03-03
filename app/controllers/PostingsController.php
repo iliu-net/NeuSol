@@ -120,6 +120,8 @@ class PostingsController extends Controller {
       $f3->reroute($next.'msg/Invalid CRUD operation');
       return;
     }
+    $num = $f3->get('POST.amount');
+    $f3->set('POST.amount',CNum::parse($num));
     $posting = new Posting($this->db);
     $id = $f3->get('POST.postingId');
     if ($id) {
@@ -209,8 +211,10 @@ class PostingsController extends Controller {
     $dateBalance = $f3->get('POST.dateBalance');
     $amount = $f3->get('POST.amountBalance');
 
+    $next = isset($params['next']) ? '/'.$params['next'].'/' : '/postings/';
+
     $posting = new Posting($this->db);
-    $posting->setBalance($acctId,$dateBalance,$amount);
+    $posting->setBalance($acctId,$dateBalance,CNum::parse($amount));
     $f3->reroute($next.'msg/Balanced Account '.$acctId);
     return;
   }
@@ -353,5 +357,4 @@ class PostingsController extends Controller {
 
     echo View::instance()->render('postings_search.html');
   }
-
 }

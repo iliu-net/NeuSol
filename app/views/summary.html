@@ -1,11 +1,11 @@
 <?php
-  Sc::ui_script('/app/views/yrnav.js');
+  CompatV1::ui_script('/app/views/yrnav.js');
   $graph = new phpGraph();
   $chdata = [];
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
-  <?= Sc::yrnav('/rpt_summary/',$year) ?>
+  <?= PositionController::yrnav('/rpt_summary/',$year) ?>
 </div>
 <div id="bottom">
 <h3><?=$year?> Summary</h3>
@@ -33,16 +33,16 @@
 	   $total = '';
 	 } elseif (count($table[$mn][$tt][$cat]) == 1 && isset($table[$mn][$tt][$cat][0])) {
 	   list($total) = $table[$mn][$tt][$cat];
-	   echo Sc::cnumfmt($total);
+	   echo CNum::fmt($total);
 	 } else {
 	   $total = 0;
 	   foreach ($table[$mn][$tt][$cat] as $x=>$y) {
 	     $total += $y;
 	   }
-	   echo '<strong>'.Sc::cnumfmt($total).'</strong>';
+	   echo '<strong>'.CNum::fmt($total).'</strong>';
 	   ksort($table[$mn][$tt][$cat]);
 	   foreach ($table[$mn][$tt][$cat] as $x=>$z) {
-	     echo '<br/>'.$x.': ' . Sc::cnumfmt($z);
+	     echo '<br/>'.$x.': ' . CNum::fmt($z);
 	   }
 	 }
 	?>
@@ -53,7 +53,7 @@
 	 if ($total != '') {
 	   $chdata[$tt][$categories_short[$cat]] = $total < 0 ? -$total : $total; // Adding chart data
 	   $pct = $total * 100.0 / $totals[0][$tt];
-	   echo Sc::cnumfmt($pct).'%';
+	   echo CNum::fmt($pct).'%';
 	 }
 	 echo '</td>';
      ?>
@@ -62,14 +62,14 @@
    <tr>
     <th>Total <?=  $category_types[$tt] ?></th>
      <?php for ($i=1;$i<=13;$i++) { $mn = $i == 13 ? 0 : $i; ?>
-       <th align="right"><?=Sc::cnumfmt($totals[$mn][$tt],'color:blue') ?></th>
+       <th align="right"><?=CNum::fmt($totals[$mn][$tt],2,'color:blue') ?></th>
      <?php } ?>
      <td>&nbsp;</td>
    </tr>
    <tr>
     <th>Cumulative <?=  $category_types[$tt] ?></th>
      <?php $j = 0.0; for ($i=1;$i<=12;$i++) { $j += $totals[$i][$tt];?>
-       <th align="right"><?=Sc::cnumfmt($j,'color:blue')?></th>
+       <th align="right"><?=CNum::fmt($j,2,'color:blue')?></th>
      <?php } ?>
      <td colspan="2">&nbsp;</td>
    </tr>
@@ -87,7 +87,7 @@
 	  $total += $totals[$mn][$tt];
 	}
       ?>
-      <th aligh="right"><?= Sc::cnumfmt($total,'color:blue') ?></th>
+      <th aligh="right"><?= CNum::fmt($total,2,'color:blue') ?></th>
     <?php } ?>
     <td>&nbsp;</td>
    </tr>
@@ -99,7 +99,7 @@
 	  $j += $totals[$i][$tt];
 	}
       ?>
-      <th align="right"><?=Sc::cnumfmt($j,'color:blue')?></th>
+      <th align="right"><?=CNum::fmt($j,2,'color:blue')?></th>
     <?php } ?>
     <td colspan="2">&nbsp;</td>
    </tr>

@@ -1,9 +1,9 @@
 <?php
-  Sc::ui_script('/ui/scripts/sorttable.js');
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::ui_script('/app/views/welcome.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
+  CompatV1::ui_script('/ui/scripts/sorttable.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::ui_script('/app/views/welcome.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
   $graph = new phpGraph();
 ?>
 <?= View::instance()->render('header.html') ?>
@@ -36,9 +36,9 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
   <?php if ($tot < 0) $data[$sname] = -$tot; ?>
   <tr>
    <td><?=$row['name']?></td>
-   <td align="right"><?= Sc::cnumfmt($row['income']) ?></td>
-   <td align="right"><?= Sc::cnumfmt($row['expenses']) ?></td>
-   <td align="right"><?= Sc::cnumfmt($tot) ?></td>
+   <td align="right"><?= CNum::fmt($row['income']) ?></td>
+   <td align="right"><?= CNum::fmt($row['expenses']) ?></td>
+   <td align="right"><?= CNum::fmt($tot) ?></td>
    <?php $in += $row['income']; $out += $row['expenses']; ?>
   </tr>
  <?php } ?>
@@ -47,9 +47,9 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
 <tfooter>
  <tr>
   <td>Totals</td>
-   <td align="right"><?= Sc::cnumfmt($out) ?></td>
-   <td align="right"><?= Sc::cnumfmt($in) ?></td>
-   <td align="right"><?= Sc::cnumfmt($tot) ?></td>
+   <td align="right"><?= CNum::fmt($out) ?></td>
+   <td align="right"><?= CNum::fmt($in) ?></td>
+   <td align="right"><?= CNum::fmt($tot) ?></td>
  </tr>
 </tfooter>
 </table>

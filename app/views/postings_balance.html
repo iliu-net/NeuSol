@@ -1,11 +1,11 @@
 <?php
-  Sc::ui_script('/ui/scripts/sorttable.js');
-  Sc::ui_script('/app/views/postings_balance.js');
-  //Sc::ui_script('/app/views/postings_form.js');
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+  CompatV1::ui_script('/ui/scripts/sorttable.js');
+  CompatV1::ui_script('/app/views/postings_balance.js');
+  //CompatV1::ui_script('/app/views/postings_form.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  //CompatV1::ui_script('/ui/scripts/UltimateScrollingTable.js');
   Sc::f3()->set('form_action_url','/postings/crud/balance');
   Sc::f3()->set('b_action', true);
 
@@ -13,7 +13,7 @@
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/balance/index') ?>"/>
-  <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changeAcct();']) ?>
+  <?= CompatV1::select($account_id,$accounts,'account',['onchange'=>'changeAcct();']) ?>
   <?= View::instance()->render('postings_form.html') ?>
 </div>
 <div id="bottom">

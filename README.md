@@ -1,5 +1,8 @@
 # NeuSol
 
+![status](https://github.com/iliu-net/NeuSol/actions/workflows/static-checks.yaml/badge.svg)
+![status](https://github.com/iliu-net/NeuSol/actions/workflows/release.yaml/badge.svg)
+
 Basic expense tracking software.  This is my first project using the [Fat-Free Framework][3].
 
 It uses the [Fat Free Framework][f3], a lightweight PHP framework, and follows the example in [Fat-Free CRUD with MVC][f3crud]
@@ -87,6 +90,9 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## ChangeLog
 
+- 1.3.2:
+  - handle numbers with thousands and different decimal separators
+  - Internal API tweaks
 - 1.3.1:
   - positions show account numbers
   - fixed php7.4 compatibility

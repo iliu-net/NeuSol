@@ -489,5 +489,39 @@ class ImportController extends Controller {
     $txt = unserialize($txt);
     return [$txt,''];
   }
+
+  static public function uploadForm($opts=[]) {
+    if (isset($opts['label'])) {
+      $label = $opts['label'];
+      unset($opts['label']);
+    } else {
+      $label = 'Select file to upload';
+    }
+    $tag = '';
+    $tag .= '<form method="post" enctype="multipart/form-data"';
+    foreach ($opts as $k => $v) {
+      if (preg_match('/^\d+$/',$k)) {
+        $tag .= ' '.$v;
+      } else {
+	$tag .= ' '.$k.'="'.$v.'"';
+      }
+    }
+    $tag .=  '>'.$label;
+    $tag .= '<input type="file" name="fileToUpload" id="fileToUpload" onchange="form.submit()"/>';
+    $f3 = Sc::f3();
+    $tag .= 'Default Account: <select id="def_acct" name="def_acct">';
+    $tag .= ' <option value="#">* automatic *</option>';
+    foreach ($f3->get('accounts_long') as $k=>$v) {
+      $tag .= '<option value="'.$k.'"';
+      if ($f3->exists('POST.def_acct')) {
+        if ($f3->get('POST.def_acct') == $v) $tag .= ' selected';
+      }
+      $tag .= '>'.$v.'</option>';
+    }
+    $tag .= '</select>';
+    $tag .= '</form>';
+    return $tag;
+  }
+
 }
 

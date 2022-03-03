@@ -1,26 +1,26 @@
 <?php
-  Sc::ui_script('/ui/scripts/sorttable.js');
-  Sc::ui_script('/app/views/postings_list.js');
-  //Sc::ui_script('/app/views/postings_form.js');
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+  CompatV1::ui_script('/ui/scripts/sorttable.js');
+  CompatV1::ui_script('/app/views/postings_list.js');
+  //CompatV1::ui_script('/app/views/postings_form.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  //CompatV1::ui_script('/ui/scripts/UltimateScrollingTable.js');
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/postings/index') ?>"/>
-  <?= Sc::select($account_id,$accounts,'account',['onchange'=>'changePage();']) ?>
+  <?= CompatV1::select($account_id,$accounts,'account',['onchange'=>'changePage();']) ?>
 
   : <?= Sc::go('/postings/index/'.$prev_page,'<<') ?> :
-  <?= Sc::select($month,[
+  <?= CompatV1::select($month,[
 	1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',
 	7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'
 	],'month',['onchange'=>'changePage();']) ?>
   <input type="text" id="form_year" name="year" maxlength=4 size=4 pattern="[0-9]" value="<?=$year?>" onchange="changePage()" required/>
   : <?= Sc::go('/postings/index/'.$next_page,'>>') ?> :
 
-  <?= Sc::select($category_page,$categories_opt,'category',['onchange'=>'changePage();']) ?>
+  <?= CompatV1::select($category_page,$categories_opt,'category',['onchange'=>'changePage();']) ?>
 
 
   <?= View::instance()->render('postings_form.html') ?>

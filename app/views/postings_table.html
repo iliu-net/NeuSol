@@ -14,7 +14,7 @@
       <?php if ($account_id == 0) { ?><td></td><?php } ?>
       <td></td><td><?= $bal_title ? $bal_title : '&nbsp;' ?></td><td></td><td></td>
       <td align="right">
-	   <?= Sc::cnumfmt($balance) ?>
+	   <?= CNum::fmt($balance) ?>
       </td>
       <td></td>
      </tr>
@@ -50,7 +50,7 @@
        </td>
        <?php if (isset($balance)) { $balance += $row->amount ; ?>
 	<td align="right">
-	   <?= Sc::cnumfmt($balance) ?>
+	   <?= CNum::fmt($balance) ?>
 	</td>
        <?php } ?>
        <td>

@@ -1,17 +1,17 @@
 <?php
-  Sc::ui_script('/ui/scripts/sorttable.js');
-  Sc::ui_script('/app/views/postings_search.js');
-  //Sc::ui_script('/app/views/postings_form.js');
-  Sc::ui_script('/ui/scripts/moment.min.js');
-  Sc::ui_script('/ui/scripts/pikaday.js');
-  Sc::x_css_inc('/ui/css/pikaday.css');
-  //Sc::ui_script('/ui/scripts/UltimateScrollingTable.js');
+  CompatV1::ui_script('/ui/scripts/sorttable.js');
+  CompatV1::ui_script('/app/views/postings_search.js');
+  //CompatV1::ui_script('/app/views/postings_form.js');
+  CompatV1::ui_script('/ui/scripts/moment.min.js');
+  CompatV1::ui_script('/ui/scripts/pikaday.js');
+  CompatV1::x_css_inc('/ui/css/pikaday.css');
+  //CompatV1::ui_script('/ui/scripts/UltimateScrollingTable.js');
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
   <form method="GET" id="form_search">
-    <?= Sc::select($account_id,$accounts,'account') ?>
-    <?= Sc::select($category_page,$categories_opt,'category') ?>
+    <?= CompatV1::select($account_id,$accounts,'account') ?>
+    <?= CompatV1::select($category_page,$categories_opt,'category') ?>
     <br/>
     From <?= Fm::text('start_date',['size'=>7,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','value'=>$start_date]) ?>
     To <?= Fm::text('end_date',['size'=>7,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass','value'=>$end_date]) ?>

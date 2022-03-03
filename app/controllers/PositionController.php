@@ -69,7 +69,7 @@ class PositionController extends Controller {
 	$post = 'POST.i'.$id.$suffix;
 	if (!$f3->exists($post)) continue;
 	$amt = $f3->get($post);
-	$posDAO->modify($id,$date,$amt);
+	$posDAO->modify($id,$date,CNum::parse($amt));
       }
     }
     $f3->reroute('/positions/ymsg/'.$year.'/Updated');
@@ -177,6 +177,14 @@ class PositionController extends Controller {
     $f3->set('positions',$positions);
 
     echo View::instance()->render($report.'.html');
+  }
+  static public function yrnav($base_url,$year) {
+    return 'Year: '.
+	    Sc::go(sprintf('%s%s',$base_url,$year-1),'&lt;&lt;').
+	    ' <input type="text" id="form_yearnav" name="yearnav" maxlength=4 size=4 patter="[0-9]" value="'.
+	    $year.'" onchange="chgev_yrnav(\''.Sc::url($base_url).'\')" /> '.
+	    Sc::go(sprintf('%s%s',$base_url,$year+1),'&gt;&gt;').' '.
+	    ' '.Sc::jslnk('chgev_yrnav(\''.Sc::url($base_url).'\')','Go');
   }
 
 }
