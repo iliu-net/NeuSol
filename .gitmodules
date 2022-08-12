@@ -10,9 +10,9 @@
 [submodule "submodules/phpGraph"]
 	path = submodules/phpGraph
 	url = https://github.com/iliu-net/phpGraph.git
-[submodule "submodules/fatfree"]
-	path = submodules/fatfree
-	url = https://github.com/bcosca/fatfree.git
 [submodule "submodules/parsecsv-for-php"]
 	path = submodules/parsecsv-for-php
 	url = https://github.com/parsecsv/parsecsv-for-php.git
+[submodule "submodules/fatfree-core"]
+	path = submodules/fatfree-core
+	url = https://github.com/bcosca/fatfree-core.git
