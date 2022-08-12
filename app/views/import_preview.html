@@ -44,13 +44,13 @@ foreach ($rows as $row) {
     <?= ImportController::td($row,$accounts_long[$row[CN_ACCOUNT]]) ?>
     <?= ImportController::td($row,$row[CN_DATE]) ?>
     <?= ImportController::td($row,$row[CN_DESCRIPTION]) ?>
-    <?= ImportController::category($f3,$row,$i,$rr_map,$categories_long) ?>
+    <?= ImportController::category(Sc::f3(),$row,$i,$rr_map,$categories_long) ?>
     <?= ImportController::amount($row) ?>
     <?= ImportController::td($row,$row[CN_XID]) ?>
     <td>
       <?php if ($row['PHPRULE_MATCH']) { ?>
 	PHP rule match
-      <?php } elseif ($row['RULE_MATCH']) { ?>
+      <?php } elseif (isset($row['RULE_MATCH'])) { ?>
 	Rule#<?= $row['RULE_MATCH'] ?>:
 	<?= Sc::go('/rule/update/'.$row['RULE_MATCH'],'edit',['target'=>'_blank']) ?>
 	<?= Sc::go('/rule/delete/'.$row['RULE_MATCH'],'delete',['target'=>'_blank','confirm'=>'Are you sure?']) ?>

@@ -55,7 +55,7 @@ Category | group
    <?php } ?>
   &nbsp;&nbsp;
     <?= Fm::text('catgroup',['size'=>4,'maxlength'=>8,'placeholder'=>'group']) ?>
-    <!-- input type="text" size=11 maxlength=11 name="xid" value="<?= $POST['xid'] ?>" placeholder="group"/ -->
+    <!-- input type="text" size=11 maxlength=11 name="xid" value="<?= isset($POST['xid']) ? $POST['xid'] : '' ?>" placeholder="group"/ -->
   <br/>
  <div class="control-group">
    <input type="submit" name="submit" value="Submit" id="form_submit" />

@@ -90,6 +90,11 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## ChangeLog
 
+- 1.3.4:
+  - Upgrading f3 to 3.8.0
+  - Fixed bugs due to PHP8 testing
+- 1.3.3:
+  - last version supporting php5+
 - 1.3.2:
   - handle numbers with thousands and different decimal separators
   - Internal API tweaks

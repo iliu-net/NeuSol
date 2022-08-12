@@ -374,7 +374,7 @@ class ImportController extends Controller {
     $html .= '<td align="right"';
     if ($row[CN_AMOUNT] < 0) $html .= ' style="color:red"';
 
-    $html .= 'sorttable_customkey="'.sprintf("%020.2f",$row['CN_AMOUNT']).'"';
+    $html .= 'sorttable_customkey="'.sprintf("%020.2f",$row[CN_AMOUNT]).'"';
     $html .='>';
     $html .= '<span title="'.$row[CN_DETAIL].'">';
     $html .= number_format($row[CN_AMOUNT],2);
@@ -427,7 +427,7 @@ class ImportController extends Controller {
   }
   static public function update_rule_stats($db, $rows) {
     foreach ($rows as $rr) {
-      if (!$rr['RULE_MATCH']) continue;
+      if (!isset($rr['RULE_MATCH'])) continue;
       if (!isset($rm)) {
 	$rm = new Rule($db);
 	$rm->clearStats();

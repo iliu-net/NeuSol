@@ -29,11 +29,22 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
  </tr>
 </thead>
 <tbody>
- <?php $in = $out = 0.0; ?>
- <?php $data = []; ?>
- <?php foreach ($table as $sname=>$row) { ?>
-  <?php $tot = $row['income']-$row['expenses'];?>
-  <?php if ($tot < 0) $data[$sname] = -$tot; ?>
+ <?php
+    $in = $out = 0.0;
+    $data = [];
+    foreach ($table as $sname=>$row) {
+      $tot = 0;
+      if (isset($row['income'])) {
+	$tot += $row['income'];
+      } else {
+	$row['income'] = 0;
+      }
+      if (isset($row['expenses'])) {
+	$tot -= $row['expenses'];
+      } else {
+	$row['expenses'] = 0;
+      }
+      if ($tot < 0) $data[$sname] = -$tot; ?>
   <tr>
    <td><?=$row['name']?></td>
    <td align="right"><?= CNum::fmt($row['income']) ?></td>

@@ -29,7 +29,7 @@ class RptSummary extends Controller{
 	//if ($ct == 2) echo "<pre>ct = $ct start=$start end=$end, rows=".count($rows)."</pre>";
 	//if ($ct == 2) echo "<pre>".print_r($rows,true)."</pre>";
 	foreach ($rows as $row) {
-	   if (!isset($table[$mn][$ct][$row['catId']])) $table[$mn][$ct][$row['categoryId']] = [];
+	   if (!isset($table[$mn][$ct][$row['catId']])) $table[$mn][$ct][$row['catId']] = [];
 	   $table[$mn][$ct][$row['catId']][$row['catgroup']] = $row['totals'];
 
 	   if (!isset($table[0][$ct][$row['catId']])) $table[0][$ct][$row['catId']] = [];
@@ -39,7 +39,7 @@ class RptSummary extends Controller{
       }
     }
     //echo '<pre>';print_r($table);echo '</pre>';
-    
+
 
     // Collate in tabular format...
     $dat = [];

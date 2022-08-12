@@ -243,7 +243,7 @@ class PostingsController extends Controller {
     $f3->set('categories_opt',$catopts);
 
     /*** SEARCHING ***/
-    $actId = 0;
+    $acctId = 0;
     $selcat = 'a';
     if ($f3->exists('GET.account')) {
       $acctId = $f3->get('GET.account');

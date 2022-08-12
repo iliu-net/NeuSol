@@ -91,7 +91,7 @@ div {
         echo '<link rel="stylesheet" href="'.$inc.'">';
       }
     }
-    if ($ui_scripts) {
+    if (isset($ui_scripts)) {
       foreach ($ui_scripts as $inc) {
         echo '<script src="'.$inc.'"></script>';
       }

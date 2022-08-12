@@ -45,7 +45,7 @@ abstract class AmexImporterV2 implements ImporterInterface {
 	$row[CN_ACCOUNT] = $dacct;
 
 	$row[CN_DATE] = substr($dat['Datum'],6,4).'-'.substr($dat['Datum'],0,2).'-'.substr($dat['Datum'],3,2);
-	if ($dat[$IC_REFERENCE] != '') {
+	if ($dat['Referentie'] != '') {
 	   $row[CN_XID] = sprintf('%u',crc32($dat['Referentie']));
 	} else {
 	   $row[CN_XID] = sprintf('%u',crc32($dat['Datum'].$dat['Bedrag'].
@@ -54,9 +54,8 @@ abstract class AmexImporterV2 implements ImporterInterface {
 	$row[CN_DESCRIPTION] = str_replace("\n","|",trim($dat['Omschrijving']));
 	$row[CN_AMOUNT] =  -(float)str_replace(",",".",trim($dat['Bedrag']));
 	$row[CN_TEXT] = $dat['Kaartlid']."\n"
-			. $dat['Vermeld op uw rekeninguittreksel als']."\n"
-			. $dat['Adres']."\n"
-			. $dat['Meer detail'];
+			. $dat['Vermeld op uw rekeningoverzicht als']."\n"
+			. $dat['Adres'];
 	foreach ($dat as $k => $v) {
 	  $row[CN_DETAIL] .= $k . ': ' . str_replace("\n","|",trim($v)) . "\n";
 	}

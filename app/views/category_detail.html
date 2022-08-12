@@ -14,8 +14,8 @@
  <p><?= Fm::text('description',['label'=>'Description: ','maxlength'=>40,'required'])?> </p>
  <p><?= Fm::text('sname',['label'=>'SNAME: ','maxlength'=>16,'required','pattern'=>'[_A-Z0-9]+'])?> </p>
  <p><?= Fm::select('categoryTypeId',$category_types,['label'=>'Type: ']) ?></p>
- <p><?= Fm::txtarea('remarks',['label'=>'Remarks: ','rows'=>4,'cols'=>50]) ?></p>
- 
+ <p><?= Fm::textarea('remarks',['label'=>'Remarks: ','rows'=>4,'cols'=>50]) ?></p>
+
  <div class="control-group">
    <input type="hidden" name="<?= $form_command ?>" value="<?= $form_command ?>"/>
    <input type="submit" name="submit" value="<?= $form_label ?>"/>
