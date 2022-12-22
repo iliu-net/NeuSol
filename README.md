@@ -87,9 +87,23 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
     For example, right now pikaday requires adding stuff in header, footer, in addition
     to the actual control placement.
     - Convert pikaday and others to Sc::render
+- [ ] Create a field for "asset" accounts.  Don't show this in postings/balance?
+      or just show them after.  Or have the option to hide them.
+- [ ] When positions are updated, an adjustment "Non-relized-value" is recorded for
+      asset accounts
+- [ ] summary page can show/hide asset account transactions.
+- [ ] Add a "inactive" accounts.  These accounts are also either hidden for
+      entry fields, or put later in the list.  Or just use 'zz prefix'
+- [ ] read xlsx
+  - https://github.com/PHPOffice/PhpSpreadsheet
+  - https://github.com/box/spout (Now dead?)
+  - https://www.nidup.io/blog/manipulate-excel-files-in-php
 
 ## ChangeLog
 
+- 1,3,6:
+  - UI tweaks and bugfixes
+  - Bug Fix search (select account+all categories)
 - 1.3.5:
   - switching to fatfree-core submodule
 - 1.3.4:

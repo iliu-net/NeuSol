@@ -62,7 +62,7 @@
     </tr>
   <?php } ?>
   <tr>
-    <td>&nbsp;</td>
+    <td colspan=2>&nbsp;</td>
     <?php foreach (array_keys($positions) as $n) { ?>
       <th><?= Sc::go('/positions/dropcol/'.$n,'Del',['confirm'=>"Delete Column $n?"]) ?></th>
     <?php } ?>

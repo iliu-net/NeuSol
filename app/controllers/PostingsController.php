@@ -341,19 +341,21 @@ class PostingsController extends Controller {
     $vals[0] = $where;
     $f3->set('postings',$posting->search($vals));
 
+    //~ echo '<pre>'.$where.'</pre>';
+    //~ echo '<pre>';
+    //~ print_r($vals);
+    //~ echo '</pre>';
+    //~ echo '<pre>';
+    //~ print_r($posting->search($vals));
+    //~ echo '</pre>';
+
     $f3->set('POST.acctId',$acctId);
     $f3->set('POST.postingDate',date('Y-m-d'));
     $f3->set('next_url',$f3->get('PARAMS.0').'?'.$f3->get('QUERY'));
 
-    if ($acctId && $selcat == 'a') {
-      $f3->set('bal_title','Starting Balance');
-      $f3->set('bal_header','Balance');
-      $f3->set('balance',$posting->pitBalance($acctId,date('Y-m-d',mktime(12,0,0,$month,1,$year)-86400)));
-    } else {
-      $f3->set('bal_title','');
-      $f3->set('bal_header','Running Total');
-      $f3->set('balance',0.0);
-    }
+    $f3->set('bal_title','');
+    $f3->set('bal_header','Running Total');
+    $f3->set('balance',0.0);
 
     echo View::instance()->render('postings_search.html');
   }
