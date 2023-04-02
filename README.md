@@ -101,6 +101,9 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
 
 ## ChangeLog
 
+- next:
+  - Switching from submodules to composer
+
 - 1,3,6:
   - UI tweaks and bugfixes
   - Bug Fix search (select account+all categories)

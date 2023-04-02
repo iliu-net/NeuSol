@@ -1,0 +1,7 @@
+{
+    "require": {
+        "bcosca/fatfree-core": "^3.8",
+        "parsecsv/php-parsecsv": "^1.3",
+        "phpoffice/phpspreadsheet": "^1.28"
+    }
+}
