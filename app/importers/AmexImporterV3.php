@@ -113,7 +113,7 @@ abstract class AmexImporterV3 implements ImporterInterface {
       if (!empty($dat[self::REFERENCE])) {
 	$row[CN_XID] = sprintf('%u',crc32($dat[self::REFERENCE]));
       } else {
-	$row[CN_XID] = sptintf('%u',crc32($dat[self::DATE].$dat[self::AMOUNT].
+	$row[CN_XID] = sprintf('%u',crc32($dat[self::DATE].$dat[self::AMOUNT].
 					  $dat[self::DESC].$dat[self::ACCOUNT]));
       }
       $row[CN_DESCRIPTION] = str_replace("\n","|",trim($dat[self::DESC]));
