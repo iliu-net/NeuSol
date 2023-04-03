@@ -36,6 +36,9 @@ class PostingsController extends Controller {
       return '';
     }
     $f3->set('accounts_long',$actlst);
+    $actlst_all = $acct->listDesc(FALSE);
+    $f3->set('accounts_all',$actlst_all);
+
     $actsel = [ 0 => "** All Accounts **" ];
     foreach ($actlst as $i=>$j) {
       $actsel[$i] = $j;
@@ -226,6 +229,9 @@ class PostingsController extends Controller {
       return '';
     }
     $f3->set('accounts_long',$actlst);
+    $actlst_all = $acct->listDesc(FALSE);
+    $f3->set('accounts_all',$actlst_all);
+
     $actsel = [ 0 => "** All Accounts **" ];
     foreach ($actlst as $i=>$j) {
       $actsel[$i] = $j;

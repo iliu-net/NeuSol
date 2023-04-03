@@ -2,7 +2,7 @@
 class RuleController extends Controller {
   public function index($f3,$params) {
     $acct = new Acct($this->db);
-    $actlst = $acct->listSname();
+    $actlst = $acct->listSname(FALSE);
     $f3->set('accounts',$actlst);
 
     $categories = new Category($this->db);

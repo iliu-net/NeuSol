@@ -4,6 +4,7 @@
   - Switching from submodules to composer
   - Added Amex XLSX importer
   - ICS Cards importer
+  - Accounts can be hidden
 - 1,3,6:
   - UI tweaks and bugfixes
   - Bug Fix search (select account+all categories)

@@ -91,14 +91,6 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
       or just show them after.  Or have the option to hide them.
 - [ ] When positions are updated, an adjustment "Non-relized-value" is recorded for
       asset accounts
-- [ ] summary page can show/hide asset account transactions.
-- [ ] Add a "inactive" accounts.  These accounts are also either hidden for
-      entry fields, or put later in the list.  Or just use 'zz prefix'
-- [ ] read xlsx
-  - https://github.com/PHPOffice/PhpSpreadsheet
-  - https://github.com/box/spout (Now dead?)
-  - https://www.nidup.io/blog/manipulate-excel-files-in-php
-
 
 ## Notes
 
