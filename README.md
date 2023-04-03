@@ -13,8 +13,6 @@ It also makes use of the following components:
 - [sorttable][sorttable]: HTML5/Javascript table with sorting capabilities.  It is quite handy
   when working with data.
 - [phpGraph][phpgraph]: SVG charts from PHP data
-- [Pikaday][pikaday]: Calendar/date picker control
-- [moment.js][moment]: Dependancy for [Pikaday][pikaday] so that it uses the fight date format.
 
 The code is structured as follows:
 
@@ -104,8 +102,6 @@ OK, so this is my first try at an [FatFree][f3] MVC web application.  So somethi
    [f3]: http://fatfreeframework.com/home
    [f3testing]: http://fatfreeframework.com/unit-testing
    [f3crud]: https://foysalmamun.wordpress.com/2013/03/27/fat-free-crud-with-mvc-tutorial/
-   [moment]: https://github.com/moment/moment
    [parsecsv]: https://github.com/parsecsv/parsecsv-for-php
    [phpgraph]: https://github.com/jerrywham/phpGraph
-   [pikaday]: https://github.com/dbushell/Pikaday
    [sorttable]: https://github.com/stuartlangridge/sorttable
