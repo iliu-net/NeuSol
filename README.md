@@ -78,20 +78,6 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
   - data/Importers/*.php
 
 
-## TODO
-
-- Pending
-  - The DAO for postings is not a clean encapsulation and uses SQL direct statements.
-  - Add unit testing using [f3 unit-testing][f3testing]
-  - Sc::render -- add support for adding pre-conditions and post-conditions
-    For example, right now pikaday requires adding stuff in header, footer, in addition
-    to the actual control placement.
-    - Convert pikaday and others to Sc::render
-- [ ] Create a field for "asset" accounts.  Don't show this in postings/balance?
-      or just show them after.  Or have the option to hide them.
-- [ ] When positions are updated, an adjustment "Non-relized-value" is recorded for
-      asset accounts
-
 ## Notes
 
 - Balance is the amount at the end of the day.
