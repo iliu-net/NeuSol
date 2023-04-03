@@ -3,16 +3,18 @@
 ![status](https://github.com/iliu-net/NeuSol/actions/workflows/static-checks.yaml/badge.svg)
 ![status](https://github.com/iliu-net/NeuSol/actions/workflows/release.yaml/badge.svg)
 
-Basic expense tracking software.  This is my first project using the [Fat-Free Framework][3].
+Basic expense tracking software.  This is my first project using the [Fat-Free Framework][f3].
 
 It uses the [Fat Free Framework][f3], a lightweight PHP framework, and follows the example in [Fat-Free CRUD with MVC][f3crud]
 
 It also makes use of the following components:
 
-- [parsecsv-for-php][parsecsv]: For parsing csv file in the Amex importing module
 - [sorttable][sorttable]: HTML5/Javascript table with sorting capabilities.  It is quite handy
   when working with data.
 - [phpGraph][phpgraph]: SVG charts from PHP data
+- [PhpSpreadsheet][phpspread]: For importing XLSX files.
+- [parsecsv-for-php][parsecsv]: For importing csv files.
+- [pdfparser][pdfparser]: For importing PDF files.
 
 The code is structured as follows:
 
@@ -104,3 +106,5 @@ OK, so this is my first try at an [FatFree][f3] MVC web application.  So somethi
    [parsecsv]: https://github.com/parsecsv/parsecsv-for-php
    [phpgraph]: https://github.com/jerrywham/phpGraph
    [sorttable]: https://github.com/stuartlangridge/sorttable
+   [phpspread]: https://github.com/PHPOffice/PhpSpreadsheet
+   [pdfparser]: https://github.com/smalot/pdfparser
