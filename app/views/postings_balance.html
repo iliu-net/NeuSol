@@ -2,9 +2,6 @@
   CompatV1::ui_script('/ui/scripts/sorttable.js');
   CompatV1::ui_script('/app/views/postings_balance.js');
   //CompatV1::ui_script('/app/views/postings_form.js');
-  CompatV1::ui_script('/ui/scripts/moment.min.js');
-  CompatV1::ui_script('/ui/scripts/pikaday.js');
-  CompatV1::x_css_inc('/ui/css/pikaday.css');
   //CompatV1::ui_script('/ui/scripts/UltimateScrollingTable.js');
   Sc::f3()->set('form_action_url','/postings/crud/balance');
   Sc::f3()->set('b_action', true);
@@ -25,7 +22,7 @@
 <h4>New Balance</h4>
 <form action="<?= Sc::url('/balance/new')?>" method="post" id="form_new_balance_form">
 <input type="hidden" name="acctId" id="form_acctId" value="<?=$POST['acctId']?>" />
-Date: <?=Fm::text('dateBalance',['default'=>date('Y-m-d'),'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+Date: <?=Fm::date('dateBalance',['default'=>date('Y-m-d'),'required']) ?>
 Amount: <?= Fm::text('amountBalance',['size'=>7,'maxlength'=>20,'required']) ?>
 <input type="submit" name="submit" value="Update" id="form_new_balance_submit"/>
 </form
@@ -36,4 +33,3 @@ Amount: <?= Fm::text('amountBalance',['size'=>7,'maxlength'=>20,'required']) ?>
 <!-- <pre>COOKIES<br/><?php print_r(Sc::f3()->get('COOKIES')); ?></pre> -->
 
 <?= View::instance()->render('footer.html') ?>
-<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>

@@ -335,6 +335,30 @@ abstract class Fm {
     return $tag;
 
   }
+  #****m* Fm/date
+  # NAME
+  #   date -- create HTML date field
+  # SYNOPSIS
+  #   $html = Fm::date($name,$opts)
+  # FUNCTION
+  #   Returns the HTML rendering for a date field.  It will pre-load
+  #   with the POST.$name value.
+  # INPUTS
+  #   $name - F3 POST variable name
+  #   $opts - array containing options as a possible mix of scalars
+  #           and key+value pairs.
+  # OPTIONS
+  #    See OPTIONS section for Fm/input.
+  # SEE ALSO
+  #   Fm/input
+  # RESULTS
+  #   HTML rendering for checkbox.
+  #******
+  static public function date($name,$opts=[]) {
+    $f3 = Base::instance();
+    if (!isset($opts['type'])) $opts['type'] = 'date';
+    return self::input($name,$opts);
+  }
   #****m* Fm/esc
   # NAME
   #   esc -- Escape HTML entities

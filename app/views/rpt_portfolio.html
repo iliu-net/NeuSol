@@ -1,7 +1,4 @@
 <?php
-  CompatV1::ui_script('/ui/scripts/moment.min.js');
-  CompatV1::ui_script('/ui/scripts/pikaday.js');
-  CompatV1::x_css_inc('/ui/css/pikaday.css');
   CompatV1::ui_script('/app/views/rpt.js');
   CompatV1::ui_script('/app/views/yrnav.js');
   $graph = new phpGraph();
@@ -19,7 +16,7 @@
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
-  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>  
+  <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
   <?= CompatV1::select($period,$avail_positions,'period',['onchange'=>'changePage();']) ?>
 </div>
 <div id="bottom">
@@ -70,5 +67,4 @@
 
 </div>
 <?= View::instance()->render('footer.html') ?>
-<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
 

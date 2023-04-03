@@ -1,7 +1,4 @@
 <?php
-  CompatV1::ui_script('/ui/scripts/moment.min.js');
-  CompatV1::ui_script('/ui/scripts/pikaday.js');
-  CompatV1::x_css_inc('/ui/css/pikaday.css');
   CompatV1::ui_script('/app/views/rpt.js');
   CompatV1::ui_script('/app/views/yrnav.js');
 
@@ -37,8 +34,8 @@
     <?= Sc::go('/positions/rpt/'.$report.'/'.$start.'/'.$end,'Any') ?>
   <?php } else if ($mode == 'any') { ?>
     <input type="hidden" id="base_url" name="base_url" value="<?= Sc::url('/positions/rpt/'.$report.'/') ?>"/>
-    <?= Fm::text('rptStart',['value'=>$start,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
-    <?= Fm::text('rptEnd',['value'=>$end,'size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+    <?= Fm::date('rptStart',['value'=>$start,'required']) ?>
+    <?= Fm::date('rptEnd',['value'=>$end,'required']) ?>
   <?= Sc::jslnk('custom_date()','Go') ?> :
   <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4),'Year') ?> :
   <?= Sc::go('/positions/rpt/'.$report.'/'.substr($start,0,4).'/'.substr($end,0,4),'Multi-Year') ?>
@@ -181,5 +178,4 @@
 
 </div>
 <?= View::instance()->render('footer.html') ?>
-<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>
 

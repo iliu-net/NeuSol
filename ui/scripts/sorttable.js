@@ -1,1 +1,1 @@
-../../submodules/sorttable/sorttable.js
+../../submodules/sorttable/sorttable/sorttable.js
