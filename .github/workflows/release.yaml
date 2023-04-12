@@ -15,7 +15,7 @@ jobs:
       - name: prepare dependancies
         run: |
           sudo apt install -y composer
-          composer update
+          composer install
       - name: create full tarball
         run: |
           > artifacts.txt

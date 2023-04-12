@@ -1,6 +1,6 @@
 # ChangeLog
 
-- next:
+- 1.4.0:
   - Switching from submodules to composer
   - Added Amex XLSX importer
   - ICS Cards importer
