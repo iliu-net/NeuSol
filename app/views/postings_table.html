@@ -2,13 +2,19 @@
   <thead>
   <tr>
     <th>Date</th>
-    <?php if ($account_id == 0) { ?><th>Account</th><?php } ?>
-    <th>Description</th>
+    <?php if ($account_id == 0) { ?><th valign="top">Account</th><?php } ?>
+    <th valign="top">
+      Description
+    </th>
     <th>Category</th>
     <th>Amount</th>
-    <?php if (isset($balance)) { ?><th><?= $bal_header ?></th><?php } ?>
+    <?php if (isset($balance)) { ?>
+      <th><?= $bal_header ?></th>
+    <?php } ?>
     <th>Action</th>
   </tr>
+  </thead>
+  <tbody>
    <?php if (isset($balance)) { ?>
      <tr>
       <?php if ($account_id == 0) { ?><td></td><?php } ?>
@@ -19,8 +25,6 @@
       <td></td>
      </tr>
    <?php } ?>
-  </thead>
-  <tbody>
 
    <?php
      $code = '';
@@ -35,7 +39,7 @@
        <td><span title="<?=$row->text?>"><?=$row->postingDate?></span></td>
        <?php if ($account_id == 0) { ?>
 	<td>
-          <span title="<?=$row->text?>"><?=$accounts_long[$row->acctId]?></span>
+          <span title="<?=$row->text?>"><?=$accounts_all[$row->acctId]?></span>
 	</hd>
       <?php } ?>
        <td><span title="<?=$row->text?>"><?=$row->description?></span></td>

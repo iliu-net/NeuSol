@@ -1,5 +1,7 @@
 <?php
-require_once('lib/parsecsv-for-php/parsecsv.lib.php');
+use \ParseCsv\Csv as parseCSV;
+
+//~ require_once('lib/parsecsv-for-php/parsecsv.lib.php');
 
 # Header
 # Datum,Omschrijving,Kaartlid,Rekening #,Bedrag,Aanvullende informatie,Vermeld op uw rekeningoverzicht als,Adres,Plaats,Postcode,Land,Referentie

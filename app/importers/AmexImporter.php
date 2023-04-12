@@ -1,5 +1,5 @@
 <?php
-require_once('lib/parsecsv-for-php/parsecsv.lib.php');
+use \ParseCsv\Csv as parseCSV;
 
 abstract class AmexImporter implements ImporterInterface {
 

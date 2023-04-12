@@ -2,9 +2,6 @@
   CompatV1::ui_script('/ui/scripts/sorttable.js');
   CompatV1::ui_script('/app/views/postings_list.js');
   //CompatV1::ui_script('/app/views/postings_form.js');
-  CompatV1::ui_script('/ui/scripts/moment.min.js');
-  CompatV1::ui_script('/ui/scripts/pikaday.js');
-  CompatV1::x_css_inc('/ui/css/pikaday.css');
   //CompatV1::ui_script('/ui/scripts/UltimateScrollingTable.js');
 ?>
 <?= View::instance()->render('header.html') ?>
@@ -35,4 +32,3 @@
 <!--- <pre>COOKIES<br/><?php print_r($_COOKIE); ?></pre> -->
 
 <?= View::instance()->render('footer.html') ?>
-<script src="<?= Sc::url('/ui/scripts/pikaday-helper.js')?>"></script>

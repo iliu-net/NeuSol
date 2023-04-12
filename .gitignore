@@ -2,4 +2,4 @@
 data/*.*
 data/Importers/*.php
 backups
-
+vendor

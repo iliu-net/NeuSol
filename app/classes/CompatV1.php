@@ -37,22 +37,6 @@ abstract class CompatV1 {
     }
     $f3->set($var,$inc);
   }
-  #****m* CompatV1/x_css_inc
-  # NAME
-  #   x_css_inc -- Register a CSS file (DEPRECATED)
-  # SYNOPSIS
-  #   CompatV1::x_css_inc($path)
-  # FUNCTION
-  #   Register a file so that it is sent along with other CSS
-  #   settings.
-  # INPUTS
-  #   $path - path to css to register.
-  # RESULTS
-  #   x_css_inc in $f3 HIVE is updated.
-  #******
-  static public function x_css_inc($path) {
-    self::add_path('x_css_inc',$path);
-  }
   #****m* CompatV1/ui_script
   # NAME
   #   ui_script -- Register a JavaScript file (DEPRECATED)

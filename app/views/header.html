@@ -86,11 +86,6 @@ div {
 
   </style>
   <?php
-    if (isset($x_css_inc)) {
-      foreach ($x_css_inc as $inc) {
-        echo '<link rel="stylesheet" href="'.$inc.'">';
-      }
-    }
     if (isset($ui_scripts)) {
       foreach ($ui_scripts as $inc) {
         echo '<script src="'.$inc.'"></script>';

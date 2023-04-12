@@ -22,7 +22,9 @@
  <p>
   <?= Fm::text('hint',['label'=>'Password hint: ','maxlength'=>32,'type'=>'password']) ?>
   <input type="button" onclick="showHide()" id="show_button" value="Show"/>
-</p>
+ </p>
+ <p><?= Fm::checkbox('hide',['label'=>'Hide','value'=>1]) ?></p>
+ </p>
 
  <div class="control-group">
    <input type="hidden" name="<?= $form_command ?>" value="<?= $form_command ?>"/>

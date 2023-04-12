@@ -1,11 +1,53 @@
 #!/bin/sh
+###$_begin-include: utils/ghrelease.sh
 #
-# First try at a release script...
+# Release script
 #
 set -euf -o pipefail
 
-checks="wfscripts/checks"
+#
+# Used to install scripts to current directory
+#
 
+die() {
+  local rc=1
+  [ $# -eq 0 ] && set - -1 EXIT
+  case "$1" in
+    -[0-9]*) rc=${1#-}; shift ;;
+  esac
+  echo "$@" 1>&2
+  exit $rc
+}
+
+
+install_util() {
+  [ $# -eq 0 ] && return 0
+  local target=
+  case "$1" in
+    -i) [ $# -eq 1 ] && target=$(pwd) || target="$2" ;;
+    --install=*) target="${1#--install=}" ;;
+    --install) target="$(pwd)" ;;
+    *) return 0
+  esac
+
+  [ -z "$target" ] && return 0
+  [ ! -d "$target" ] && die -5 "$target: not a directory"
+
+  target="$target/$(basename "$0")"
+  [ -e "$target" ] &&  die -7 "$target: already exists!  Try re-binding instead."
+  cp -av "$0" "$target"
+  exit $?
+}  
+
+  
+    
+
+stderr() {
+  echo "$@" 1>&2
+}
+
+
+checks=".ghrelease-checks"
 rc=false
 github=false
 gh_auth=false
@@ -24,7 +66,8 @@ do
     --rel|-r) rc=false ;;
     --gh|-g) github=true ;;
     --no-gh|-G) github=false ;;
-    *) break ;;
+    --) shift ; break ;;
+    *) install_util "$@" ; break ;;
   esac
   shift
 done
@@ -39,9 +82,11 @@ if [ $# -lt 1 ] ; then
 	* --gh|-g : use github API
 	* --no-gh|-G : do not use github API
 	* version : version tag
+	* -i [dir] : install $0 to current directory or [dir].
 
 	If version is --purge, it will delete all pre-releases
 	_EOF_
+  gh release list
   exit 1
 fi
 
@@ -52,7 +97,11 @@ if $github ; then
 fi
 
 relid="$1" ; shift
-repodir="$(dirname "$(readlink -f "$0")")"
+if [ -n "${ORIG0:-}" ] ; then
+  repodir="$(dirname "$(readlink -f "$ORIG0")")"
+else
+  repodir="$(dirname "$(readlink -f "$0")")"
+fi
 cd "$repodir"
 
 git pull --tags # Make sure remote|local tags are in sync
@@ -92,6 +141,15 @@ else
   fi
 fi
 
+if [ -x "$checks" ] ; then
+  "$(readlink -f "$checks")" $@ || die -13 "pre-release checks failed!"
+else
+  stderr ''
+  stderr "Skipping pre-release checks"
+  stderr "Create an executable script \"$checks\" to enable pre-release checks"
+  stderr ''
+fi
+
 # Check for uncomitted changes
 if [ -n "$(git status --porcelain)" ] ; then
   echo "Only run this on a clean checkout"
@@ -100,19 +158,12 @@ if [ -n "$(git status --porcelain)" ] ; then
   exit 3
 fi
 
-if [ -d "$checks" ] ; then
-  run-parts "$checks"
-fi
-
 if ptag=$(git describe --abbrev=0) ; then
   relnotes="$(git log "$ptag"..HEAD)" # --oneline
 else
   relnotes="$(git log HEAD)" # --oneline
 fi
-if [ -z "$relnotes" ] ; then
-  echo "No commits since last release"
-  exit 4
-fi
+[ -z "$relnotes" ] && die -4 "No commits since last release"
 
 if [ -f "version.h" ] ; then
   vfile="version.h"
@@ -135,3 +186,4 @@ gh release create \
 	--target "$cbranch" \
 	--title "$relid" \
 	--notes "$relnotes"
+###$_end-include: utils/ghrelease.sh

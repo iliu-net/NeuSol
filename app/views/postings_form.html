@@ -35,7 +35,7 @@ Category | group
  Id: <?= Fm::text('postingId',['readonly','placeholder'=>'New','size'=>5]) ?>
  <span style="float: right">
   Date:
-   <?= Fm::text('postingDate',['size'=>8,'maxlength'=>10,'required','placeholder'=>'yyyy-mm-dd','class'=>'mypikadayclass']) ?>
+   <?= Fm::date('postingDate',['size'=>8,'maxlength'=>10,'required']) ?>
  </span>
  <br/>
   Desc:

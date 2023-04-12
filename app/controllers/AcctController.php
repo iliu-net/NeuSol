@@ -4,7 +4,7 @@ class AcctController extends Controller {
   public function index($f3,$params) {
     $accts = new Acct($this->db);
     $f3->set('accounts',$accts->all());
-    echo View::instance()->render('acct_list.html');	
+    echo View::instance()->render('acct_list.html');
   }
 
   function validateForm($f3,$type,$id=null) {
@@ -32,7 +32,7 @@ class AcctController extends Controller {
 	$f3->set('msg',$msg);
       }
     }
-    $f3->set('msg',$msg);
+    $f3->set('msg',$msg ?? '');
     $f3->set('form_action',Sc::url('/acct/create'));
     $f3->set('page_head','Create Account');
     $f3->set('form_command','create');
@@ -42,6 +42,7 @@ class AcctController extends Controller {
   public function update($f3,$params) {
     $acct = new Acct($this->db);
     if ($f3->exists('POST.update')) {
+      if (!$f3->exists('POST.hide')) $f3->set('POST.hide',0);
       if (($msg = $this->validateForm($f3,$acct,$f3->get('POST.acctId'))) == '') {
         $acct->edit($f3->get('POST.acctId'));
         $f3->reroute('/acct/msg/Entry updated');

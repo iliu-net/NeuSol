@@ -12,6 +12,7 @@
     <th>Number</th>
     <th>Institution</th>
     <th>SName</th>
+    <th>Hide</th>
     <th>Action</th>
   </tr>
   </thead>
@@ -22,6 +23,9 @@
       <td><span title="<?= $act['remarks'] ?>"><?= $act['acctNo'] ?> </span></td>
       <td><span title="<?= $act['remarks'] ?>"><?= $act['symbol'] ?> </span></td>
       <td><span title="<?= $act['hint'] ?>"><?= $act['sname'] ?> </span></td>
+      <td><span title="<?= $act['remarks'] ?>">
+	<input type="checkbox" disabled <?= $act['hide'] ? 'checked' : '' ?>>
+      </span></td>
       <td>
 	<span title="<?= $act['remarks'] ?>">
           <?= Sc::go('/acct/update/'.$act['acctId'],'Edit') ?>

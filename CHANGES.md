@@ -1,0 +1,51 @@
+# ChangeLog
+
+- 1.4.0:
+  - Switching from submodules to composer
+  - Added Amex XLSX importer
+  - ICS Cards importer
+  - Accounts can be hidden
+  - Removing pikaday dependancies
+  - Removing phpGraph submodule
+  - Updating sorttable and fixing postings table sorting.
+- 1,3,6:
+  - UI tweaks and bugfixes
+  - Bug Fix search (select account+all categories)
+- 1.3.5:
+  - switching to fatfree-core submodule
+- 1.3.4:
+  - Upgrading f3 to 3.8.0
+  - Fixed bugs due to PHP8 testing
+- 1.3.3:
+  - last version supporting php5+
+- 1.3.2:
+  - handle numbers with thousands and different decimal separators
+  - Internal API tweaks
+- 1.3.1:
+  - positions show account numbers
+  - fixed php7.4 compatibility
+  - reverse proxy fixes
+  - ... etc...
+- 1.3.0:
+  - updated sub modules
+  - search postings
+  - dynamic rules
+  - month navigation
+  - misc improvements
+- 1.2.3: balance
+  - Add controls to make it easier to balance accounts
+- 1.2.2: 2017.03
+  - rpt_positions: Show asset/liabilities totals
+  - Clean-ups
+- 1.2.1: Positions
+  - Equity Positions
+  - Tweaking summary, adding pie charts
+  - Data Entry, Postings: Shows running total
+- 1.2.0: Backups
+  - Backup improvements
+- 1.1.0: First full production version
+  - Added CategoryTypes
+  - Updated FatFreeFramework
+  - Summary Reporting
+  - This version was working quite well for a few months
+- 1.0.0 : First public release

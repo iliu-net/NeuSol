@@ -3,18 +3,18 @@
 ![status](https://github.com/iliu-net/NeuSol/actions/workflows/static-checks.yaml/badge.svg)
 ![status](https://github.com/iliu-net/NeuSol/actions/workflows/release.yaml/badge.svg)
 
-Basic expense tracking software.  This is my first project using the [Fat-Free Framework][3].
+Basic expense tracking software.  This is my first project using the [Fat-Free Framework][f3].
 
 It uses the [Fat Free Framework][f3], a lightweight PHP framework, and follows the example in [Fat-Free CRUD with MVC][f3crud]
 
 It also makes use of the following components:
 
-- [parsecsv-for-php][parsecsv]: For parsing csv file in the Amex importing module
 - [sorttable][sorttable]: HTML5/Javascript table with sorting capabilities.  It is quite handy
   when working with data.
 - [phpGraph][phpgraph]: SVG charts from PHP data
-- [Pikaday][pikaday]: Calendar/date picker control
-- [moment.js][moment]: Dependancy for [Pikaday][pikaday] so that it uses the fight date format.
+- [PhpSpreadsheet][phpspread]: For importing XLSX files.
+- [parsecsv-for-php][parsecsv]: For importing csv files.
+- [pdfparser][pdfparser]: For importing PDF files.
 
 The code is structured as follows:
 
@@ -78,71 +78,6 @@ The web server must have `mod_rewrite` enabled and allow `.htaccess` overrides.
   - data/Importers/*.php
 
 
-## TODO
-
-- Pending
-  - The DAO for postings is not a clean encapsulation and uses SQL direct statements.
-  - Add unit testing using [f3 unit-testing][f3testing]
-  - Sc::render -- add support for adding pre-conditions and post-conditions
-    For example, right now pikaday requires adding stuff in header, footer, in addition
-    to the actual control placement.
-    - Convert pikaday and others to Sc::render
-- [ ] Create a field for "asset" accounts.  Don't show this in postings/balance?
-      or just show them after.  Or have the option to hide them.
-- [ ] When positions are updated, an adjustment "Non-relized-value" is recorded for
-      asset accounts
-- [ ] summary page can show/hide asset account transactions.
-- [ ] Add a "inactive" accounts.  These accounts are also either hidden for
-      entry fields, or put later in the list.  Or just use 'zz prefix'
-- [ ] read xlsx
-  - https://github.com/PHPOffice/PhpSpreadsheet
-  - https://github.com/box/spout (Now dead?)
-  - https://www.nidup.io/blog/manipulate-excel-files-in-php
-
-## ChangeLog
-
-- 1,3,6:
-  - UI tweaks and bugfixes
-  - Bug Fix search (select account+all categories)
-- 1.3.5:
-  - switching to fatfree-core submodule
-- 1.3.4:
-  - Upgrading f3 to 3.8.0
-  - Fixed bugs due to PHP8 testing
-- 1.3.3:
-  - last version supporting php5+
-- 1.3.2:
-  - handle numbers with thousands and different decimal separators
-  - Internal API tweaks
-- 1.3.1:
-  - positions show account numbers
-  - fixed php7.4 compatibility
-  - reverse proxy fixes
-  - ... etc...
-- 1.3.0:
-  - updated sub modules
-  - search postings
-  - dynamic rules
-  - month navigation
-  - misc improvements
-- 1.2.3: balance
-  - Add controls to make it easier to balance accounts
-- 1.2.2: 2017.03
-  - rpt_positions: Show asset/liabilities totals
-  - Clean-ups
-- 1.2.1: Positions
-  - Equity Positions
-  - Tweaking summary, adding pie charts
-  - Data Entry, Postings: Shows running total
-- 1.2.0: Backups
-  - Backup improvements
-- 1.1.0: First full production version
-  - Added CategoryTypes
-  - Updated FatFreeFramework
-  - Summary Reporting
-  - This version was working quite well for a few months
-- 1.0.0 : First public release
-
 ## Notes
 
 - Balance is the amount at the end of the day.
@@ -167,10 +102,9 @@ OK, so this is my first try at an [FatFree][f3] MVC web application.  So somethi
 * * *
 
    [f3]: http://fatfreeframework.com/home
-   [f3testing]: http://fatfreeframework.com/unit-testing
    [f3crud]: https://foysalmamun.wordpress.com/2013/03/27/fat-free-crud-with-mvc-tutorial/
-   [moment]: https://github.com/moment/moment
    [parsecsv]: https://github.com/parsecsv/parsecsv-for-php
    [phpgraph]: https://github.com/jerrywham/phpGraph
-   [pikaday]: https://github.com/dbushell/Pikaday
    [sorttable]: https://github.com/stuartlangridge/sorttable
+   [phpspread]: https://github.com/PHPOffice/PhpSpreadsheet
+   [pdfparser]: https://github.com/smalot/pdfparser

@@ -17,13 +17,12 @@ class PositionController extends Controller {
     }
 
     $acct = new Acct($this->db);
-    $actlst = $acct->listDesc();
+    $actlst = $acct->listDesc(FALSE);
     if (count($actlst) == 0) {
       $f3->reroute('/acct/msg/No accounts found, please create one!');
       return '';
     }
     ksort($actlst);
-    $f3->set('accounts',$actlst);
 
     $posDAO = new Position($this->db);
 
@@ -37,8 +36,26 @@ class PositionController extends Controller {
 	$positions[$adding][$acctId] = $res;
       }
     }
+    # Hide positions if needed...
+    $shown = $acct->listDesc();
+    foreach (array_keys($actlst) as $acctId) {
+      if (isset($shown[$acctId])) continue;
+      $sum = 0;
+      foreach ($positions as $position => $vv) {
+	if (!isset($vv[$acctId])) continue;
+	$sum += $vv[$acctId];
+      }
+      if ($sum == 0) {
+	foreach (array_keys($positions) as $position) {
+	  unset($positions[$position][$acctId]);
+	}
+	unset($actlst[$acctId]);
+      }
+    }
 
     ksort($positions);
+
+    $f3->set('accounts',$actlst);
     $f3->set('positions',$positions);
 
     $all = [];
@@ -48,6 +65,9 @@ class PositionController extends Controller {
     $f3->set('acct_all',$all);
 
     echo View::instance()->render('positions.html');
+    echo '<pre>';
+    print_r($positions);
+    echo '</pre>';
   }
 
   public function save($f3,$params) {
@@ -141,14 +161,12 @@ class PositionController extends Controller {
     }
 
     $acct = new Acct($this->db);
-    $actlst = $acct->listDesc();
+    $actlst = $acct->listDesc(FALSE);
     if (count($actlst) == 0) {
       $f3->reroute('/acct/msg/No accounts found, please create one!');
       return '';
     }
     ksort($actlst);
-    $f3->set('accounts',$actlst);
-    $f3->set('accounts_short',$acct->listSName());
 
     $posDAO = new Position($this->db);
     if ($f3->get('mode') == 'single') {
@@ -174,6 +192,26 @@ class PositionController extends Controller {
       $positions = $posDAO->getpos('? <= positionDate AND positionDate <= ?',[$start,$end]);
     }
     ksort($positions);
+
+    # Hide positions if needed...
+    $shown = $acct->listDesc();
+    foreach (array_keys($actlst) as $acctId) {
+      if (isset($shown[$acctId])) continue;
+      $sum = 0;
+      foreach ($positions as $position => $vv) {
+	if (!isset($vv[$acctId])) continue;
+	$sum += $vv[$acctId];
+      }
+      if ($sum == 0) {
+	foreach (array_keys($positions) as $position) {
+	  unset($positions[$position][$acctId]);
+	}
+	unset($actlst[$acctId]);
+      }
+    }
+
+    $f3->set('accounts',$actlst);
+    $f3->set('accounts_short',$acct->listSName(FALSE));
     $f3->set('positions',$positions);
 
     echo View::instance()->render($report.'.html');
