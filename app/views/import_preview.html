@@ -60,7 +60,7 @@ foreach ($rows as $row) {
 	</div>
 	<div id="qadd_form<?= $i ?>" style="display: none">
 	  <input type="hidden" value="0" id="qadd<?= $i ?>" />
-	  <input type="text" value="<?=trim($row[CN_DESCRIPTION]) ?>" id="desc_re<?= $i ?>"/>
+	  <input type="text" value="<?=trim($row[CN_DESCRIPTION]) ?>" id="desc_re<?= $i ?>" maxlength=40 />
 	  <?= Sc::jslnk("qadd_cancel($i);",'cancel') ?>
 	</div>
       <?php } ?>

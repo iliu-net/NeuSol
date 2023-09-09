@@ -56,14 +56,14 @@ class PostingsController extends Controller {
     list($acctId,$month,$year,$selcat) = self::valid_page($f3,$page);
 
     if ($month == 12) {
-      $f3->set('next_page',implode(',',[$acctId,1,$year+1,'a']));
+      $f3->set('next_page',implode(',',[$acctId,1,$year+1,$selcat]));
     } else {
-      $f3->set('next_page',implode(',',[$acctId,$month+1,$year,'a']));
+      $f3->set('next_page',implode(',',[$acctId,$month+1,$year,$selcat]));
     }
     if ($month == 1) {
-      $f3->set('prev_page',implode(',',[$acctId,12,$year-1,'a']));
+      $f3->set('prev_page',implode(',',[$acctId,12,$year-1,$selcat]));
     } else {
-      $f3->set('prev_page',implode(',',[$acctId,$month-1,$year,'a']));
+      $f3->set('prev_page',implode(',',[$acctId,$month-1,$year,$selcat]));
     }
 
     $f3->set('account_id',$acctId);

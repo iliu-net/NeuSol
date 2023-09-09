@@ -68,9 +68,21 @@
     <tr>
      <td><?= $acct_desc ?> </td>
      <?php foreach ($positions as $n=>&$pos) { ?>
-       <?php if (!isset($pos[$acct])) $pos[$acct] = 0; ?>
        <td align="right">
-	 <?= CNum::fmt($pos[$acct]) ?>
+	 <?php
+	    if (!isset($pos[$acct])) $pos[$acct] = 0;
+	    if (preg_match('/^([0-9][0-9][0-9][0-9])-([0-9][0-9])-[0-9][0-9]$/', $n, $mv)) {
+	      $year = intval($mv[1]);
+	      $mn = intval(ltrim($mv[2],'0'));
+	      $mn -= 2;
+	      if ($mn < 1) $mn = 1;
+	      echo Sc::go('/postings/index/'.
+                  implode(',',[$acct, $mn, $year, 'a']),
+		  CNum::fmt($pos[$acct]));
+	    } else {
+	      echo CNum::fmt($pos[$acct]);
+	    }
+	  ?>
        </td>
        <?php $al_totals[$pos[$acct] < 0 ? 'l' : 'a'][$n] += $pos[$acct]; ?>
      <?php } ?>
@@ -175,7 +187,7 @@
   <?php if ($first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
   <?php if ($last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
 </table>
-
+POSITIONS
 </div>
 <?= View::instance()->render('footer.html') ?>
 

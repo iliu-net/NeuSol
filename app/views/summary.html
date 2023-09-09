@@ -33,13 +33,32 @@
 	   $total = '';
 	 } elseif (count($table[$mn][$tt][$cat]) == 1 && isset($table[$mn][$tt][$cat][0])) {
 	   list($total) = $table[$mn][$tt][$cat];
-	   echo CNum::fmt($total);
+	   if ($mn == 0) {
+	    echo CNum::fmt($total);
+	   } else {
+	    echo '<a href="'.
+		    Sc::url('/postings/index/'.
+			    implode(',',[0, $mn, $year, $cat])).
+		    '">';
+	    echo CNum::fmt($total);
+	    echo '</a>';
+	   }
 	 } else {
 	   $total = 0;
 	   foreach ($table[$mn][$tt][$cat] as $x=>$y) {
 	     $total += $y;
 	   }
-	   echo '<strong>'.CNum::fmt($total).'</strong>';
+	   if ($mn == 0) {
+	    echo '<strong>'.CNum::fmt($total).'</strong>';
+	   } else {
+	    echo '<a href="'.
+		    Sc::url('/postings/index/'.
+			    implode(',',[0, $mn, $year, $cat])).
+		    '">';
+	    echo '<strong>'.CNum::fmt($total).'</strong>';
+	    echo '</a>';
+	   }
+	   echo ' - ';
 	   ksort($table[$mn][$tt][$cat]);
 	   foreach ($table[$mn][$tt][$cat] as $x=>$z) {
 	     echo '<br/>'.$x.': ' . CNum::fmt($z);

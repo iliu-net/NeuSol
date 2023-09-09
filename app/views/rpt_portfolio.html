@@ -6,9 +6,23 @@
   $sections = ['assets'=>[],'liabilities'=>[]];
   $gdata = ['assets'=>[],'liabilities'=>[]];
   $totals = ['assets'=>0,'liabilities'=>0];
+
+  if (preg_match('/^([0-9][0-9][0-9][0-9])-([0-9][0-9])-[0-9][0-9]$/', $period, $mv)) {
+    $year = intval($mv[1]);
+    $mn = intval(ltrim($mv[2],'0'));
+  } else {
+    $year = intval(date('Y'));
+    $mn = intval(date('n'));
+  }
+  $mn -= 2;
+  if ($mn < 1) $mn = 1;
   foreach ($positions[$period] as $n=>$amt) {
     $s = $amt < 0 ? 'liabilities' : 'assets';
-    $sections[$s][$accounts[$n].' ('.$accounts_short[$n].')'] = $amt;
+    $t =  Sc::go('/postings/index/'.
+                  implode(',',[$n, $mn, $year, 'a']),
+                $accounts[$n].' ('.$accounts_short[$n].')');
+    //~ $t = $accounts[$n].' ('.$accounts_short[$n].')';
+    $sections[$s][$t] = $amt;
     $gdata[$s][$accounts_short[$n]] = $amt < 0 ? -$amt : $amt;
     $totals[$s] += $amt;
   }
@@ -47,7 +61,7 @@
 <?php foreach ($sections[$h] as $i=>$j) { ?>
 <tr><td><?=$i?></td><td align="right"><?= CNum::fmt($j) ?></td></tr>
 <?php } ?>
-<tr><th>Total</ht><td align="right"><?= CNum::fmt($totals[$h]) ?></td></tr>
+<tr><th>Total</th><td align="right"><?= CNum::fmt($totals[$h]) ?></td></tr>
 </tbody>
 </table>
 <?= $graph->draw($gdata[$h],['type'=>'pie','diskLegends'=>true]) ?>
@@ -61,8 +75,8 @@
   <?php if (isset($period)) { ?><tr align="left"><th>Period</th><td><?= $period ?></td><?php } ?>
   <?php if (isset($start)) { ?><tr align="left"><th>Start</th><td><?= $start ?></td><?php } ?>
   <?php if (isset($end)) { ?><tr align="left"><th>End</th><td><?= $end ?></td><?php } ?>
-  <?php if ($first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
-  <?php if ($last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
+  <?php if (isset($first) && $first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
+  <?php if (isset($last) && $last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
 </table>
 
 </div>

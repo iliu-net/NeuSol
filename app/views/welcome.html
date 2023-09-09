@@ -43,7 +43,12 @@ $graph->draw($reports['income'],['type'=>'pie','diskLegends'=>true])
       }
       if ($tot < 0) $data[$sname] = -$tot; ?>
   <tr>
-   <td><?=$row['name']?></td>
+   <td>
+     <a href="<?= Sc::url('/postings/index/'.
+			  implode(',',[0, date('n'), date('Y'), $row['cid']]))?>">
+      <?=$row['name']?>
+     </a>
+   </td>
    <td align="right"><?= CNum::fmt($row['income']) ?></td>
    <td align="right"><?= CNum::fmt($row['expenses']) ?></td>
    <td align="right"><?= CNum::fmt($tot) ?></td>

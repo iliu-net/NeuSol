@@ -1,5 +1,10 @@
 # ChangeLog
 
+- 1.4.1:
+  - Add hyperlinks in the Welcome page
+  - Add hyperlinks in summary, portfolio and historical portfolio reports
+  - Navigation links in postings maintain $selcat.
+  - bugfixes
 - 1.4.0:
   - Switching from submodules to composer
   - Added Amex XLSX importer

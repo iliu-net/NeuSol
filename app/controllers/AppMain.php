@@ -31,13 +31,14 @@ class AppMain extends Controller{
     $reports = [];
     $table = [];
     foreach (['expenses'=>'<','income'=>'>'] as $i=>$j) {
-      $rows = $this->db->exec('SELECT sname,sum(amount) as totals,nsCategory.description as category
+      $rows = $this->db->exec('SELECT sname,sum(amount) as totals,nsCategory.description as category, nsCategory.categoryId as cid
 		FROM nsPosting,nsCategory
 		WHERE nsCategory.categoryId = nsPosting.categoryId AND postingDate > ? AND amount '.$j.' 0 AND acctId in ('.$accounts.')
 		GROUP BY nsPosting.categoryId',$start);
       foreach ($rows as $row) {
 	if (!isset($table[$row['sname']])) $table[$row['sname']] = [];
 	$table[$row['sname']][$i] = abs($row['totals']);
+	$table[$row['sname']]['cid'] = $row['cid'];
 	$table[$row['sname']]['name'] = $row['category'];
       }
     }
@@ -50,8 +51,9 @@ class AppMain extends Controller{
        $reports[$row['sname']] = -$row['totals'];
     }
 
-    $f3->set('reports',$reports);		
+    $f3->set('reports',$reports);
     $f3->set('table',$table);
     echo View::instance()->render('welcome.html');
   }
 }
+

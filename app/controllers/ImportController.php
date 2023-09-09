@@ -41,13 +41,8 @@ class ImportController extends Controller {
     // Create any quick add new rules...
     $qadd_rules = self::get_qrules($f3->get('POST.qrules'));
     $msg = self::add_rules($this->db, $qadd_rules);
-    if ($msg != '') {
+    if ($msg != '' || $command == 'preview') {
       $this->previewRows($f3,$rows,$rr_map,$msg);
-      return;
-    }
-
-    if ($command == 'preview') {
-      $this->previewRows($f3,$rows,$rr_map);
       return;
     }
 
@@ -62,15 +57,16 @@ class ImportController extends Controller {
     // report results
     $f3->reroute('/import/msg/ROWS INSERTED: '.$k);
 
-    //~ echo Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
+    //~ echo Sc::go('/postings','Postings') .':'.Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
     //~ echo '<pre>';
+    //~ echo '# ROWS'.PHP_EOL;
     //~ print_r($rows);
+    //~ echo '# RR_MAP'.PHP_EOL;
     //~ print_r($rr_map);
+    //~ echo '# RULES'.PHP_EOL;
     //~ print_r($qadd_rules);
-    //~ print_r($f3->get('POST.qrules'));
-
     //~ echo '</pre>';
-    //~ echo Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
+    //~ echo Sc::go('/postings','Postings') .':'.Sc::go('/import','Bulk Import').' : '.Sc::go('/','Home').'<br/>';
 
     /*
     echo '<pre>';
@@ -408,6 +404,7 @@ class ImportController extends Controller {
 
     foreach ($qadd_list as $uid => $rr) {
       list($rownum, $catopt, $catgrp, $desc_re) = $rr;
+      $desc_re = substr($desc_re,0,40);
       $chk = $rm->qcheck($desc_re);
       if ($chk) {
 	$msg .= 'Duplicate rule match /'.$desc_re.'/'.PHP_EOL;

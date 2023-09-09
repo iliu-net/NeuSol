@@ -11,6 +11,7 @@
 <table class="sortable">
   <thead>
   <tr>
+    <th>ID</th>
     <th>Pri</th>
     <th>Target<br/>Category</th>
     <th>Match Criteria</th>
@@ -24,6 +25,7 @@
   <tbody>
     <?php foreach ($rules as $rr) { ?>
     <tr>
+      <td><?= $rr['ruleId'] ?></td>
       <td><?= $rr['pri'] ?></td>
       <td>
 	<?= $categories[$rr['categoryId']] ?>

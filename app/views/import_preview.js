@@ -28,9 +28,8 @@ function do_submit($command) {
       qdesc = document.getElementById("desc_re"+i).value;
       //~ console.log("QDEC: "+ qdesc);
       qadds += xid + "\t" + i + "\t" + cat + "\t" + cgn + "\t" + qdesc +"\n";
-    } else {
-      rows += xid + "\t" + i + "\t" + cat + "\t" + cgn + "\n";
     }
+    rows += xid + "\t" + i + "\t" + cat + "\t" + cgn + "\n";
   }
 
   document.getElementById("override").value = rows;
