@@ -52,7 +52,9 @@
         <?= $acct_all[$acct]['acctNo'] ?>
        </span>
      </td>
-     <?php foreach ($positions as $n=>$pos) { ?>
+     <?php foreach ($positions as $n=>$pos) {
+	if (!isset($pos[$acct])) $pos[$acct] = '';
+       ?>
        <td>
 	 <?= Fm::text('i'.$acct.'x'.str_replace('-','_',$n),['value'=>sprintf("%.2f",$pos[$acct]),'size'=>6,'maxlenght'=>12,'style'=>'text-align:right;']) ?>
        </td>

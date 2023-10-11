@@ -1,11 +1,15 @@
 # ChangeLog
 
+- 1.4.2:
+  - Fixed bugs in positions
+  - Migrating to new container infrastructure
+  - Removed out of date files
 - 1.4.1:
   - Add hyperlinks in the Welcome page
   - Add hyperlinks in summary, portfolio and historical portfolio reports
   - Navigation links in postings maintain $selcat.
   - bugfixes
-- 1.4.0:
+- 1.4.0: 2023.04
   - Switching from submodules to composer
   - Added Amex XLSX importer
   - ICS Cards importer
@@ -31,13 +35,13 @@
   - fixed php7.4 compatibility
   - reverse proxy fixes
   - ... etc...
-- 1.3.0:
+- 1.3.0: 2022.01
   - updated sub modules
   - search postings
   - dynamic rules
   - month navigation
   - misc improvements
-- 1.2.3: balance
+- 1.2.3:
   - Add controls to make it easier to balance accounts
 - 1.2.2: 2017.03
   - rpt_positions: Show asset/liabilities totals
@@ -53,4 +57,4 @@
   - Updated FatFreeFramework
   - Summary Reporting
   - This version was working quite well for a few months
-- 1.0.0 : First public release
+- 1.0.0 : First public release (2016.05)

@@ -11,9 +11,6 @@
     unset($temp);
   }
   $al_totals = ['a'=>[],'l'=>[]];
-  $graph = new phpGraph();
-  $g_hist = [ 'assets' => [] , 'liabilities' => [] ];
-  $g_line = [];
 ?>
 <?= View::instance()->render('header.html') ?>
 <div id="topdiv">
@@ -85,12 +82,12 @@
 	  ?>
        </td>
        <?php $al_totals[$pos[$acct] < 0 ? 'l' : 'a'][$n] += $pos[$acct]; ?>
-     <?php } ?>
+     <?php } unset($pos); ?>
      <?php if ($gains) {
 	if ($positions[$first][$acct]!=0.0) {
 	  echo
 		'<td align="right">'.
-		CNum::fmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / $positions[$first][$acct],2,'color:blue').
+		CNum::fmt(($positions[$last][$acct] - $positions[$first][$acct]) * 100.0 / abs($positions[$first][$acct]),2,'color:blue').
 		' % </td>';
 	} else {
 	  echo '<td></td>';
@@ -111,7 +108,7 @@
        if ($gains) {
          if ($al_totals[$i][$first]!=0.0) {
 	   echo '<td align="right">'.
-		CNum::fmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/$al_totals[$i][$first],2,'color:blue').
+		CNum::fmt(($al_totals[$i][$last] - $al_totals[$i][$first])*100.0/abs($al_totals[$i][$first]),2,'color:blue').
 		' % </td>';
          } else {
            echo '<td></td>';
@@ -131,16 +128,9 @@
        $deltas = [];
        foreach ($positions as $i => $pos) {
          $sum = 0;
-         $g_hist['assets'][$i] = $g_hist['liabilities'][$i] = 0;
          foreach ($pos as $n) {
            $sum += $n;
-	   if ($n < 0) {
-	     $g_hist['liabilities'][$i] -= $n;
-	   } else {
-	     $g_hist['assets'][$i] += $n;
-	   }
          }
-	 $g_line[$i] = $sum;
          if ($prev !== FALSE) {
           $deltas[] = ($sum - $prev) * 100.0 / $prev;
          } else {
@@ -166,16 +156,6 @@
   </tbody>
 </table>
 
-<?php if (count($positions) >= 2) {
-  //$data = [ 'Se 1' => 100000, 'Se 2' => 200000, 'Se 3' => 300000, 'Se 4' => 400000 ];
-  //echo $graph->draw($data,['steps'=>50000,'type'=>'bar']);
-  //echo  $graph->draw($g_line,['type'=>'line','steps'=>50000]);
-  // $graph->draw($g_hist,['multi'=>TRUE,'type'=>['assets'=>]) ;
-  //echo '<pre>';
-  //print_r(['g_hist'=>$g_hist,'g_line'=>$g_line]);
-  //echo '</pre>';
-} ?>
-
 <hr/>
 
 <table>
@@ -187,7 +167,6 @@
   <?php if ($first) { ?><tr align="left"><th>First</th><td><?= $first ?></td><?php } ?>
   <?php if ($last) { ?><tr align="left"><th>Last</th><td><?= $last ?></td><?php } ?>
 </table>
-POSITIONS
 </div>
 <?= View::instance()->render('footer.html') ?>
 

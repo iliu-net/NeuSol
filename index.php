@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__.'/vendor/autoload.php');
 date_default_timezone_set('UTC');
+require(__DIR__.'/vendor/autoload.php');
 
 if (php_sapi_name() == 'cli') {
   define('WORKING_DIR',getcwd());
@@ -22,15 +22,24 @@ if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
     }
   }
 }
-//~ $f3=require('submodules/fatfree-core/base.php');
+# Fixed issues with nginx...
+if (($i = strpos($_SERVER['SERVER_NAME'], ':')) !== false) {
+  $_SERVER['SERVER_PORT'] = substr($_SERVER['SERVER_NAME'],$i+1);
+  $_SERVER['SERVER_NAME'] = substr($_SERVER['SERVER_NAME'],0,$i);
+}
+
 $f3 = Base::instance();
+//~ $f3=require('vendor/bcosca/fatfree-core/base.php');
 $f3->config('config/config.ini');
 
-define('NEUHOME',basename(dirname(realpath(__FILE__))));
-if (NEUHOME == 'NeuDev') {
+define('APPNAME',basename(dirname($_SERVER['SCRIPT_NAME'])));
+if (substr(APPNAME,-3) == 'Dev') {
   define('NONPROD',1);
   $f3->config('config/nonprod-config.ini');
 }
+$xcfg = implode('/',array_slice(explode('/',realpath(__FILE__)),0,3)) . '/config.ini';
+if (is_readable($xcfg)) $f3->config($xcfg);
+unset($xcfg);
 
 $f3->config($routes);
 

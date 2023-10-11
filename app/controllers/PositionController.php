@@ -65,9 +65,9 @@ class PositionController extends Controller {
     $f3->set('acct_all',$all);
 
     echo View::instance()->render('positions.html');
-    echo '<pre>';
-    print_r($positions);
-    echo '</pre>';
+    //~ echo '<pre>';
+    //~ print_r($positions);
+    //~ echo '</pre>';
   }
 
   public function save($f3,$params) {
