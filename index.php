@@ -23,7 +23,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
   }
 }
 # Fixed issues with nginx...
-if (($i = strpos($_SERVER['SERVER_NAME'], ':')) !== false) {
+if (isset($_SERVER['SERVER_NAME']) && ($i = strpos($_SERVER['SERVER_NAME'], ':')) !== false) {
   $_SERVER['SERVER_PORT'] = substr($_SERVER['SERVER_NAME'],$i+1);
   $_SERVER['SERVER_NAME'] = substr($_SERVER['SERVER_NAME'],0,$i);
 }
